@@ -1,4 +1,4 @@
-package com.ssafy.eoullim.domain;
+package com.ssafy.eoullim.model.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,19 +9,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id = null;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(name = "tel")
-    private String tel;
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
 
-    @Column(name = "user_id", unique = true)
+    @Column(name = "user_id", unique = true, nullable = false)
     private String userId;
 
     private String password;
