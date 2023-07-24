@@ -34,10 +34,12 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
-    public static UserEntity of(String userName, String encodedPwd) {
+    public static UserEntity of(String userName, String encodedPwd, String name, String phoneNumber) {
         UserEntity entity = new UserEntity();
         entity.setUserName(userName);
         entity.setPassword(encodedPwd);
+        entity.setName(name);
+        entity.setPhoneNumber(phoneNumber);
         return entity;
     }
 }
