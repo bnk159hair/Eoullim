@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://ssafy207.duckdns.org:3306/eoullim?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ssafy
+    password: ssafy207
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
