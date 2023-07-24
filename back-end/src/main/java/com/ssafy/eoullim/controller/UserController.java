@@ -20,14 +20,19 @@ public class UserController {
     // 연석
     @PostMapping("/join")
     private Response<Void> join(@RequestBody UserJoinRequest request) {
-
-        userService.join(request);
+        userService.join(request.getUserName(), request.getPassword(), request.getName(), request.getPhoneNumber());
         return Response.success();
     }
+
 
     @PostMapping("/login")
     public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         String token = userService.login(request.getUserName(), request.getPassword());
         return Response.success(new UserLoginResponse(token));
+    }
+
+    @GetMapping("/info")
+    public Response<?> info(){
+        return Response.success();
     }
 }

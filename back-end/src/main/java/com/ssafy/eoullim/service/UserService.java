@@ -42,12 +42,15 @@ public class UserService {
     }
 
     @Transactional
-    public void join(UserJoinRequest request) {
-        String userName = request.getUserName();
+    public User join(String userName, String password, String name, String phoneNumber) {
         // check the userId not exist
         userRepository.findByUserName(userName).ifPresent(it -> {
             throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName is %s", userName));
         });
-        userRepository.save(UserEntity.of(userName, encoder.encode(request.getPassword())));
+
+        // 비밀번호 암호화
+        UserEntity savedUser = userRepository.save(UserEntity.of(userName, encoder.encode(password), name, phoneNumber));
+        return User.fromEntity(savedUser);
     }
+
 }
