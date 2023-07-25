@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Getter
 @Entity
-@Table(name = "user")
+@Table(name = "child")
 @NoArgsConstructor
 public class ChildEntity {
     @Id
@@ -22,6 +22,7 @@ public class ChildEntity {
     private String name;            //user real name
 
     @Column(name = "birth", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date birth;
 
     @Column(name = "gender", nullable = false)
@@ -35,6 +36,6 @@ public class ChildEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.OFF;
-    
+
     // TODO: 외래키 연결 해야 함
 }
