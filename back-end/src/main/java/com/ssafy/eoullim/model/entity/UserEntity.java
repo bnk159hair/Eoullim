@@ -13,7 +13,6 @@ import javax.persistence.*;
 @Table(name = "user")
 @NoArgsConstructor
 public class UserEntity {
-
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

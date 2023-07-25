@@ -1,6 +1,6 @@
 package com.ssafy.eoullim.controller;
 
-import com.ssafy.eoullim.dto.Response;
+import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

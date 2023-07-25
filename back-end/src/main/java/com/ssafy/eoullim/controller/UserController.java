@@ -1,9 +1,9 @@
 package com.ssafy.eoullim.controller;
 
-import com.ssafy.eoullim.dto.Response;
-import com.ssafy.eoullim.dto.UserJoinRequest;
-import com.ssafy.eoullim.dto.UserLoginRequest;
-import com.ssafy.eoullim.dto.UserLoginResponse;
+import com.ssafy.eoullim.dto.response.Response;
+import com.ssafy.eoullim.dto.request.UserJoinRequest;
+import com.ssafy.eoullim.dto.request.UserLoginRequest;
+import com.ssafy.eoullim.dto.response.UserLoginResponse;
 import com.ssafy.eoullim.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

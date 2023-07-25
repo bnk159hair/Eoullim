@@ -1,6 +1,5 @@
 package com.ssafy.eoullim.service;
 
-import com.ssafy.eoullim.dto.UserJoinRequest;
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.User;
