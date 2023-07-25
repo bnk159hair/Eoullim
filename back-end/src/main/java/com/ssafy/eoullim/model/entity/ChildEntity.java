@@ -37,5 +37,7 @@ public class ChildEntity {
     @Enumerated(EnumType.STRING)
     private Status status = Status.OFF;
 
-    // TODO: 외래키 연결 해야 함
+    @ManyToOne
+    @JoinColumn(name = "mask_id")
+    private MaskEntity mask;
 }
