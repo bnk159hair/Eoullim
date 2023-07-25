@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    
-    // 연석
+
     @PostMapping("/join")
     private Response<Void> join(@RequestBody UserJoinRequest request) {
         userService.join(request.getUserName(), request.getPassword(), request.getName(), request.getPhoneNumber());

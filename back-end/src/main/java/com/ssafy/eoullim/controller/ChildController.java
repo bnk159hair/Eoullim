@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.controller;
 
+import com.ssafy.eoullim.dto.request.ChildCreateRequest;
 import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +16,15 @@ import java.util.List;
 public class ChildController {
     // 사용자의 자녀 리스트 조회
     @GetMapping
-    public Response<List<ChildEntity>> list(@RequestBody )  {
-
+    public Response<List<ChildEntity>> list()  {
+        return Response.success();
     }
 
     // 자녀 등록
     @PostMapping
-    public Response<Void> create(@RequestBody ) {
+    public Response<Void> create(@RequestBody ChildCreateRequest request) {
 
+        return Response.success();
     }
 
     // 특정 자녀 선택 (로그인)
@@ -31,13 +33,13 @@ public class ChildController {
     // 특정 자녀 정보 상세보기
     @GetMapping(value = "{childId}")
     public Response<?> postInfo(@PathVariable("postNo") int postNo) {
-
+        return Response.success();
     }
 
     // 특정 자녀 수정
     @PutMapping("/")
     public Response<?> modify() {
-
+        return Response.success();
     }
 
     // 특정 자녀 삭제
