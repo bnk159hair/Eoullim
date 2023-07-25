@@ -1,13 +1,15 @@
 package com.ssafy.eoullim.model.entity;
 
 import com.ssafy.eoullim.model.Status;
-import com.ssafy.eoullim.model.UserRole;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "child")
@@ -32,13 +34,30 @@ public class ChildEntity {
     private String school;
 
     @Column(name = "grade", nullable = false)
-    private String grade;
+    private int grade;
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.OFF;
 
+    // 사용자(보호자) 외래키
+    @ManyToOne
+    @JoinColumn(name="user_id", referencedColumnName="user_id")
+    private UserEntity user;
+
     // (cascade=CascadeType.REMOVE)
     @ManyToOne
-    @JoinColumn(name="mask_id", referencedColumnName="mask_id")
+    @JoinColumn(name="animon_id", referencedColumnName="animon_id")
     private AnimonEntity mask;
+
+
+    public static ChildEntity of(UserEntity user, String name, Date birth, char gender, String school, int grade) {
+        ChildEntity entity = new ChildEntity();
+        entity.setName(name);
+        entity.setBirth(birth);
+        entity.setGender(gender);
+        entity.setSchool(school);
+        entity.setGrade(grade);
+        entity.setUser(user);
+        return entity;
+    }
 }

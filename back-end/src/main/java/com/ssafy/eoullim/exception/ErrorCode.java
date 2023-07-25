@@ -13,6 +13,7 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Invalid password"),
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
+    INVALID_DATA(HttpStatus.UNAUTHORIZED, "Invalid data"),
     ;
 
     private final HttpStatus status;
