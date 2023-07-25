@@ -42,15 +42,18 @@ public class UserService {
     }
 
     @Transactional
-    public User join(String userName, String password, String name, String phoneNumber) {
+    public void join(String userName, String password, String name, String phoneNumber) {
         // check the userId not exist
         userRepository.findByUserName(userName).ifPresent(it -> {
             throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName is %s", userName));
         });
 
-        // 비밀번호 암호화
-        UserEntity savedUser = userRepository.save(UserEntity.of(userName, encoder.encode(password), name, phoneNumber));
-        return User.fromEntity(savedUser);
+        // 비밀번호 암호화해서 DB에 저장
+        userRepository.save(UserEntity.of(userName, encoder.encode(password), name, phoneNumber));
+        return;
+        // 리턴 타입 필요 없을 것 같아서 수정
+//        UserEntity savedUser = userRepository.save(UserEntity.of(userName, encoder.encode(password), name, phoneNumber));
+//        return User.fromEntity(savedUser);
     }
 
 }
