@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not founded"),
+    CHILD_NOT_FOUND(HttpStatus.NOT_FOUND, "Child not founded"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Invalid password"),
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),

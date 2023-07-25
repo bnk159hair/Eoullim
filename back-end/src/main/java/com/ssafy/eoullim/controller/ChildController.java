@@ -2,6 +2,8 @@ package com.ssafy.eoullim.controller;
 
 import com.ssafy.eoullim.dto.request.ChildCreateRequest;
 import com.ssafy.eoullim.dto.response.Response;
+import com.ssafy.eoullim.dto.response.UserLoginResponse;
+import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.service.ChildService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,6 @@ public class ChildController {
     }
 
     // 자녀 등록
-    @Transactional
     @PostMapping
     public Response<Void> create(@RequestBody ChildCreateRequest request, Authentication authentication) {
         // 지금은 request를 getter로 풀었지만, service 단의 새로운 객체를 만드는 것도 고려 가능
@@ -34,11 +35,15 @@ public class ChildController {
         return Response.success();
     }
 
-    // 특정 자녀 선택 (로그인)
-    @PostMapping("/select")
+    // 특정 자녀 선택
+    @PostMapping("/{childId}")
+    public Response<Child> select(@PathVariable Integer childId){
+        Child child = childService.select(childId);
+        return Response.success(child);
+    }
 
     // 특정 자녀 정보 상세보기
-    @GetMapping(value = "{childId}")
+    @GetMapping("/")
     public Response<?> postInfo(@PathVariable("postNo") int postNo) {
         return Response.success();
     }
@@ -54,4 +59,5 @@ public class ChildController {
     // 애니몬 조회
 
     // 영상 조회
+
 }

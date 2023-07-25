@@ -2,6 +2,8 @@ package com.ssafy.eoullim.service;
 
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
+import com.ssafy.eoullim.model.Child;
+import com.ssafy.eoullim.model.Status;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.model.entity.UserEntity;
 import com.ssafy.eoullim.repository.ChildRepository;
@@ -9,6 +11,7 @@ import com.ssafy.eoullim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +44,13 @@ public class ChildService {
         
         // DB에 저장할 DATA 전달해서 저장
         childRepository.save(ChildEntity.of(userRepository.findByUserName(userName).get(), name, birthDate , gender, school, grade));
-        return;
     }
 
+    @Transactional
+    public Child select(Integer childId) {
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+        childEntity.setStatus(Status.ON);
+        return Child.fromEntity(childEntity);
+    }
 }
