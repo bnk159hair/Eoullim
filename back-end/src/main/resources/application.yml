@@ -12,3 +12,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+jwt:
+  secret-key: ssafy_9th_gwanju_c207_eoullim_secret_key
+  # 30 days
+  token.expired-time-ms: 2592000000

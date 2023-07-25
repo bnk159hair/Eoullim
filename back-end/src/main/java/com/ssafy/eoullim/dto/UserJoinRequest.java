@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserJoinRequest {
+    private String phoneNumber;
+    private String name;
     private String userName;
-    private String tel;
-    private String userId;
     private String password;
 }
