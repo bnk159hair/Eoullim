@@ -52,4 +52,5 @@ public class UserService {
         UserEntity savedUser = userRepository.save(UserEntity.of(userName, encoder.encode(password), name, phoneNumber));
         return User.fromEntity(savedUser);
     }
+
 }

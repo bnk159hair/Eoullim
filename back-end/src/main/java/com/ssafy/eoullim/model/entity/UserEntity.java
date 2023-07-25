@@ -42,4 +42,5 @@ public class UserEntity {
         entity.setPhoneNumber(phoneNumber);
         return entity;
     }
+
 }
