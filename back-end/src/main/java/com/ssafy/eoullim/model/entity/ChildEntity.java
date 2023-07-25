@@ -1,6 +1,7 @@
 package com.ssafy.eoullim.model.entity;
 
 import com.ssafy.eoullim.model.Status;
+import com.ssafy.eoullim.model.UserRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,8 +37,8 @@ public class ChildEntity {
     @Enumerated(EnumType.STRING)
     private Status status = Status.OFF;
 
-    // TODO: 외래키 연결 해야 함
-    @ManyToOne(cascade=CascadeType.REMOVE)
+    // (cascade=CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name="mask_id", referencedColumnName="mask_id")
-    AnimonEntity mask;
+    private AnimonEntity mask;
 }
