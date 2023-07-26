@@ -4,14 +4,19 @@ import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.Status;
+import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.model.entity.UserEntity;
 import com.ssafy.eoullim.repository.ChildRepository;
 import com.ssafy.eoullim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,7 +30,7 @@ public class ChildService {
     private final ChildRepository childRepository;
     private final UserRepository userRepository;
 
-    public void create(String userName, String name, String birth, char gender, String school, int grade) {
+    public void create(User user, String name, String birth, char gender, String school, int grade) {
         // TODO: 나중에 front 단에서 쓸 수 있는 비동기로 바꾸가
         // 자녀 이름 중복 체크
 //        childRepository.selectChildByName(userName, name).ifPresent(it -> {
@@ -41,9 +46,14 @@ public class ChildService {
             // String이 yyyyMMdd 형식이 아닌 경우 THROW DATA ERROR
             throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("birth is %s", birth));
         }
-        
-        // DB에 저장할 DATA 전달해서 저장
-        childRepository.save(ChildEntity.of(userRepository.findByUserName(userName).get(), name, birthDate , gender, school, grade));
+
+        childRepository.save(ChildEntity.of(UserEntity.of(user), name, birthDate , gender, school, grade));
+
+    }
+
+    public Page<Child> list(Pageable pageable) {
+
+        return childRepository.findAll(pageable).map(Child::fromEntity);
     }
 
     @Transactional

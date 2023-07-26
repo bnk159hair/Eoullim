@@ -34,7 +34,7 @@ public class ChildEntity {
     private String school;
 
     @Column(name = "grade", nullable = false)
-    private int grade;
+    private Integer grade;
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.OFF;

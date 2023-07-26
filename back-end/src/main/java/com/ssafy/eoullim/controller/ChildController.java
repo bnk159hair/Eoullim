@@ -1,15 +1,20 @@
 package com.ssafy.eoullim.controller;
 
 import com.ssafy.eoullim.dto.request.ChildCreateRequest;
+import com.ssafy.eoullim.dto.response.ChildResponse;
 import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.dto.response.UserLoginResponse;
 import com.ssafy.eoullim.model.Child;
+import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.service.ChildService;
+import com.ssafy.eoullim.utils.ClassUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +26,25 @@ import java.util.List;
 public class ChildController {
 
     private final ChildService childService;
-    // 사용자의 자녀 리스트 조회
+
     @GetMapping
-    public Response<List<ChildEntity>> list()  {
-        return Response.success();
+    public Response<Page<ChildResponse>> list(Pageable pageable) {
+        return Response.success(childService.list(pageable).map(ChildResponse::fromChild));
     }
 
     // 자녀 등록
     @PostMapping
     public Response<Void> create(@RequestBody ChildCreateRequest request, Authentication authentication) {
-        // 지금은 request를 getter로 풀었지만, service 단의 새로운 객체를 만드는 것도 고려 가능
-        childService.create(authentication.getName(), request.getName(), request.getBirth(), request.getGender(), request.getSchool(), request.getGrade());
+
+        User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
+        childService.create(
+                user,
+                request.getName(),
+                request.getBirth(),
+                request.getGender(),
+                request.getSchool(),
+                request.getGrade()
+        );
         return Response.success();
     }
 

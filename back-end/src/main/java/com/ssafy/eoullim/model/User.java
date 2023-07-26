@@ -20,6 +20,8 @@ import java.util.List;
 public class User implements UserDetails {
 
     private Integer id;
+    private String name;
+    private String phoneNumber;
     private String username;
     private String password;
     private UserRole role;
@@ -27,6 +29,8 @@ public class User implements UserDetails {
     public static User fromEntity(UserEntity entity) {
         return new User(
                 entity.getId(),
+                entity.getName(),
+                entity.getPhoneNumber(),
                 entity.getUserName(),
                 entity.getPassword(),
                 entity.getRole()

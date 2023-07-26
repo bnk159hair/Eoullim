@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.service;
 
+import com.ssafy.eoullim.dto.request.UserJoinRequest;
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.User;
@@ -40,19 +41,13 @@ public class UserService {
         return JwtTokenUtils.generateAccessToken(userName, secretKey, expiredTimeMs);
     }
 
-    @Transactional
-    public void join(String userName, String password, String name, String phoneNumber) {
-        // check the userId not exist
-        userRepository.findByUserName(userName).ifPresent(it -> {
-            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName is %s", userName));
+    public void join(UserJoinRequest request) {
+        // Check Duplicated UserName
+        userRepository.findByUserName(request.getUserName()).ifPresent(it -> {
+            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName is %s", request.getUserName()));
         });
 
-        // 비밀번호 암호화해서 DB에 저장
-        userRepository.save(UserEntity.of(userName, encoder.encode(password), name, phoneNumber));
-        return;
-        // 리턴 타입 필요 없을 것 같아서 수정
-//        UserEntity savedUser = userRepository.save(UserEntity.of(userName, encoder.encode(password), name, phoneNumber));
-//        return User.fromEntity(savedUser);
+        userRepository.save(UserEntity.of(request));
     }
 
 }
