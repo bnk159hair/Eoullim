@@ -1,6 +1,6 @@
 package com.ssafy.eoullim.exception;
 
-import com.ssafy.eoullim.dto.Response;
+import com.ssafy.eoullim.dto.response.Response;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 

@@ -9,17 +9,17 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Entity
-@Table(name = "mask")
+@Table(name="animon")
 @NoArgsConstructor
-public class MaskEntity {
-
+public class AnimonEntity {
     @Id
+    @Column(name = "animon_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id = null;
+    private Integer id = null;      //PK
+
+    @Column(name = "image_path", nullable = false)
+    private String imagePath;
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "image_path", nullable = false)
-    private String image;
 }
