@@ -1,6 +1,6 @@
 package com.ssafy.eoullim.exception;
 
-import com.ssafy.eoullim.dto.Response;
+import com.ssafy.eoullim.dto.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

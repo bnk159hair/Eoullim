@@ -1,4 +1,4 @@
-package com.ssafy.eoullim.dto;
+package com.ssafy.eoullim.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
