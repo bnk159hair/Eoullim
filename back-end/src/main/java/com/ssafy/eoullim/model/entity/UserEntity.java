@@ -43,13 +43,13 @@ public class UserEntity {
 //    @JoinColumn(name = "user_id")
 //    private List<ChildEntity> children = new ArrayList<>();
 
-    public static UserEntity of(UserJoinRequest request) {
+    public static UserEntity of(String name, String phoneNumber, String userName, String password) {
         return new UserEntity(
                 null,
-                request.getName(),
-                request.getPhoneNumber(),
-                request.getUserName(),
-                request.getPassword(),
+                name,
+                phoneNumber,
+                userName,
+                password,
                 UserRole.USER
         );
     }

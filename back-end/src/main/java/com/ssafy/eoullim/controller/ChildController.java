@@ -28,8 +28,8 @@ public class ChildController {
     private final ChildService childService;
 
     @GetMapping
-    public Response<Page<ChildResponse>> list(Pageable pageable) {
-        return Response.success(childService.list(pageable).map(ChildResponse::fromChild));
+    public Response<List<ChildEntity>> list()  {
+        return Response.success();
     }
 
     // 자녀 등록
@@ -62,12 +62,20 @@ public class ChildController {
     }
 
     // 특정 자녀 수정
-    @PutMapping("/")
-    public Response<?> modify() {
+    @PutMapping("/{childId}")
+    public Response<?> modify(@PathVariable Integer childId,
+                              @RequestBody ChildCreateRequest request,
+                              Authentication authentication) {
+
         return Response.success();
     }
 
     // 특정 자녀 삭제
+    @DeleteMapping("/{childId}")
+    public Response<Void> delete(@PathVariable Integer childId, Authentication authentication) {
+        childService.delete(childId, authentication.getName());
+        return Response.success();
+    }
 
     // 애니몬 조회
 

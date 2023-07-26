@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +41,8 @@ public class ChildService {
         // String -> Date Formatter (yyyyMMdd)
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Date birthDate = null;
-        try {
-            birthDate = dateFormat.parse(birth);
-        } catch (ParseException e) {
-            // String이 yyyyMMdd 형식이 아닌 경우 THROW DATA ERROR
+        try { birthDate = dateFormat.parse(birth); }
+        catch (ParseException e) {  // ERROR: String이 yyyyMMdd 형식이 아닌 경우
             throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("birth is %s", birth));
         }
 
@@ -52,7 +51,6 @@ public class ChildService {
     }
 
     public Page<Child> list(Pageable pageable) {
-
         return childRepository.findAll(pageable).map(Child::fromEntity);
     }
 
@@ -63,4 +61,24 @@ public class ChildService {
         childEntity.setStatus(Status.ON);
         return Child.fromEntity(childEntity);
     }
+
+//    @Transactional
+//    public Child modify() {
+//        return new Child();
+//    }
+
+    public void delete(Integer childId, String userName) {
+        // ERROR : 자녀 ID 잘못 접근 시
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(()
+                -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
+        // ERROR : 현재 User가 지우려는 자녀 ID 권한이 없는 경우 (다른 사용자의 user를 제거하려 할 경우)
+        if (!Objects.equals(childEntity.getUser().getUserName(), userName)) {
+            throw new EoullimApplicationException(ErrorCode.INVALID_PERMISSION,
+                    String.format("user %s has no permission with child %d", userName, childId));
+        }
+        // TODO: 추후 자녀와 관련된 마스크나 영상 정보도 지울 것인지
+        childRepository.deleteById(childId);
+        return;
+    }
+
 }

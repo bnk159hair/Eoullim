@@ -41,13 +41,28 @@ public class UserService {
         return JwtTokenUtils.generateAccessToken(userName, secretKey, expiredTimeMs);
     }
 
-    public void join(UserJoinRequest request) {
-        // Check Duplicated UserName
-        userRepository.findByUserName(request.getUserName()).ifPresent(it -> {
-            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName is %s", request.getUserName()));
-        });
+    @Transactional
+    public void join(String userName, String password, String name, String phoneNumber) {
+        idCheck(userName);  // 아이디 중복 체크
 
-        userRepository.save(UserEntity.of(request));
+        // 비밀번호 암호화해서 DB에 저장
+        userRepository.save(UserEntity.of(name, phoneNumber, userName, encoder.encode(password)));
+        return;
+    }
+    // ID 중복 체크
+    public void idCheck(String userName) {
+        // ERROR : Duplicated ID
+        userRepository.findByUserName(userName).ifPresent(it -> {
+            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName is %s", userName));
+        });
+        return;
+    }
+
+    public void pwCheck(String pwRequest, String pwCorrect) {
+        if (!encoder.matches(pwRequest, pwCorrect)) {
+            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD, String.format("userName is %s", pwRequest));
+        }
+        return;
     }
 
 }
