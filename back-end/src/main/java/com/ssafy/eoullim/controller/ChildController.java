@@ -28,8 +28,10 @@ public class ChildController {
     private final ChildService childService;
 
     @GetMapping
-    public Response<List<ChildEntity>> list()  {
-        return Response.success();
+    public Response<List<Child>> list(Authentication authentication)  {
+        User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
+        List<Child> childList = childService.list(user.getId());
+        return Response.success(childList);
     }
 
     // 자녀 등록

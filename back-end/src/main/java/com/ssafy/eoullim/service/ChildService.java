@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,8 +51,8 @@ public class ChildService {
 
     }
 
-    public Page<Child> list(Pageable pageable) {
-        return childRepository.findAll(pageable).map(Child::fromEntity);
+    public List<Child> list(Integer userId) {
+        return childRepository.findAllByUserId(userId).stream().map(Child::fromEntity).collect(Collectors.toList());
     }
 
     @Transactional

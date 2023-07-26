@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.repository;
 
+import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,6 @@ public interface ChildRepository  extends JpaRepository<ChildEntity, Integer> {
 //                                            @Param(value = "name") String name);
     @Query(value = "select c from ChildEntity c where c.user.id = (select u.id from UserEntity u where u.userName = :userName)")
     List<ChildEntity> findByUserName(@Param(value = "userName") String userName);
-  }
+
+    List<ChildEntity> findAllByUserId(Integer userId);
+}
