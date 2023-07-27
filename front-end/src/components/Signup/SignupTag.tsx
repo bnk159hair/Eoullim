@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface SignupProps {
   onSignup: (userData: UserData) => void;
@@ -13,6 +14,12 @@ interface UserData {
 }
 
 const SignupTag: React.FC<SignupProps> = ({ onSignup }) => {
+  const navigate = useNavigate();
+
+  const handleSignUpClick = () => {
+    navigate('/login');
+  };
+
   const [userData, setUserData] = useState<UserData>({
     guardianName: '',
     phoneNumber: '',
@@ -96,9 +103,9 @@ const SignupTag: React.FC<SignupProps> = ({ onSignup }) => {
       {password !== confirmPassword && confirmPassword !== '' && (
         <p className="error">비밀번호가 일치하지 않습니다.</p>
       )}
-      <button type="submit">회원가입</button>
+      <button type="submit" onClick={handleSignUpClick}>회원가입</button>
     </form>
   );
-};
+}
 
 export default SignupTag;

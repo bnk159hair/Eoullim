@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 interface LoginProps {
   onLogin: (username: string, password: string) => void;
@@ -8,7 +8,7 @@ interface LoginProps {
 const LoginTag: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -25,6 +25,10 @@ const LoginTag: React.FC<LoginProps> = ({ onLogin }) => {
 
   const handleSignUpClick = () => {
     navigate('/signup'); // Redirect to the /signup page
+  };
+  
+  const handleSign = () => {
+    navigate('/profil');
   };
 
   return (
@@ -47,7 +51,7 @@ const LoginTag: React.FC<LoginProps> = ({ onLogin }) => {
           onChange={handlePasswordChange}
         />
       </div>
-      <button type="submit">로그인</button>
+      <button type="submit" onClick={handleSign}>로그인</button>
       <button type="button" onClick={handleSignUpClick}>회원가입</button>
     </form>
   );

@@ -3,17 +3,16 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Main from '../MainPage/Main';
 import LoginTag from '../../components/Login/LoginTag';
 
-function Login() {
-    const handleLogin = (username: string, password: string) => {
-      console.log('로그인 정보:', username, password);
-    };
-  
-    return (
-      <>
-        <LoginTag onLogin={handleLogin}/>
-      </>
-    );
-  }
-  
-  export default Login;
-  
+const Login = () => {
+  const handleLogin = (username: string, password: string) => {
+    console.log('로그인 정보:', username, password);
+  };
+
+  return (
+    <>
+      <LoginTag onLogin={handleLogin}/>
+    </>
+  );
+}
+
+export default Login;
