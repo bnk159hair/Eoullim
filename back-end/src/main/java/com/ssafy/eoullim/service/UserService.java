@@ -50,7 +50,6 @@ public class UserService {
         return;
     }
 
-    // 비밀번호 수정
     @Transactional
     public void modify(Integer userId, String curPassword, String newPassword) {
         // UserId와 일치하는 사용자 가져오기
