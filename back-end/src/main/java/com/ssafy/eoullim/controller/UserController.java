@@ -1,10 +1,7 @@
 package com.ssafy.eoullim.controller;
 
-import com.ssafy.eoullim.dto.request.UserIdCheckRequest;
-import com.ssafy.eoullim.dto.request.UserPwCheckRequest;
+import com.ssafy.eoullim.dto.request.*;
 import com.ssafy.eoullim.dto.response.Response;
-import com.ssafy.eoullim.dto.request.UserJoinRequest;
-import com.ssafy.eoullim.dto.request.UserLoginRequest;
 import com.ssafy.eoullim.dto.response.UserLoginResponse;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.User;
@@ -43,6 +40,12 @@ public class UserController {
         return Response.success();
     }
 
+    @PutMapping("/{userId}")
+    public Response<?> modify(@PathVariable Integer userId,
+                              @RequestBody UserModifyRequest request) {
+        userService.modify(userId, request.getCurPassword(), request.getNewPassword());
+        return Response.success();
+    }
     
     @GetMapping("/id-check")    // ID 중복 체크
     public Response<?> idCheck(@RequestBody UserIdCheckRequest request) {

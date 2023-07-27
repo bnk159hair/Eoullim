@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.service;
 
+import com.ssafy.eoullim.dto.request.ChildRequest;
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.Child;
@@ -24,7 +25,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +35,7 @@ public class ChildService {
     private final ChildRepository childRepository;
     private final UserRepository userRepository;
 
-    public void create(User user, String name, String birth, char gender, String school, int grade) {
+    public void create(User user, String name, Date birth, char gender, String school, int grade) {
         // TODO: 나중에 front 단에서 쓸 수 있는 비동기로 바꾸가
         // 자녀 이름 중복 체크
 //        childRepository.selectChildByName(userName, name).ifPresent(it -> {
@@ -40,33 +43,44 @@ public class ChildService {
 //        });
 
         // String -> Date Formatter (yyyyMMdd)
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        Date birthDate = null;
-        try { birthDate = dateFormat.parse(birth); }
-        catch (ParseException e) {  // ERROR: String이 yyyyMMdd 형식이 아닌 경우
-            throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("birth is %s", birth));
-        }
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+//        Date birthDate = null;
+//        try { birthDate = dateFormat.parse(birth); }
+//        catch (ParseException e) {  // ERROR: String이 yyyyMMdd 형식이 아닌 경우
+//            throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("birth is %s", birth));
+//        }
 
-        childRepository.save(ChildEntity.of(UserEntity.of(user), name, birthDate , gender, school, grade));
+        childRepository.save(ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade));
 
     }
 
-    public Page<Child> list(Pageable pageable) {
-        return childRepository.findAll(pageable).map(Child::fromEntity);
+    public List<Child> list(Integer userId) {
+        return childRepository.findAllByUserId(userId).stream().map(Child::fromEntity).collect(Collectors.toList());
     }
 
     @Transactional
-    public Child select(Integer childId) {
+    public Child login(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
                 new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
         childEntity.setStatus(Status.ON);
         return Child.fromEntity(childEntity);
     }
+    public Child info(Integer childId) {
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+        return Child.fromEntity(childEntity);
+    }
 
-//    @Transactional
-//    public Child modify() {
-//        return new Child();
-//    }
+    @Transactional
+    public void modify(Integer childId, ChildRequest request) {
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+        childEntity.setName(request.getName());
+        childEntity.setBirth(request.getBirth());
+        childEntity.setGender(request.getGender());
+        childEntity.setSchool(request.getSchool());
+        childEntity.setGrade(request.getGrade());
+    }
 
     public void delete(Integer childId, String userName) {
         // ERROR : 자녀 ID 잘못 접근 시
