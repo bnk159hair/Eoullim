@@ -1,7 +1,6 @@
 package com.ssafy.eoullim.model.entity;
 
 import com.ssafy.eoullim.model.Status;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,16 +38,13 @@ public class ChildEntity {
     @Enumerated(EnumType.STRING)
     private Status status = Status.OFF;
 
-    // 사용자(보호자) 외래키
     @ManyToOne
-    @JoinColumn(name="user_id", referencedColumnName="user_id")
+    @JoinColumn(name="user_id")
     private UserEntity user;
 
-    // (cascade=CascadeType.REMOVE)
     @ManyToOne
-    @JoinColumn(name="animon_id", referencedColumnName="animon_id")
+    @JoinColumn(name="animon_id")
     private AnimonEntity mask;
-
 
     public static ChildEntity of(UserEntity user, String name, Date birth, char gender, String school, int grade) {
         ChildEntity entity = new ChildEntity();

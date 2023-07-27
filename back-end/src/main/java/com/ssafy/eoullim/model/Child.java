@@ -20,13 +20,13 @@ public class Child {
 
     public static Child fromEntity(ChildEntity entity) {
         return new Child(
-                entity.getId(),
-                entity.getName(),
-                entity.getBirth(),
-                entity.getGender(),
-                entity.getSchool(),
-                entity.getGrade(),
-                entity.getStatus()
+            entity.getId(),
+            entity.getName(),
+            entity.getBirth(),
+            entity.getGender(),
+            entity.getSchool(),
+            entity.getGrade(),
+            entity.getStatus()
         );
     }
 }

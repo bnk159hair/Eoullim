@@ -55,14 +55,12 @@ public class UserService {
         userRepository.findByUserName(userName).ifPresent(it -> {
             throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName is %s", userName));
         });
-        return;
     }
 
     public void pwCheck(String pwRequest, String pwCorrect) {
         if (!encoder.matches(pwRequest, pwCorrect)) {
             throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD, String.format("userName is %s", pwRequest));
         }
-        return;
     }
 
 }
