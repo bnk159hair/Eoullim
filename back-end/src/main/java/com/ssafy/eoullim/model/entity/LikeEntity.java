@@ -15,6 +15,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LikeEntity {
+    // ALTER TABLE `like` MODIFY COLUMN follower_id int AFTER following_id;
+
     @Id
     @Column(name = "like_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

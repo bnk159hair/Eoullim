@@ -16,6 +16,7 @@ public enum ErrorCode {
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     INVALID_DATA(HttpStatus.UNAUTHORIZED, "Invalid data"),
+    LIKE_ALREADY_FOUND(HttpStatus.FOUND, "Like Relationship already founded"),
     ;
 
     private final HttpStatus status;
