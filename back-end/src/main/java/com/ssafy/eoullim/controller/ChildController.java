@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.controller;
 
+import com.ssafy.eoullim.dto.request.ChildSchoolRequest;
 import com.ssafy.eoullim.dto.request.ChildRequest;
 import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.model.Child;
@@ -64,9 +65,17 @@ public class ChildController {
         return Response.success();
     }
 
+    // 특정 자녀 삭제
     @DeleteMapping("/{childId}")
     public Response<Void> delete(@PathVariable Integer childId, Authentication authentication) {
         childService.delete(childId, authentication.getName());
+        return Response.success();
+    }
+
+    // 학교 API
+    @PostMapping("/school")
+    public Response<?> checkSchool(@RequestBody ChildSchoolRequest request) {
+        childService.checkSchool(request.getKeyword());
         return Response.success();
     }
 
