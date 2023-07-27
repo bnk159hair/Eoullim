@@ -48,15 +48,15 @@ public class UserController {
     }
     
     @GetMapping("/id-check")    // ID 중복 체크
-    public Response<?> idCheck(@RequestBody UserIdCheckRequest request) {
-        userService.idCheck(request.getUserName());
+    public Response<?> checkId(@RequestBody UserIdCheckRequest request) {
+        userService.checkId(request.getUserName());
         return Response.success();
     }
     
     @GetMapping("/pw-check")    // User Password 재확인
-    public Response<?> pwCheck(@RequestBody UserPwCheckRequest request, Authentication authentication) {
+    public Response<?> checkPw(@RequestBody UserPwCheckRequest request, Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
-        userService.pwCheck(request.getPassword(), user.getPassword());
+        userService.checkPw(request.getPassword(), user.getPassword());
         return Response.success();
     }
 }
