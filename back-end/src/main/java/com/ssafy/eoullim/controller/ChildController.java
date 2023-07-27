@@ -88,14 +88,17 @@ public class ChildController {
     @GetMapping("/school")
     public Response<?> getSchoolName(@RequestBody ChildSchoolRequest request) {
         String serviceKey = "Ng3w6w1%2B7JypSInrX8Wa10b9j0G6%2F9ailN1XP%2FuO9oB7gfAImwjczu8kP%2F9JfDsX0wLbLW9%2Bv3NZsh2XG1Gw8Q%3D%3D";
+        String url1 = "http://api.data.go.kr/openapi/tn_pubr_public_elesch_mskul_lc_api";
+        String url2 ="http://api.data.go.kr/openapi/tn_pubr_public_elesch_info_api";
         try {
-            StringBuilder urlBuilder = new StringBuilder("http://api.data.go.kr/openapi/tn_pubr_public_elesch_mskul_lc_api");
+            StringBuilder urlBuilder = new StringBuilder(url1);
             urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "="+serviceKey);
             urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "="+URLEncoder.encode("1", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "="+URLEncoder.encode("100", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("type", "UTF-8") + "="+URLEncoder.encode("json", "UTF-8"));
+//            urlBuilder.append("&" + URLEncoder.encode("SCHL_NM", "UTF-8") + "="+URLEncoder.encode("*." + request.getKeyword() + "*.", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("schoolSe", "UTF-8") + "="+URLEncoder.encode("초등학교", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("schoolNm", "UTF-8") + "="+URLEncoder.encode(request.getKeyword(), "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("schoolNm", "UTF-8") + "="+URLEncoder.encode(request.getKeyword()+"초등학교", "UTF-8"));
 
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
