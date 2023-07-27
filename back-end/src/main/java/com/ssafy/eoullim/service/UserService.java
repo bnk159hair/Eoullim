@@ -49,6 +49,24 @@ public class UserService {
         userRepository.save(UserEntity.of(name, phoneNumber, userName, encoder.encode(password)));
         return;
     }
+
+    @Transactional
+    public void modify(Integer userId, String curPassword, String newPassword) {
+        // UserId와 일치하는 사용자 가져오기
+        User user = User.fromEntity(userRepository.findById(userId).orElseThrow(
+                ()-> {   // ERROR : UserID에 일치하는 사용자 X
+                    throw new EoullimApplicationException(ErrorCode.USER_NOT_FOUND, String.format("userId is %s", userId));
+                }));
+        // ERROR : 사용자가 입력한 현재 비밀번호 틀린 경우
+        if (!encoder.matches(curPassword, user.getPassword())) {
+            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD, String.format("userId is %s", userId));
+        }
+        // user에 비밀번호 바꾼 후 저장
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(UserEntity.of(user));
+        return;
+    }
+
     // ID 중복 체크
     public void idCheck(String userName) {
         // ERROR : Duplicated ID
