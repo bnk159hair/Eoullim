@@ -51,14 +51,12 @@ public class ChildController {
         return Response.success(child);
     }
 
-    // 특정 자녀 정보 상세보기
     @GetMapping("/{childId}")
     public Response<?> info(@PathVariable Integer childId) {
         Child child = childService.info(childId);
         return Response.success(child);
     }
 
-    // 특정 자녀 수정
     @PutMapping("/{childId}")
     public Response<?> modify(@PathVariable Integer childId,
                               @RequestBody ChildRequest request) {
@@ -66,7 +64,6 @@ public class ChildController {
         return Response.success();
     }
 
-    // 특정 자녀 삭제
     @DeleteMapping("/{childId}")
     public Response<Void> delete(@PathVariable Integer childId, Authentication authentication) {
         childService.delete(childId, authentication.getName());
