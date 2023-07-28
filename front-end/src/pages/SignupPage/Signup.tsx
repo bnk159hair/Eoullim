@@ -7,7 +7,6 @@ interface UserData {
   phoneNumber: string;
   username: string;
   password: string;
-  confirmPassword: string;
 }
 
 const Signup = () => {
