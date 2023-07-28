@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
-
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Invalid password"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "Invalid Permission"),
@@ -18,6 +17,7 @@ public enum ErrorCode {
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "API Connection error occurs"),
+    LIKE_ALREADY_FOUND(HttpStatus.FOUND, "Like Relationship already founded"),
     ;
 
     private final HttpStatus status;
