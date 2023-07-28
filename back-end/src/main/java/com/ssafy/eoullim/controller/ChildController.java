@@ -23,7 +23,6 @@ public class ChildController {
 
     @GetMapping
     public Response<List<Child>> list(Authentication authentication) {
-        System.out.println(authentication.getPrincipal());
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
         List<Child> childList = childService.list(user.getId());
         return Response.success(childList);
@@ -69,9 +68,5 @@ public class ChildController {
         childService.delete(childId, authentication.getName());
         return Response.success();
     }
-
-    // 애니몬 조회
-
-    // 영상 조회
 
 }

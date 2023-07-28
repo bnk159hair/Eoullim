@@ -9,7 +9,6 @@ import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.model.entity.UserEntity;
 import com.ssafy.eoullim.repository.ChildRepository;
-import com.ssafy.eoullim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,25 +22,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChildService {
     private final ChildRepository childRepository;
-    private final UserRepository userRepository;
 
     public void create(User user, String name, Date birth, char gender, String school, int grade) {
-        // TODO: 나중에 front 단에서 쓸 수 있는 비동기로 바꾸가
-        // 자녀 이름 중복 체크
-//        childRepository.selectChildByName(userName, name).ifPresent(it -> {
-//            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("childName is %s", name));
-//        });
-
-        // String -> Date Formatter (yyyyMMdd)
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-//        Date birthDate = null;
-//        try { birthDate = dateFormat.parse(birth); }
-//        catch (ParseException e) {  // ERROR: String이 yyyyMMdd 형식이 아닌 경우
-//            throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("birth is %s", birth));
-//        }
-
         childRepository.save(ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade));
-
     }
 
     public List<Child> list(Integer userId) {
@@ -51,20 +34,20 @@ public class ChildService {
     @Transactional
     public Child login(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
         childEntity.setStatus(Status.ON);
         return Child.fromEntity(childEntity);
     }
     public Child info(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
         return Child.fromEntity(childEntity);
     }
 
     @Transactional
     public void modify(Integer childId, ChildRequest request) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
         childEntity.setName(request.getName());
         childEntity.setBirth(request.getBirth());
         childEntity.setGender(request.getGender());
@@ -81,7 +64,6 @@ public class ChildService {
             throw new EoullimApplicationException(ErrorCode.INVALID_PERMISSION,
                     String.format("user %s has no permission with child %d", userName, childId));
         }
-        // TODO: 추후 자녀와 관련된 마스크나 영상 정보도 지울 것인지
         childRepository.deleteById(childId);
     }
 }
