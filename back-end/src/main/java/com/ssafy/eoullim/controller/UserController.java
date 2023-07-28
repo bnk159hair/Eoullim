@@ -1,0 +1,62 @@
+package com.ssafy.eoullim.controller;
+
+import com.ssafy.eoullim.dto.request.*;
+import com.ssafy.eoullim.dto.response.Response;
+import com.ssafy.eoullim.dto.response.UserLoginResponse;
+import com.ssafy.eoullim.exception.ErrorCode;
+import com.ssafy.eoullim.model.User;
+import com.ssafy.eoullim.service.UserService;
+import com.ssafy.eoullim.utils.ClassUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/v1/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @PostMapping("/join")
+    private Response<Void> join(@RequestBody UserJoinRequest request) {
+        userService.join(request.getUserName(),
+                request.getPassword(),
+                request.getName(),
+                request.getPhoneNumber());
+        return Response.success();
+    }
+
+    @PostMapping("/login")
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
+        String token = userService.login(request.getUserName(), request.getPassword());
+        return Response.success(new UserLoginResponse(token));
+    }
+
+    @GetMapping("/info")
+    public Response<?> info(){
+        return Response.success();
+    }
+
+    @PutMapping("/{userId}")
+    public Response<?> modify(@PathVariable Integer userId,
+                              @RequestBody UserModifyRequest request) {
+        userService.modify(userId, request.getCurPassword(), request.getNewPassword());
+        return Response.success();
+    }
+    
+    @GetMapping("/id-check")    // ID 중복 체크
+    public Response<?> checkId(@RequestBody UserIdCheckRequest request) {
+        userService.checkId(request.getUserName());
+        return Response.success();
+    }
+    
+    @GetMapping("/pw-check")    // User Password 재확인
+    public Response<?> checkPw(@RequestBody UserPwCheckRequest request, Authentication authentication) {
+        User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
+        userService.checkPw(request.getPassword(), user.getPassword());
+        return Response.success();
+    }
+}
