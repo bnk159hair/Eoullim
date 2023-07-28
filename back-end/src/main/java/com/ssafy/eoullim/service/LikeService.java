@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,11 @@ public class LikeService {
         likeRepository.save(LikeEntity.of(followingEntity, followerEntity));
     }
 
-//    public List<Child> likeList(Integer following) {
-//
-//    }
+    public List<Child> likeList(Integer childId) {
+        childRepository.findById(childId).orElseThrow(() ->
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("%d is not childId", childId)));
+        // child ID로 followerId 다 가져오기
+        // 그 아이디로 모든 child 가져오기
+        return likeRepository.findFollowings(childId).stream().map(Child::fromEntity).collect(Collectors.toList());
+    }
 }

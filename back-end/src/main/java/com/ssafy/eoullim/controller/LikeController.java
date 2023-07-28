@@ -1,11 +1,16 @@
 package com.ssafy.eoullim.controller;
 
 import com.ssafy.eoullim.dto.request.LikeRequest;
+import com.ssafy.eoullim.dto.response.ChildResponse;
 import com.ssafy.eoullim.dto.response.Response;
+import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -20,9 +25,13 @@ public class LikeController {
         return Response.success();
     }
 
-//    @GetMapping
-//    public Response<?> likeList(@RequestBody LikeRequest request) {
-//        likeService.likeList(request.getFollowingId());
-//    }
+    @GetMapping(value = "{userId}")
+    public Response<List<ChildResponse>> likeList(@PathVariable Integer userId) {
+        List<Child> childList = likeService.likeList(userId);
+        System.out.println(childList);
+        return Response.success(
+                childList.stream().map(ChildResponse::fromChild).collect(Collectors.toList())
+        );
+    }
 
 }
