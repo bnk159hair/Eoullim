@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LikeRequest {
-    private Integer followingId;
-    private Integer followerId;
+public class FriendshipRequest {
+    private Integer myId;
+    private Integer friendId;
 }
