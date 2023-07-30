@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -17,10 +18,10 @@ public class ChildEntity {
     @Id
     @Column(name = "child_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id = null;      //primary Key
+    private Integer id;
 
     @Column(name = "name", nullable = false)
-    private String name;            //user real name
+    private String name;
 
     @Column(name = "birth", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -38,13 +39,18 @@ public class ChildEntity {
     @Enumerated(EnumType.STRING)
     private Status status = Status.OFF;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name="animon_id")
-    private AnimonEntity mask;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "animon_id")
+    private AnimonEntity animon;
+
+    @Getter
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "child_animon_id")
+    private List<ChildAnimonEntity> animonList;
 
     public static ChildEntity of(UserEntity user, String name, Date birth, char gender, String school, int grade) {
         ChildEntity entity = new ChildEntity();

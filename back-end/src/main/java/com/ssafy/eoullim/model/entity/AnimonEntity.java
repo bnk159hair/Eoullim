@@ -15,7 +15,7 @@ public class AnimonEntity {
     @Id
     @Column(name = "animon_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id = null;      //PK
+    private Integer id;
 
     @Column(name = "image_path", nullable = false)
     private String imagePath;

@@ -40,24 +40,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChildService {
     private final ChildRepository childRepository;
-    private final UserRepository userRepository;
 
     @Value("${public-api.service-key}")
     private String serviceKey;
     private String schoolApiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_elesch_mskul_lc_api";
 
-    public void create(User user, String name, Date birth, char gender, String school, int grade) {
-        // TODO: 자녀 이름 중복 체크
-        // String -> Date Formatter (yyyyMMdd)
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-//        Date birthDate = null;
-//        try { birthDate = dateFormat.parse(birth); }
-//        catch (ParseException e) {  // ERROR: String이 yyyyMMdd 형식이 아닌 경우
-//            throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("birth is %s", birth));
-//        }
-
+    public void create(User user, String name, Date birth, char gender, String school, Integer grade) {
         childRepository.save(ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade));
-
     }
 
     public List<Child> list(Integer userId) {
@@ -67,20 +56,21 @@ public class ChildService {
     @Transactional
     public Child login(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         childEntity.setStatus(Status.ON);
         return Child.fromEntity(childEntity);
     }
+
     public Child info(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         return Child.fromEntity(childEntity);
     }
 
     @Transactional
     public void modify(Integer childId, ChildRequest request) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         childEntity.setName(request.getName());
         childEntity.setBirth(request.getBirth());
         childEntity.setGender(request.getGender());
@@ -90,16 +80,14 @@ public class ChildService {
 
     public void delete(Integer childId, String userName) {
         // ERROR : 자녀 ID 잘못 접근 시
-        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(()
-                -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         // ERROR : 현재 User가 지우려는 자녀 ID 권한이 없는 경우 (다른 사용자의 user를 제거하려 할 경우)
         if (!Objects.equals(childEntity.getUser().getUserName(), userName)) {
             throw new EoullimApplicationException(ErrorCode.INVALID_PERMISSION,
                     String.format("user %s has no permission with child %d", userName, childId));
         }
-        // TODO: 추후 자녀와 관련된 마스크나 영상 정보도 지울 것인지
         childRepository.deleteById(childId);
-        return;
     }
 
     public void checkSchool(String keyword) {
@@ -147,5 +135,4 @@ public class ChildService {
             throw new EoullimApplicationException(ErrorCode.CONNECTION_ERROR);
         }
     }
-
 }

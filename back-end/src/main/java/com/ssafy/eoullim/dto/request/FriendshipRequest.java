@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class FriendshipRequest {
-    private Integer myId;
+    private Integer childId;
     private Integer friendId;
 }

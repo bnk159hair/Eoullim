@@ -24,13 +24,11 @@ public class ChildController {
 
     @GetMapping
     public Response<List<Child>> list(Authentication authentication) {
-        System.out.println(authentication.getPrincipal());
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
         List<Child> childList = childService.list(user.getId());
         return Response.success(childList);
     }
 
-    // 자녀 등록
     @PostMapping
     public Response<Void> create(@RequestBody ChildRequest request, Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
@@ -45,7 +43,6 @@ public class ChildController {
         return Response.success();
     }
 
-    // 특정 자녀 선택
     @PostMapping("/login/{childId}")
     public Response<Child> login(@PathVariable Integer childId) {
         Child child = childService.login(childId);
@@ -53,19 +50,18 @@ public class ChildController {
     }
 
     @GetMapping("/{childId}")
-    public Response<?> info(@PathVariable Integer childId) {
+    public Response<Child> info(@PathVariable Integer childId) {
         Child child = childService.info(childId);
         return Response.success(child);
     }
 
     @PutMapping("/{childId}")
-    public Response<?> modify(@PathVariable Integer childId,
+    public Response<Void> modify(@PathVariable Integer childId,
                               @RequestBody ChildRequest request) {
         childService.modify(childId, request);
         return Response.success();
     }
 
-    // 특정 자녀 삭제
     @DeleteMapping("/{childId}")
     public Response<Void> delete(@PathVariable Integer childId, Authentication authentication) {
         childService.delete(childId, authentication.getName());
@@ -78,9 +74,5 @@ public class ChildController {
         childService.checkSchool(request.getKeyword());
         return Response.success();
     }
-
-    // 애니몬 조회
-
-    // 영상 조회
 
 }
