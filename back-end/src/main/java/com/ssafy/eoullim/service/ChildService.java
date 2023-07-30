@@ -40,24 +40,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChildService {
     private final ChildRepository childRepository;
-    private final UserRepository userRepository;
 
     @Value("${public-api.service-key}")
     private String serviceKey;
     private String schoolApiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_elesch_mskul_lc_api";
 
     public void create(User user, String name, Date birth, char gender, String school, int grade) {
-        // TODO: 자녀 이름 중복 체크
-        // String -> Date Formatter (yyyyMMdd)
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-//        Date birthDate = null;
-//        try { birthDate = dateFormat.parse(birth); }
-//        catch (ParseException e) {  // ERROR: String이 yyyyMMdd 형식이 아닌 경우
-//            throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("birth is %s", birth));
-//        }
-
         childRepository.save(ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade));
-
     }
 
     public List<Child> list(Integer userId) {
@@ -67,20 +56,20 @@ public class ChildService {
     @Transactional
     public Child login(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
         childEntity.setStatus(Status.ON);
         return Child.fromEntity(childEntity);
     }
     public Child info(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
         return Child.fromEntity(childEntity);
     }
 
     @Transactional
     public void modify(Integer childId, ChildRequest request) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("postId is %d", childId)));
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
         childEntity.setName(request.getName());
         childEntity.setBirth(request.getBirth());
         childEntity.setGender(request.getGender());
@@ -97,55 +86,6 @@ public class ChildService {
             throw new EoullimApplicationException(ErrorCode.INVALID_PERMISSION,
                     String.format("user %s has no permission with child %d", userName, childId));
         }
-        // TODO: 추후 자녀와 관련된 마스크나 영상 정보도 지울 것인지
         childRepository.deleteById(childId);
-        return;
     }
-
-    public void checkSchool(String keyword) {
-        try {
-            // API URL Build
-            StringBuilder urlBuilder = new StringBuilder(schoolApiUrl);
-            urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "="+serviceKey);
-            urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "="+URLEncoder.encode("1", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "="+URLEncoder.encode("100", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("type", "UTF-8") + "="+URLEncoder.encode("json", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("schoolSe", "UTF-8") + "="+URLEncoder.encode("초등학교", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("schoolNm", "UTF-8") + "="+URLEncoder.encode(keyword+"초등학교", "UTF-8"));
-            // http connection
-            URL url = new URL(urlBuilder.toString());
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Content-type", "application/json");
-            System.out.println("Response code: " + conn.getResponseCode());
-            BufferedReader rd;
-            if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {    // success
-                rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-            } else {
-                rd = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
-            }
-            StringBuilder outputStringBuilder = new StringBuilder();    // output store
-            String line;
-            while ((line = rd.readLine()) != null) {
-                outputStringBuilder.append(line);
-            }
-            rd.close();
-            conn.disconnect();
-            System.out.println(outputStringBuilder.toString());
-            // ERROR : 일치하는 초등학교가 없는 경우
-            if(outputStringBuilder.toString().contains("NODATA_ERROR")) {
-                System.out.println(" 여기 왔나요? ");
-                throw new EoullimApplicationException(ErrorCode.DATA_NOT_FOUND,
-                        String.format("%s Elementary school has no data", keyword));
-            }
-            else {          // 나온 결과물을 가지고 갈 수도 있음!! 지금은 쓸모 없으니 그냥 있나 없나만 확인
-                return;     // 일치하는 초등학교 있는 경우
-            }
-        } catch (EoullimApplicationException e) {   // ERROR : 위에서 throw한 DATA_NOT_FOUND throw
-            throw e;
-        } catch (Exception e) {                     // ERROR : Http Connection (api 호출 과정에서 error)
-            throw new EoullimApplicationException(ErrorCode.CONNECTION_ERROR);
-        }
-    }
-
 }

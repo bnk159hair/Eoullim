@@ -17,8 +17,5 @@ public interface ChildRepository  extends JpaRepository<ChildEntity, Integer> {
 //    @Query(value = "select * from ChildEntity where user_name = :userName and name = :name")
 //    Optional<ChildEntity> selectChildByName(@Param(value = "userName") String userName,
 //                                            @Param(value = "name") String name);
-//    @Query(value = "select c from ChildEntity c where c.user.id = (select u.id from UserEntity u where u.userName = :userName)")
-//    List<ChildEntity> findByUserName(@Param(value = "userName") String userName);
-
     List<ChildEntity> findAllByUserId(Integer userId);
 }

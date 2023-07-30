@@ -65,7 +65,6 @@ public class ChildController {
         return Response.success();
     }
 
-    // 특정 자녀 삭제
     @DeleteMapping("/{childId}")
     public Response<Void> delete(@PathVariable Integer childId, Authentication authentication) {
         childService.delete(childId, authentication.getName());
