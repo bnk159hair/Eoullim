@@ -20,12 +20,14 @@ import java.util.stream.Collectors;
 public class AnimonService {
     private final ChildRepository childRepository;
     private final ChildAnimonRepository childAnimonRepository;
-    public List<Animon> list(Integer childId) {
-        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND, String.format("childId is %d", childId)));
 
-        return childEntity.getAnimonList()
-                .stream().map(ChildAnimonEntity::getAnimonEntity).collect(Collectors.toList())
+    public List<Animon> list(Integer childId) {
+        return childAnimonRepository.findAnimonsByChildId(childId)
                 .stream().map(Animon::fromEntity).collect(Collectors.toList());
+//        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
+//                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
+//        return childEntity.getAnimonList()
+//                .stream().map(ChildAnimonEntity::getAnimonEntity).collect(Collectors.toList())
+//                .stream().map(Animon::fromEntity).collect(Collectors.toList());
     }
 }

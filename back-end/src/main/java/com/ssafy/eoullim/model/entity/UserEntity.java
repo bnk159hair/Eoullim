@@ -22,26 +22,22 @@ public class UserEntity {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id = null;      //primary Key
+    private Integer id;
 
     @Column(name = "name", nullable = false)
-    private String name;            //user real name
+    private String name;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @Column(name = "user_name", unique = true, nullable = false)
-    private String userName;        //userId
+    private String userName;
 
     @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
-
-//    @OneToMany
-//    @JoinColumn(name = "user_id")
-//    private List<ChildEntity> children = new ArrayList<>();
 
     public static UserEntity of(String name, String phoneNumber, String userName, String password) {
         return new UserEntity(

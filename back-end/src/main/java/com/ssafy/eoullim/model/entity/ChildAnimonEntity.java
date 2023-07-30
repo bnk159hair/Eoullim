@@ -15,13 +15,13 @@ public class ChildAnimonEntity {
     @Id
     @Column(name = "child_animon_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id = null;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
-    private ChildEntity childEntity;
+    private ChildEntity child;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "animon_id")
-    private AnimonEntity animonEntity;
+    private AnimonEntity animon;
 }

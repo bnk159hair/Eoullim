@@ -18,10 +18,10 @@ public class ChildEntity {
     @Id
     @Column(name = "child_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id = null;      //primary Key
+    private Integer id;
 
     @Column(name = "name", nullable = false)
-    private String name;            //user real name
+    private String name;
 
     @Column(name = "birth", nullable = false)
     @Temporal(TemporalType.DATE)

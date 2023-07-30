@@ -29,8 +29,14 @@ public class UserService {
 
     public User loadUserByUsername(String userName) throws UsernameNotFoundException {
         return userRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(
-                        () -> new EoullimApplicationException(ErrorCode.USER_NOT_FOUND, String.format("userName is %s", userName))
-                );
+                () -> new EoullimApplicationException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    public void join(String userName, String password, String name, String phoneNumber) {
+        userRepository.findByUserName(userName).ifPresent(it -> {
+            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME);
+        });
+        userRepository.save(UserEntity.of(name, phoneNumber, userName, encoder.encode(password)));
     }
 
     public String login(String userName, String password) {
@@ -42,42 +48,23 @@ public class UserService {
     }
 
     @Transactional
-    public void join(String userName, String password, String name, String phoneNumber) {
-        checkId(userName);  // 아이디 중복 체크
-
-        // 비밀번호 암호화해서 DB에 저장
-        userRepository.save(UserEntity.of(name, phoneNumber, userName, encoder.encode(password)));
-        return;
-    }
-
-    @Transactional
-    public void modify(Integer userId, String curPassword, String newPassword) {
-        // UserId와 일치하는 사용자 가져오기
-        User user = User.fromEntity(userRepository.findById(userId).orElseThrow(
-                ()-> {   // ERROR : UserID에 일치하는 사용자 X
-                    throw new EoullimApplicationException(ErrorCode.USER_NOT_FOUND, String.format("userId is %s", userId));
-                }));
-        // ERROR : 사용자가 입력한 현재 비밀번호 틀린 경우
+    public void modify(User user, String curPassword, String newPassword) {
         if (!encoder.matches(curPassword, user.getPassword())) {
-            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD, String.format("userId is %s", userId));
+            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
         }
-        // user에 비밀번호 바꾼 후 저장
         user.setPassword(encoder.encode(newPassword));
         userRepository.save(UserEntity.of(user));
-        return;
     }
 
-    // ID 중복 체크
     public void checkId(String userName) {
-        // ERROR : Duplicated ID
         userRepository.findByUserName(userName).ifPresent(it -> {
-            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName is %s", userName));
+            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME);
         });
     }
 
     public void checkPw(String pwRequest, String pwCorrect) {
         if (!encoder.matches(pwRequest, pwCorrect)) {
-            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD, String.format("userName is %s", pwRequest));
+            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
         }
     }
 
