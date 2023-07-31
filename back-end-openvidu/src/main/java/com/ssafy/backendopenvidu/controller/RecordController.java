@@ -105,7 +105,17 @@ public class RecordController {
         //   .hasVideo(hasVideo)
         //   .build();
 
-
+        // System.out.println(
+        //   "Starting recording for session " +
+        //   sessionId +
+        //   " with properties {outputMode=" +
+        //   outputMode +
+        //   ", hasAudio=" +
+        //   hasAudio +
+        //   ", hasVideo=" +
+        //   hasVideo +
+        //   "}"
+        // );
 
         try {
             // Recording recording = openvidu.startRecording(sessionId, properties);
