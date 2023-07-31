@@ -41,13 +41,13 @@ public class UserController {
         return Response.success();
     }
     
-    @GetMapping("/id-check")    // ID 중복 체크
+    @PostMapping("/id-check")    // ID 중복 체크
     public Response<Void> checkId(@RequestBody UserIdCheckRequest request) {
         userService.checkId(request.getUserName());
         return Response.success();
     }
     
-    @GetMapping("/pw-check")    // User Password 재확인
+    @PostMapping("/pw-check")    // User Password 재확인
     public Response<Void> checkPw(@RequestBody UserPwCheckRequest request, Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
         userService.checkPw(request.getPassword(), user.getPassword());

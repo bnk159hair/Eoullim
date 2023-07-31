@@ -2,11 +2,13 @@ package com.ssafy.eoullim.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ChildRequest {
     // 자녀 정보
     private String name;        // front 단에서 비동기 처리
