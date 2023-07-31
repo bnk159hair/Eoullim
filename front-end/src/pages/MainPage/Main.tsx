@@ -1,13 +1,11 @@
 import React from 'react';
 import LoginUser from '../../components/main/LoginUser';
 import { useNavigate } from 'react-router-dom';
-import joinSession from '../../components/Session/Viedo';
 
 const Main = () => {
   const navigate = useNavigate();
 
   const getNewFriend = () => {
-    joinSession();
     navigate('/session');
   };
 
