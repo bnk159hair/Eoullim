@@ -61,6 +61,13 @@ public class ChildService {
         return Child.fromEntity(childEntity);
     }
 
+    @Transactional
+    public void logout(Integer childId) {
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
+        childEntity.setStatus(Status.OFF);
+    }
+
     public Child info(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
                 new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
