@@ -38,7 +38,7 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
         //api 테스트 시에 주소 추가
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/*/users/join", "/api/*/users/login").permitAll()
+                .antMatchers("/api/*/users/join", "/api/*/users/login", "/api/*/users/id-check").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
