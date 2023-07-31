@@ -19,6 +19,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 //		Set max age to 1800 seconds (30 minutes).
         registry.addMapping("/**")
                 .allowedOrigins("*")
+//                .allowedOrigins("http://localhost:3000")
 //		        .allowedOrigins("http://localhost:8080", "http://localhost:8081")
                 .allowedMethods(HttpMethod.GET.name(),
                         HttpMethod.POST.name(),
