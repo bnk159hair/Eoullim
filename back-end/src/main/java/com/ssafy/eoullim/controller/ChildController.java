@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/children")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ChildController {
 
     private final ChildService childService;
@@ -47,6 +48,12 @@ public class ChildController {
     public Response<Child> login(@PathVariable Integer childId) {
         Child child = childService.login(childId);
         return Response.success(child);
+    }
+
+    @PostMapping("/logout/{childId}")
+    public Response<Void> logout(@PathVariable Integer childId) {
+        childService.logout(childId);
+        return Response.success();
     }
 
     @GetMapping("/{childId}")
