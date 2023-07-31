@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { loggedInUserIdState } from '../../atoms/Login';
+import {LoginTagContainer,LoginInput} from './LoginTag.styles'
 
 
 const LoginTag = () => {
@@ -14,7 +15,7 @@ const LoginTag = () => {
   // const [loggedInUserId, setLoggedInUserId] = useRecoilState(loggedInUserIdState);
 
   const handleLogin = () => { 
-    axios.post(`${BASEURL}/login`, { userName, password })
+    axios.post(`${BASEURL}/users/login`, { userName, password },{withCredentials: true})
       .then((response) => {
         navigate('/profile');
       })
@@ -30,12 +31,16 @@ const LoginTag = () => {
 
   return (
     <div>
-      <h1>로그인</h1>
+      <LoginTagContainer>
+      <br />
+      <br />
       <div>
-        <input type="text" placeholder="아이디" value={userName} onChange={(e) => setUsername(e.target.value)} />
+        <LoginInput type="text" placeholder="아이디" value={userName} onChange={(e) => setUsername(e.target.value)} />
       </div>
+      <br />
+      <br />
       <div>
-        <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <LoginInput type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
       <div>
         <button onClick={handleLogin}>로그인</button>
@@ -43,6 +48,7 @@ const LoginTag = () => {
       <div>
         <button onClick={handleSignup}>회원가입</button>
       </div>
+      </LoginTagContainer>
     </div>
   );
 };

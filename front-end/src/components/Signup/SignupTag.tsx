@@ -49,7 +49,7 @@ const SignUpTag = () => {
       alert(response.data.resultCode ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다.");
     } catch (error) {
       console.error("아이디 중복 체크 에러:", error);
-      alert("아이디 중복 체크에 실패했습니다.");
+      alert("이미 사용 중인 아이디입니다.");
     }
   };
 

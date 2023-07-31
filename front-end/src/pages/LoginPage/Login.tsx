@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import LoginTag from '../../components/Login/LoginTag';
+import {LoginPageContainer,LoginTagContainer} from './Login.styles'
 
 const Login = () => {
 
   return (
-    <>
-      <LoginTag/>
-    </>
+    <LoginPageContainer>
+      <LoginTagContainer>
+        <LoginTag/>
+      </LoginTagContainer>
+    </LoginPageContainer>
   );
 }
 
