@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/friendship")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class FriendshipController {
     private final FriendshipService friendshipService;
 

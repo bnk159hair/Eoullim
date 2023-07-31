@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/animons")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class AnimonController {
 
     private final AnimonService animonService;

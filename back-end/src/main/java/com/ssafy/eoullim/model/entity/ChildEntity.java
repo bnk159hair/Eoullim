@@ -47,10 +47,10 @@ public class ChildEntity {
     @JoinColumn(name = "animon_id")
     private AnimonEntity animon;
 
-    @Getter
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "child_animon_id")
-    private List<ChildAnimonEntity> animonList;
+//    @Getter
+//    @OneToMany(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "child_animon_id")
+//    private List<ChildAnimonEntity> animonList;
 
     public static ChildEntity of(UserEntity user, String name, Date birth, char gender, String school, int grade) {
         ChildEntity entity = new ChildEntity();
