@@ -38,6 +38,8 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
 //        http.cors().disable(); // CORS 비활성화 XXX
         //api 테스트 시에 주소 추가
         http.csrf().disable()
+                .cors() // CORS 설정 추가
+                .and()
                 .authorizeRequests()
                 .antMatchers("/api/*/users/join", "/api/*/users/login", "/api/*/users/id-check").permitAll()
                 .antMatchers("/api/**").authenticated()
