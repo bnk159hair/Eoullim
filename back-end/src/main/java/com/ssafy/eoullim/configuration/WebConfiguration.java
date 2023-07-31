@@ -17,13 +17,19 @@ public class WebConfiguration implements WebMvcConfigurer {
 //		Allow "simple" methods GET, HEAD and POST.
 //		Allow all headers.
 //		Set max age to 1800 seconds (30 minutes).
-        registry.addMapping("/**").allowedOrigins("*")
-//		.allowedOrigins("http://localhost:8080", "http://localhost:8081")
-                .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(),
-                        HttpMethod.DELETE.name(), HttpMethod.HEAD.name(), HttpMethod.OPTIONS.name(),
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+//		        .allowedOrigins("http://localhost:8080", "http://localhost:8081")
+                .allowedMethods(HttpMethod.GET.name(),
+                        HttpMethod.POST.name(),
+                        HttpMethod.PUT.name(),
+                        HttpMethod.DELETE.name(),
+                        HttpMethod.HEAD.name(),
+                        HttpMethod.OPTIONS.name(),
                         HttpMethod.PATCH.name())
-//			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
-                .allowCredentials(true) // 쿠키 인증 요청 허용
+                .allowedHeaders("*") // 요청 헤더 허용 (원하는 헤더를 지정해도 됨)
+//			    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
+//              .allowCredentials(true) // 쿠키 인증 요청 허용
                 .maxAge(3000);          // 원하는 시간만큼 pre-flight 리퀘스트를 캐싱
     }
 
