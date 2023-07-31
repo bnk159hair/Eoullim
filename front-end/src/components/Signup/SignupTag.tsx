@@ -1,134 +1,122 @@
-import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { signupState, UserData } from '../../atoms/signupAtom';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate, NavLink } from "react-router-dom";
 
-interface SignupProps {
-  onSignup: (userData: UserData) => void;
-}
-
-const SignupTag: React.FC<SignupProps> = ({ onSignup }) => {
-  const [userData, setUserData] = useRecoilState<UserData>(signupState);
-  const [usernameError, setUsernameError] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+const SignUpTag = () => {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [resultCode, setIsresultCode] = useState(false);
+  const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const navigate = useNavigate();
+  const BASEURL = 'https://i9c207.p.ssafy.io/api/v1';
+
+  const handleSignUp = async () => {
+    if (!resultCode) {
+      alert("아이디 중복 체크를 해주세요.");
+      return;
+    }
+
+    if (!userName || !password || !name || !phoneNumber) {
+      alert("모든 정보를 입력해주세요.");
+      return;
+    }
+
+    if (!isPasswordMatch) {
+      alert("비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      const signUpData = { userName , password, name, phoneNumber };
+      const response = await axios.post(`${BASEURL}/users/join`, signUpData);
+      console.log("회원가입 성공:", response.data);
+      navigate("/login");
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+    }
+  };
 
   const handleIdCheck = async () => {
     try {
-      setIsLoading(true);
-      const response = await axios.get(`/users/id-check?username=${userData.username}`);
-      if (response.data.exists) {
-        setUsernameError('이미 사용 중인 아이디입니다.');
-      } else {
-        setUsernameError('');
-      }
+      const response = await axios.post(`${BASEURL}/users/id-check`, {
+        userName: userName  
+      });
+      setIsresultCode(response.data.resultCode);
+      console.log("아이디 중복 체크 결과:", response.data.resultCode);
+      alert(response.data.resultCode ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다.");
     } catch (error) {
-      console.error('아이디 중복 체크 오류:', error);
-    } finally {
-      setIsLoading(false);
+      console.error("아이디 중복 체크 에러:", error);
+      alert("아이디 중복 체크에 실패했습니다.");
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-      setIsLoading(true);
-      const response = await axios.post('/users/join', userData);
-      console.log('회원가입 성공:', response.data);
-      onSignup(userData);
-      navigate('/login');
-    } catch (error) {
-      console.error('회원가입 오류:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handlePasswordConfirmation = () => {
+    setIsPasswordMatch(password === passwordConfirmation);
   };
-
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setUserData((prevUserData) => ({
-      ...prevUserData,
-      [name]: value,
-    }));
-    if (name === 'confirmPassword') {
-      if (value !== userData.password) {
-        setPasswordError('비밀번호가 일치하지 않습니다.');
-      } else {
-        setPasswordError('');
-      }
-    }
-  };
-
-  const { guardianName, phoneNumber, username, password} = userData;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <div>
-        <label htmlFor="username">아이디:</label>
         <input
           type="text"
-          id="username"
-          name="username"
-          value={username}
-          onChange={handleInput}
-          required
+          placeholder="아이디"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
         />
-        <button type="button" onClick={handleIdCheck} disabled={isLoading}>
-          중복 체크
+        <button onClick={handleIdCheck} disabled={resultCode}>
+          {resultCode ? "중복체크 완료" : "아이디 중복 체크"}
         </button>
-        {usernameError && <p>{usernameError}</p>}
+        {resultCode && (
+          <div style={{ color: "green" }}>사용 가능한 아이디입니다.</div>
+        )}
       </div>
       <div>
-        <label htmlFor="password">비밀번호:</label>
         <input
           type="password"
-          id="password"
-          name="password"
+          placeholder="비밀번호"
           value={password}
-          onChange={handleInput}
-          required
+          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <div>
-        <label htmlFor="confirmPassword">비밀번호 확인:</label>
         <input
           type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          onChange={handleInput}
-          required
+          placeholder="비밀번호 확인"
+          value={passwordConfirmation}
+          onChange={(e) => setPasswordConfirmation(e.target.value)}
+          onBlur={handlePasswordConfirmation}
         />
-        {passwordError && <p>{passwordError}</p>}
+        {!isPasswordMatch && (
+          <div style={{ color: "red" }}>비밀번호가 일치하지 않습니다.</div>
+        )}
       </div>
       <div>
-        <label htmlFor="name">이름:</label>
         <input
           type="text"
-          id="name"
-          name="guardianName" // 이름 입력란의 name 속성을 "guardianName"으로 수정
-          value={guardianName}
-          onChange={handleInput}
-          required
+          placeholder="이름"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div>
-        <label htmlFor="phoneNumber">전화번호:</label>
         <input
           type="text"
-          id="phoneNumber"
-          name="phoneNumber"
+          placeholder="전화번호"
           value={phoneNumber}
-          onChange={handleInput}
-          required
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </div>
-      <button type="submit" disabled={isLoading}>
-        회원가입
-      </button>
-    </form>
+      <button onClick={handleSignUp}>회원가입</button>
+      <div>
+        <NavLink to="/login">
+          <button>이미 계정이 있으신가요? 로그인</button>
+        </NavLink>
+      </div>
+    </div>
   );
 };
 
-export default SignupTag;
+export default SignUpTag;

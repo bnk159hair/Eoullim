@@ -1,59 +1,49 @@
+// LoginTag.tsx
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { loggedInUserIdState } from '../../atoms/Login';
 
-interface LoginProps {
-  onLogin: (username: string, password: string) => void;
-}
 
-const LoginTag: React.FC<LoginProps> = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
+const LoginTag = () => {
+  const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const BASEURL = 'https://i9c207.p.ssafy.io/api/v1';
+  // const [loggedInUserId, setLoggedInUserId] = useRecoilState(loggedInUserIdState);
 
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
+  const handleLogin = () => { 
+    axios.post(`${BASEURL}/login`, { userName, password })
+      .then((response) => {
+        navigate('/profile');
+      })
+      .catch((error) => {
+      
+        alert('아이디와 비밀번호를 확인해주세요.');
+      });
   };
 
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    onLogin(username, password);
-  };
-
-  const handleSignUpClick = () => {
-    navigate('/signup'); // Redirect to the /signup page
-  };
-  
-  const handleSign = () => {
-    navigate('/profil');
+  const handleSignup = () => {
+    navigate('/signup');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
+      <h1>로그인</h1>
       <div>
-        <label htmlFor="username">아이디:</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={handleUsernameChange}
-        />
+        <input type="text" placeholder="아이디" value={userName} onChange={(e) => setUsername(e.target.value)} />
       </div>
       <div>
-        <label htmlFor="password">비밀번호:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
+        <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
-      <button type="submit" onClick={handleSign}>로그인</button>
-      <button type="button" onClick={handleSignUpClick}>회원가입</button>
-    </form>
+      <div>
+        <button onClick={handleLogin}>로그인</button>
+      </div>
+      <div>
+        <button onClick={handleSignup}>회원가입</button>
+      </div>
+    </div>
   );
 };
 
