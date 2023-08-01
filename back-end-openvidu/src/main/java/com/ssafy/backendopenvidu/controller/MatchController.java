@@ -112,25 +112,30 @@ public class MatchController {
             @RequestBody MatchRequest matchRequest
             ) throws OpenViduJavaClientException, OpenViduHttpException {
         OpenViduRole role = OpenViduRole.PUBLISHER;
-
         // Build connectionProperties object with the serverData and the role
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC)
                 .role(role).data("user_data").build();
 
+
+
         if(matchingQueue.isEmpty()){ // 비어있다면
-            String sessionId = matchRequest.getChildId().toString()+matchRequest.getName();
+            String sessionId = matchRequest.getChildId().toString()+matchRequest.getGrade();
+            System.out.println(sessionId);
             RecordingProperties recordingProperties = new RecordingProperties.Builder()
-                    // .outputMode(Recording.OutputMode.COMPOSED)
                     .outputMode(Recording.OutputMode.INDIVIDUAL)
                     .resolution("640x480")
                     .frameRate(24)
                     .name("VideoInfo")
                     .build();
+            System.out.println("===========================");
+
             SessionProperties sessionProperties = new SessionProperties.Builder()
                     .defaultRecordingProperties(recordingProperties)
                     .customSessionId(sessionId)
                     .recordingMode(RecordingMode.MANUAL)
                     .build();
+            System.out.println("===========================");
+
             Session session = openvidu.createSession(sessionProperties);
 
             String token = session.createConnection(connectionProperties).getToken();
@@ -139,24 +144,32 @@ public class MatchController {
             newRoom.setSessionId(session.getSessionId());
             matchingQueue.add(newRoom);
             Map<String, String> result = new HashMap<>();
-            result.put("sessionId", sessionId);
+            result.put("sessionId", session.getSessionId());
             result.put("token", token);
             return new ResponseEntity<>(result, HttpStatus.OK);
 
         }else{ // 비어있지 않다면
+            System.out.println("--------------------------");
+
             Room existingRoom = matchingQueue.poll();
             String sessionId = existingRoom.getSessionId();
+
             Session session = openvidu.getActiveSession(sessionId);
             if (session == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+            System.out.println("--------------------------");
+
             String token = session.createConnection(connectionProperties).getToken();
 
             Map<String, String> result = new HashMap<>();
             result.put("sessionId", sessionId);
             result.put("token", token);
-
+            System.out.println(sessionId);
+            System.out.println(token);
             Recording recording = openvidu.startRecording(sessionId);
+            System.out.println("--------------------------");
+
             existingRoom.setRecordingId(recording.getId());
             mapRooms.put(sessionId, existingRoom);
             return new ResponseEntity<>(result, HttpStatus.OK);
