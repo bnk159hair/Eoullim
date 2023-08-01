@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { load } from "@tensorflow-models/facemesh";
-import * as THREE from "three";
-import { TRIANGULATION } from "../assets/data/triangulation"
-import { uvs } from "../assets/data/frontProjectionUVMap";
-import { positionBufferData } from "../assets/data/positionBufferData";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { load } from '@tensorflow-models/facemesh';
+import * as THREE from 'three';
+import { TRIANGULATION } from '../assets/data/triangulation';
+import { uvs } from '../assets/data/frontProjectionUVMap';
+import { positionBufferData } from '../assets/data/positionBufferData';
 
 export const useFaceMeshModel = (): any => {
   const [model, setModel] = useState<any>(undefined);
@@ -110,9 +110,11 @@ class FaceCanvas {
   static get EYE_VERTICES() {
     return [
       // LEFT EYE
-      133, 173, 157, 158, 159, 160, 161, 246, 33, 7, 163, 144, 145, 153, 154, 155,
+      133, 173, 157, 158, 159, 160, 161, 246, 33, 7, 163, 144, 145, 153, 154,
+      155,
       // RIGHT EYE
-      362, 398, 384, 385, 386, 387, 388, 466, 263, 249, 390, 373, 374, 380, 381, 382,
+      362, 398, 384, 385, 386, 387, 388, 466, 263, 249, 390, 373, 374, 380, 381,
+      382,
     ];
   }
   _addCamera() {
@@ -134,7 +136,9 @@ class FaceCanvas {
     const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.2);
     this._scene.add(light);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(this._halfW, this._halfH * 0.5, -1000).normalize();
+    directionalLight.position
+      .set(this._halfW, this._halfH * 0.5, -1000)
+      .normalize();
     this._scene.add(directionalLight);
   }
 
@@ -142,10 +146,10 @@ class FaceCanvas {
     this._geometry = new THREE.BufferGeometry();
     this._geometry.setIndex(TRIANGULATION);
     this._geometry.setAttribute(
-      "position",
+      'position',
       new THREE.Float32BufferAttribute(positionBufferData, 3)
     );
-    this._geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+    this._geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     this._geometry.computeVertexNormals();
   }
 
@@ -178,7 +182,7 @@ class FaceCanvas {
 
   render(positionBufferData: any) {
     this._geometry.setAttribute(
-      "position",
+      'position',
       new THREE.Float32BufferAttribute(positionBufferData, 3)
     );
     this._geometry.attributes.position.needsUpdate = true;

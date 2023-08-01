@@ -9,7 +9,6 @@ import Profile from './pages/ProfilePage/ProfileSelect';
 import Stream from './pages/StreamPage/Stream';
 import Friends from './pages/Friendspage/Friends';
 
-
 function App() {
   return (
     <div>
@@ -17,7 +16,7 @@ function App() {
         <RecoilRoot>
           <Router>
             <Routes>
-              <Route path="/" element={<Main />} /> 
+              <Route path="/" element={<Main />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<Profile />} />
