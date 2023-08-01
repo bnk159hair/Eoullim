@@ -1,16 +1,35 @@
 import styled from "styled-components";
 import tw from "twin.macro";
-import LoginBox from "../../assets/box/loginbox.png"
+import LoginBox from "../../assets/box/loginbox.png";
 
 export const LoginTagContainer = styled.div`
     width: 560px;
     height: 300px;
-    padding: 50px;      
+    padding: 50px;
     background-size: cover;
-    background-image: url(${LoginBox}); // 이미지 경로를 문자열로 감싸줍니다.
+    background-image: url(${LoginBox});
+    display: grid;
+    grid-template-columns: 300px 100px;
+    gap: 10px;
+    justify-content: space-evenly;
+    align-content: center;
 `;
+
 export const LoginInput = styled.input`
-width : 200px
-padding: 60px
-${tw`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-`
+  width: 250px;
+  padding: 10px;
+  border: solid 2px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+`;
+
+export const LoginButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 250px;
+`;
+
+export const LoginButton = styled.button`
+  ${tw`bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4`}
+
+`;
