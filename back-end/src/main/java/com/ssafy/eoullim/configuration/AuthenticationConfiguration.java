@@ -23,11 +23,9 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().regexMatchers("^(?!/api/).*");
-
     }
 
     @Override
