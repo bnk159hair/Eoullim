@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -35,19 +38,28 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().disable(); // CORS 비활성화
-        //api 테스트 시에 주소 추가
+        //api 테스트 시에 주
         http.csrf().disable()
+                .cors() // CORS 설정 추가
+                .and()
+
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+
+                .and()
                 .authorizeRequests()
-                .antMatchers("/api/*/users/join", "/api/*/users/login", "/api/*/users/id-check").permitAll()
+                .antMatchers("/api/*/users/join").permitAll()       // 회원가입은 모든 도메인에서 허용
+                .antMatchers("/api/*/users/login").permitAll()      // 로그인은 모든 도메인에서 허용
+                .antMatchers("/api/*/users/id-check").permitAll()   // 아이디 체크 역시 모든 도메인에서 허용
+
+//                .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
+
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+
                 .and()
                 .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
     }
@@ -57,9 +69,19 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList(
+                HttpMethod.GET.name(),
+                HttpMethod.POST.name(),
+                HttpMethod.PUT.name(),
+                HttpMethod.DELETE.name(),
+                HttpMethod.HEAD.name(),
+                HttpMethod.OPTIONS.name(),
+                HttpMethod.PATCH.name()));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+//        configuration.addAllowedOrigin("*");
+//        configuration.addAllowedHeader("*");
+//        configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
