@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../../components/Session/Loading';
-import useOpenVidu from '../../hooks/useOpenVidu';
+import Loading from '../../components/stream/Loading';
+import { useOpenVidu } from '../../hooks/useOpenVidu';
 
 const Session = () => {
   const [loading, setLoading] = useState(true); // 전역 변수로 두고 두 명 모두 참가하면 false로 변경
   const navigate = useNavigate();
 
-  // const { publisher, streamList, onChangeAnimonStatus, onChangeMicStatus } =
-  useOpenVidu('1', '1');
+  console.log('오픈비두 시작');
+  const { publisher, streamList } = useOpenVidu('userId');
 
   setTimeout(() => {
     setLoading(false);

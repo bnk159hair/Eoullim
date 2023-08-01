@@ -1,28 +1,17 @@
-import React, { useRef, useEffect } from "react";
-import "./StreamComponent.css";
+import { useRef, useEffect } from 'react';
+import './StreamComponent.css';
 
-interface OvVideoComponentProps {
-  user: {
-    streamManager: any; // Replace `any` with the actual type of `streamManager`
-    getStreamManager: () => any; // Replace `any` with the actual return type of `getStreamManager`
-  };
-  mutedSound: boolean; // Replace `boolean` with the actual type of `mutedSound`
-}
-
-const OvVideoComponent: React.FC<OvVideoComponentProps> = ({
-  user,
-  mutedSound,
-}) => {
+const OvVideoComponent = (user: any) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (user && user.streamManager && videoRef.current) {
-      console.log("PROPS: ", user);
+      console.log('PROPS: ', user);
       user.getStreamManager().addVideoElement(videoRef.current);
     }
 
     if (user && user.streamManager.session && user && videoRef.current) {
-      user.streamManager.session.on("signal:userChanged", (event: any) => {
+      user.streamManager.session.on('signal:userChanged', (event: any) => {
         const data = JSON.parse(event.data);
         if (data.isScreenShareActive !== undefined) {
           user.getStreamManager().addVideoElement(videoRef.current);
@@ -40,9 +29,9 @@ const OvVideoComponent: React.FC<OvVideoComponentProps> = ({
   return (
     <video
       autoPlay={true}
-      id={"video-" + user.getStreamManager().stream.streamId}
+      id={'video-' + user.getStreamManager().stream.streamId}
       ref={videoRef}
-      muted={mutedSound}
+      muted={false}
     />
   );
 };
