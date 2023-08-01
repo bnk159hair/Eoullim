@@ -4,14 +4,19 @@ import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.model.entity.UserEntity;
+import com.ssafy.eoullim.repository.UserCacheRepository;
 import com.ssafy.eoullim.repository.UserRepository;
 import com.ssafy.eoullim.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+    private final UserCacheRepository userCacheRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -27,8 +33,9 @@ public class UserService {
     private Long expiredTimeMs;
 
     public User loadUserByUsername(String userName) throws UsernameNotFoundException {
-        return userRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(
-                () -> new EoullimApplicationException(ErrorCode.USER_NOT_FOUND));
+        return userCacheRepository.getUser(userName).orElseGet(
+                () -> userRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(
+                        () -> new EoullimApplicationException(ErrorCode.USER_NOT_FOUND)));
     }
 
     public void join(String userName, String password, String name, String phoneNumber) {
@@ -44,6 +51,13 @@ public class UserService {
             throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
         }
         return JwtTokenUtils.generateAccessToken(userName, secretKey, expiredTimeMs);
+    }
+
+    public void logout(String userName){
+        // 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장하기
+        Long expiration = JwtTokenUtils.getExpiration(tokenRequestDto.getAccessToken());
+        redisTemplate.opsForValue().set(tokenRequestDto.getAccessToken(),"logout", expiration, TimeUnit.MILLISECONDS);
+
     }
 
     @Transactional
