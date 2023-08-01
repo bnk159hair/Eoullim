@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter //setter 추가
+//@Setter //setter 추가
 @Getter
 @Entity
 @Table(name = "user")
