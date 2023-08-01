@@ -3,6 +3,7 @@ package com.ssafy.eoullim.controller;
 import com.ssafy.eoullim.dto.request.ChildSchoolRequest;
 import com.ssafy.eoullim.dto.request.ChildRequest;
 import com.ssafy.eoullim.dto.response.Response;
+import com.ssafy.eoullim.model.Animon;
 import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.service.ChildService;
@@ -73,6 +74,18 @@ public class ChildController {
     public Response<Void> delete(@PathVariable Integer childId, Authentication authentication) {
         childService.delete(childId, authentication.getName());
         return Response.success();
+    }
+
+    @GetMapping("/{childId}/animons")
+    public Response<List<Animon>> animonlist(@PathVariable Integer childId) {
+        List<Animon> animonList = childService.animonList(childId);
+        return Response.success(animonList);
+    }
+
+    @GetMapping("/{childId}/animons/{animonId}")
+    public Response<Animon> selectAnimon(@PathVariable Integer childId, @PathVariable Integer animonId) {
+        Animon animon = childService.selectAnimon(childId, animonId);
+        return Response.success(animon);
     }
 
     // 학교 API
