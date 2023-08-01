@@ -34,6 +34,12 @@ public class UserController {
         return Response.success(token);
     }
 
+    @GetMapping("/logout")
+    public Response<Void> logout(Authentication authentication) {
+//        String token = userService.logout();
+        return Response.success();
+    }
+
     @PutMapping
     public Response<Void> modify(@RequestBody UserModifyRequest request, Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);

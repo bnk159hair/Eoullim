@@ -4,11 +4,15 @@ import com.ssafy.eoullim.dto.request.ChildRequest;
 import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
+import com.ssafy.eoullim.model.Animon;
 import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.Status;
 import com.ssafy.eoullim.model.User;
+import com.ssafy.eoullim.model.entity.AnimonEntity;
+import com.ssafy.eoullim.model.entity.ChildAnimonEntity;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.model.entity.UserEntity;
+import com.ssafy.eoullim.repository.ChildAnimonRepository;
 import com.ssafy.eoullim.repository.ChildRepository;
 import com.ssafy.eoullim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +44,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChildService {
     private final ChildRepository childRepository;
+    private final ChildAnimonRepository childAnimonRepository;
 
     @Value("${public-api.service-key}")
     private String serviceKey;
@@ -95,6 +100,26 @@ public class ChildService {
                     String.format("user %s has no permission with child %d", userName, childId));
         }
         childRepository.deleteById(childId);
+    }
+
+    public List<Animon> animonList(Integer childId) {
+        return childAnimonRepository.findAnimonsByChildId(childId)
+                .stream().map(Animon::fromEntity).collect(Collectors.toList());
+//        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
+//                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
+//        return childEntity.getAnimonList()
+//                .stream().map(ChildAnimonEntity::getAnimonEntity).collect(Collectors.toList())
+//                .stream().map(Animon::fromEntity).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Animon selectAnimon(Integer childId, Integer animonId) {
+        ChildAnimonEntity childAnimonEntity = childAnimonRepository.findByChildIdAndAnimonId(childId, animonId).orElseThrow(() ->
+                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
+        AnimonEntity animonEntity = childAnimonEntity.getAnimon();
+        ChildEntity childEntity = childAnimonEntity.getChild();
+        childEntity.setAnimon(animonEntity);
+        return Animon.fromEntity(animonEntity);
     }
 
     public void checkSchool(String keyword) {
