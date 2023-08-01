@@ -1,4 +1,4 @@
-package com.ssafy.eoullim.configuration;
+package com.ssafy.eoullim.filter;
 
 import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.service.UserService;
@@ -40,7 +40,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 log.info("Request with {} check the query param", request.getRequestURI());
                 token = request.getQueryString().split("=")[1].trim();
             } else if (header == null || !header.startsWith("Bearer ")) {
-                log.error("Authorization Header does not start with Bearer {}", request.getRequestURI());
+//                log.error("Authorization Header does not start with Bearer {}", request.getRequestURI());
                 chain.doFilter(request, response);
                 return;
             } else {
