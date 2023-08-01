@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface ChildRepository  extends JpaRepository<ChildEntity, Integer> {
-    @Query(value = "select l.child from ChildEntity c where c.child.id in (:childId, :friendId)")
-    List<ChildEntity> findChildren(@Param("childId") Integer childId, @Param("friendId") Integer friendId);
+//    @Query(value = "select l.child from ChildEntity c where c.child.id in (:childId, :friendId)")
+//    List<ChildEntity> findChildren(@Param("childId") Integer childId, @Param("friendId") Integer friendId);
 
 //    // 자녀 이름 중복 검사
 //    @Query(value = "select * from ChildEntity where user_name = :userName and name = :name")
