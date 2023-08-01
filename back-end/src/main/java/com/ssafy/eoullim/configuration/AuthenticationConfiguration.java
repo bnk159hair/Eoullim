@@ -38,7 +38,6 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.cors().disable(); // CORS 비활성화 XXX
         //api 테스트 시에 주
         http.csrf().disable()
                 .cors() // CORS 설정 추가
