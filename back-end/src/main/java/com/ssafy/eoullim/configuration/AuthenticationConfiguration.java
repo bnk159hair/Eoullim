@@ -39,20 +39,28 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.cors().disable(); // CORS 비활성화 XXX
-        //api 테스트 시에 주소 추가
+        //api 테스트 시에 주
         http.csrf().disable()
                 .cors() // CORS 설정 추가
                 .and()
+
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+
+                .and()
                 .authorizeRequests()
-                .antMatchers("/api/*/users/join", "/api/*/users/login", "/api/*/users/id-check").permitAll()
+                .antMatchers("/api/*/users/join").permitAll()       // 회원가입은 모든 도메인에서 허용
+                .antMatchers("/api/*/users/login").permitAll()      // 로그인은 모든 도메인에서 허용
+                .antMatchers("/api/*/users/id-check").permitAll()   // 아이디 체크 역시 모든 도메인에서 허용
+
+//                .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
+
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+
                 .and()
                 .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
     }
