@@ -112,14 +112,18 @@ public class MatchController {
             @RequestBody MatchRequest matchRequest
             ) throws OpenViduJavaClientException, OpenViduHttpException {
         OpenViduRole role = OpenViduRole.PUBLISHER;
+        Map<String, Object> params = new HashMap<>();
         // Build connectionProperties object with the serverData and the role
-        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC)
-                .role(role).data("user_data").build();
-
+//        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC)
+//                .role(role).data("user_data").build();
+        ConnectionProperties connectionProperties = ConnectionProperties
+                .fromJson(params)
+                .build();
 
 
         if(matchingQueue.isEmpty()){ // 비어있다면
             String sessionId = matchRequest.getChildId().toString()+matchRequest.getGrade();
+//            String sessionId = "SessionA";
             System.out.println(sessionId);
             RecordingProperties recordingProperties = new RecordingProperties.Builder()
                     .outputMode(Recording.OutputMode.INDIVIDUAL)
