@@ -8,4 +8,5 @@ export const ProfileCreateBox=styled.div `
     background-image : url(${CreateBox});
     background-size: cover;
     border-radius: 30%;
+    border: solid 2px;
 `

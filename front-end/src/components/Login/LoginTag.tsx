@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { loggedInUserIdState } from '../../atoms/Login';
+import { tokenState } from '../../atoms/Auth';
 import {LoginTagContainer, LoginInput, LoginButton, LoginButtonContainer} from './LoginTag.styles'
 
 
@@ -11,11 +11,12 @@ const LoginTag = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const BASEURL = 'http://localhost:8080/api/v1';
-  // const [loggedInUserId, setLoggedInUserId] = useRecoilState(loggedInUserIdState);
+  const [token, setToken] = useRecoilState(tokenState);
 
   const handleLogin = () => { 
-    axios.post(`${BASEURL}/users/login`, { userName, password },{withCredentials: true})
+    axios.post(`${BASEURL}/users/login`, { userName, password })
       .then((response) => {
+        setToken(response.data.result);
         navigate('/profile');
       })
       .catch((error) => {

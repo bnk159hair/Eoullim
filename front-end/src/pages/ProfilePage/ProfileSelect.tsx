@@ -1,11 +1,14 @@
 import React from 'react';
 import ProfileList from '../../components/Profile/ProfileList';
+import {ProfileSelectPageContainer} from './ProfileSelect.styles'
 
 const ProfileSelect = () => {
     return (
-        <div>
+        <ProfileSelectPageContainer>
+            <button>회원정보수정</button>
             <ProfileList/>
-        </div>
+            <button>로그아웃</button>
+        </ProfileSelectPageContainer>
     );
 };
 
