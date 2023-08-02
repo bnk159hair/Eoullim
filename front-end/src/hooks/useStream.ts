@@ -2,6 +2,7 @@ import { StreamManager } from 'openvidu-browser';
 import { useEffect, useRef, useState } from 'react';
 
 export const useStream = (streamManager: StreamManager) => {
+  console.log(12312312312321312321312321, streamManager);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [speaking, setSpeaking] = useState<boolean>(false);
   const [micStatus, setMicStatus] = useState<boolean>(

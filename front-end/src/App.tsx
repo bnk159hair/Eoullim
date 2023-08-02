@@ -6,8 +6,9 @@ import Main from './pages/MainPage/Main';
 import Login from './pages/LoginPage/Login';
 import Signup from './pages/SignupPage/Signup';
 import Profile from './pages/ProfilePage/ProfileSelect';
-import Stream from './pages/StreamPage/Stream';
+import Session from './pages/SessionPage/Session';
 import Friends from './pages/Friendspage/Friends';
+import Record from './pages/RecordPage/Record';
 
 function App() {
   return (
@@ -20,8 +21,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/stream" element={<Stream />} />
+              <Route path="/session" element={<Session />} />
               <Route path="/friends" element={<Friends />} />
+              <Route path="/record" element={<Record />} />
             </Routes>
           </Router>
         </RecoilRoot>

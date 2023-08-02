@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 const Main = () => {
   const navigate = useNavigate();
 
-  const handleStreamClick = () => {
-    navigate('/stream');
+  const getNewFriend = () => {
+    navigate('/session');
   };
 
   const handleFriendsClick = () => {
@@ -16,7 +16,7 @@ const Main = () => {
   return (
     <div>
       메인페이지
-      <button onClick={handleStreamClick}>새친구 만들기</button>
+      <button onClick={getNewFriend}>새친구 만들기</button>
       <button onClick={handleFriendsClick}>내친구 목록</button>
       <LoginUser />
     </div>

@@ -1,16 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import SignupTag from '../../components/Signup/SignupTag';
-
+import {SignupPageContainer,SignupTagContainer} from './Signup.styles'
 
 
 const Signup = () => {
   return (
-    <>
-      <h1>회원가입</h1>
+    <SignupPageContainer>
+      <div>회원가입</div>
       <br />
-      <SignupTag/>
-    </>
+      <SignupTagContainer>
+        <SignupTag/>
+      </SignupTagContainer> 
+    </SignupPageContainer>
   );
 }
 
