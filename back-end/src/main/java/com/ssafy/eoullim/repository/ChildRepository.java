@@ -12,10 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface ChildRepository  extends JpaRepository<ChildEntity, Integer> {
-
-//    // 자녀 이름 중복 검사
-//    @Query(value = "select * from ChildEntity where user_name = :userName and name = :name")
-//    Optional<ChildEntity> selectChildByName(@Param(value = "userName") String userName,
-//                                            @Param(value = "name") String name);
     List<ChildEntity> findAllByUserId(Integer userId);
+    
+    // 사용 가능
+//    Optional<ChildEntity> findByNameAndUser_Id(String name, Integer user_id); // User가 동일한 Child 이름을 가지고 있는지
+//    int deleteByIdAndUser_UserName(Integer childId, String userName);         // User가 가진 Child를 삭제
 }
