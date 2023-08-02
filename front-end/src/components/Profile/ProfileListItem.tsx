@@ -1,20 +1,51 @@
-import React from 'react';
+import React,{useState} from 'react';
+import { ProfileUsereBox } from './profileListItem.styles';
+import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
 
-const ProfileListItem = () => {
+// interface ProfileListItemProps {
+//   name: string;
+// }
+
+const ProfileListItem: React.FC = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleProfileClick = () => {
-    navigate('/');
+  const handleModalOpen = () => {
+    setModalOpen(true);
   };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleMainClick = () =>{
+    navigate('/'); 
+  };
+
+  const handleRecordClick = () =>{
+    navigate('/record')
+  }
 
   return (
     <div>
-      프로필 사진
-      이름
-      <button type="button" onClick={handleProfileClick}>프로필 선택</button>
+      <ProfileUsereBox onClick={handleMainClick}>
+        이름
+      </ProfileUsereBox>
+        <button onClick={handleModalOpen} >수정</button>
+        {isModalOpen && <ModifyModal onClose={handleModalClose} />}
+        <button>삭제</button>
+        <button onClick={handleRecordClick}>녹화영상</button>
     </div>
   );
 };
+
+// const ProfileListItem: React.FC<ProfileListItemProps> = ({ name }) => {
+//   return (
+//     <ProfileUsereBox>
+//       {name}
+//     </ProfileUsereBox>
+//   );
+// };
 
 export default ProfileListItem;
