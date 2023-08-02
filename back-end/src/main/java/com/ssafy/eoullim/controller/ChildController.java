@@ -6,7 +6,6 @@ import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.model.Animon;
 import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.User;
-import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.service.ChildService;
 import com.ssafy.eoullim.utils.ClassUtils;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +27,14 @@ public class ChildController {
     @GetMapping
     public Response<List<Child>> list(Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
-        List<Child> childList = childService.getList(user.getId());
+        List<Child> childList = childService.list(user.getId());
         return Response.success(childList);
     }
 
     @PostMapping
     public Response<Void> create(@RequestBody ChildRequest request, Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
-        Child child = childService.create(
+        childService.create(
                 user,
                 request.getName(),
                 request.getBirth(),
@@ -60,7 +59,7 @@ public class ChildController {
 
     @GetMapping("/{childId}")
     public Response<Child> info(@PathVariable Integer childId) {
-        Child child = childService.getChildInfo(childId);
+        Child child = childService.info(childId);
         return Response.success(child);
     }
 
@@ -79,13 +78,13 @@ public class ChildController {
 
     @GetMapping("/{childId}/animons")
     public Response<List<Animon>> animonlist(@PathVariable Integer childId) {
-        List<Animon> animonList = childService.getAnimonList(childId);
+        List<Animon> animonList = childService.animonList(childId);
         return Response.success(animonList);
     }
 
     @GetMapping("/{childId}/animons/{animonId}")
     public Response<Animon> selectAnimon(@PathVariable Integer childId, @PathVariable Integer animonId) {
-        Animon animon = childService.setAnimon(childId, animonId);
+        Animon animon = childService.selectAnimon(childId, animonId);
         return Response.success(animon);
     }
 
