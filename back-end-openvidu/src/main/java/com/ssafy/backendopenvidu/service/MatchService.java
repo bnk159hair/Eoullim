@@ -1,12 +1,13 @@
 package com.ssafy.backendopenvidu.service;
 
-import com.ssafy.backendopenvidu.model.entity.Room;
+import com.ssafy.backendopenvidu.model.Room;
+import com.ssafy.backendopenvidu.model.entity.RoomEntity;
+import com.ssafy.backendopenvidu.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -18,17 +19,17 @@ import org.json.simple.parser.ParseException;
 @RequiredArgsConstructor
 public class MatchService {
 
-    //private final
+    private final RoomRepository roomRepository;
 
-    public void writeVideoToDB(String sessionId, Room room) throws IOException, ParseException {
+    public void writeVideoToDB(String recordingId, Room room) throws IOException, ParseException {
 
         System.out.println(room.getChildOne());
         System.out.println(room.getChildTwo());
 
         /* 압축 해제 코드 시작 */
-        sessionId = "103";
+        recordingId = "103";
         String dir = "C:\\Users\\ssafy\\Downloads\\";
-        String recordFolder = dir+sessionId+"\\";
+        String recordFolder = dir+recordingId+"\\";
         File recordZip = new File(recordFolder, "VideoInfo.zip");
 
         try(BufferedInputStream in = new BufferedInputStream(new FileInputStream(recordZip))){
@@ -62,7 +63,18 @@ public class MatchService {
             JSONObject element = (JSONObject) files.get(i);
             String name = (String)element.get("name");
             JSONObject clientData = (JSONObject) parser.parse((String)element.get("clientData"));
-            String userId = (String)clientData.get("childId");
+            int userId = Integer.parseInt((String)clientData.get("childId"));
+            System.out.println(userId);
+            if(room.getChildOne().intValue() == userId){ // 영상의 주인이 첫번째 사람
+                System.out.println("---");
+                roomRepository.save(RoomEntity.of(recordFolder+name, userId, room.getChildTwo()));
+            }
+            if(room.getChildTwo().intValue() == userId){ // 영상의 주인이 두번째 사람
+                System.out.println("---");
+
+                roomRepository.save(RoomEntity.of(recordFolder+name, userId, room.getChildOne()));
+
+            }
 
         }
 

@@ -1,4 +1,4 @@
-package com.ssafy.backendopenvidu.model.entity;
+package com.ssafy.backendopenvidu.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
