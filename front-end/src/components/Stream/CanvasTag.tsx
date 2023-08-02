@@ -8,21 +8,22 @@ interface IProps {
   streamManager: StreamManager;
   name: string;
   avatarPath: string;
+  me: boolean;
   balance?: boolean;
 }
 
-export const CanvasTag: FC<IProps> = ({ streamManager, name, avatarPath }) => {
+export const CanvasTag: FC<IProps> = ({
+  streamManager,
+  name,
+  avatarPath,
+  me,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { videoRef, speaking, micStatus, videoStatus } =
     useStream(streamManager);
   useFaceMask(videoRef.current, canvasRef.current, avatarPath);
   return (
-    <div
-      style={{
-        width: '640px',
-        height: '480px',
-      }}
-    >
+    <div>
       <video
         id="streamVideo"
         ref={videoRef}

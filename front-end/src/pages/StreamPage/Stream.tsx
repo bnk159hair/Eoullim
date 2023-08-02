@@ -1,7 +1,6 @@
 import { OpenVidu, StreamManager } from 'openvidu-browser';
 import axios from 'axios';
 import React, { Component, useRef, useState, useEffect } from 'react';
-import UserVideoComponent from '../../components/Stream/UserVideoComponent';
 import CanvasTag from '../../components/Stream/CanvasTag';
 
 const APPLICATION_SERVER_URL = 'http://localhost:5000/';
@@ -39,6 +38,8 @@ class Stream extends Component<{}, AppState> {
     this.handleChangeUserName = this.handleChangeUserName.bind(this);
     this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
     this.onbeforeunload = this.onbeforeunload.bind(this);
+    this.handleAudio = this.handleAudio.bind(this);
+    this.handleVideo = this.handleVideo.bind(this);
   }
 
   componentDidMount() {
@@ -73,6 +74,14 @@ class Stream extends Component<{}, AppState> {
     }
   }
 
+  handleAudio(status: boolean) {
+    this.state.publisher.publishAudio(!status);
+  }
+
+  handleVideo(status: boolean) {
+    this.state.publisher.publishVideo(!status);
+  }
+
   deleteSubscriber(streamManager: any) {
     let subscribers = this.state.subscribers;
     let index = subscribers.indexOf(streamManager, 0);
@@ -85,7 +94,6 @@ class Stream extends Component<{}, AppState> {
   }
 
   async joinSession() {
-    console.log('join');
     this.OV = new OpenVidu();
 
     this.setState(
@@ -220,9 +228,8 @@ class Stream extends Component<{}, AppState> {
   render() {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
-    if (this.state.session !== undefined) {
-      console.log(this.state.session.streamManagers);
-    }
+    const micStatus = true;
+    const videoStatus = true;
 
     return (
       <div className="container">
@@ -298,6 +305,7 @@ class Stream extends Component<{}, AppState> {
                   streamManager={this.state.mainStreamManager}
                   name={myUserName}
                   avatarPath="http://localhost:3000/image.png"
+                  me={this.state.mainStreamManager.name === myUserName}
                 />
               </div>
             ) : null}
@@ -309,7 +317,12 @@ class Stream extends Component<{}, AppState> {
                     this.handleMainVideoStream(this.state.publisher!.stream)
                   }
                 >
-                  <UserVideoComponent streamManager={this.state.publisher} />
+                  <CanvasTag
+                    streamManager={this.state.publisher}
+                    name={this.state.publisher.name}
+                    avatarPath="http://localhost:3000/image.png"
+                    me={this.state.publisher.name === myUserName}
+                  />
                 </div>
               ) : null}
               {this.state.subscribers.map((sub: any) => (
@@ -319,7 +332,12 @@ class Stream extends Component<{}, AppState> {
                   onClick={() => this.handleMainVideoStream(sub.stream)}
                 >
                   <span>{sub.stream.connection.data}</span>
-                  <UserVideoComponent streamManager={sub} />
+                  <CanvasTag
+                    streamManager={sub}
+                    name={myUserName}
+                    avatarPath="http://localhost:3000/image.png"
+                    me={sub.name === myUserName}
+                  />
                 </div>
               ))}
             </div>
