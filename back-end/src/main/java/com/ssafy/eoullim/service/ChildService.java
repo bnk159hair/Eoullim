@@ -52,8 +52,17 @@ public class ChildService {
     private String serviceKey;
     private String schoolApiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_elesch_mskul_lc_api";
 
+    public List<Child> getChildList(Integer userId) {
+        return childRepository.findAllByUserId(userId)
+                .stream().map(Child::fromEntity).collect(Collectors.toList());
+    }
+
     @Transactional
-    public Child create(User user, String name, Date birth, char gender, String school, Integer grade) {
+    public void create(User user, String name, Date birth, char gender, String school, Integer grade) {
+        // 자녀 이름 중복 검사
+//        childRepository.findByNameAndUser_Id(name, user.getId()).orElseThrow(
+//                () -> new EoullimApplicationException(ErrorCode.DUPLICATED_CHILD_NAME, String.format("%s is Duplicated Name", name)));
+        // Child Insert and Get PK
         ChildEntity childEntity = ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade);
         childRepository.save(childEntity);
         // 기본 애니몬 4종을 해당 Child에 부여
@@ -62,13 +71,9 @@ public class ChildService {
             if (animonEntity.getId() == 1) childEntity.setAnimon(animonEntity);    // 4종 중 1번 애니몬을 선택
             childAnimonRepository.save(ChildAnimonEntity.of(childEntity, animonEntity));
         }
-        return Child.fromEntity(childEntity);
+        return;
     }
 
-    public List<Child> getList(Integer userId) {
-        return childRepository.findAllByUserId(userId)
-                .stream().map(Child::fromEntity).collect(Collectors.toList());
-    }
 
     @Transactional
     public Child login(Integer childId) {
@@ -113,16 +118,17 @@ public class ChildService {
                     String.format("user %s has no permission with child %d", userName, childId));
         }
         childRepository.delete(childEntity);
+
+        // DB 한 번 접근으로도 가능
+//        if (childRepository.deleteByIdAndUser_UserName(childId, userName) != 1) {
+//            throw new EoullimApplicationException(ErrorCode.DELETE_FAILED,
+//                    String.format("userId %s or profileId %d was Bad Request", userName, childId));
+//        }
     }
 
     public List<Animon> getAnimonList(Integer childId) {
         return childAnimonRepository.findAnimonsByChildId(childId)
                 .stream().map(Animon::fromEntity).collect(Collectors.toList());
-//        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-//                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
-//        return childEntity.getAnimonList()
-//                .stream().map(ChildAnimonEntity::getAnimonEntity).collect(Collectors.toList())
-//                .stream().map(Animon::fromEntity).collect(Collectors.toList());
     }
     @Transactional
     public Animon setAnimon(Integer childId, Integer animonId) {

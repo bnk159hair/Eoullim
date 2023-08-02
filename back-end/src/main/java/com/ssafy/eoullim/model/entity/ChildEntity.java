@@ -20,20 +20,20 @@ public class ChildEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "birth", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date birth;
 
-    @Column(name = "gender", nullable = false)
+    @Column(nullable = false)
     private char gender;
 
-    @Column(name = "school", nullable = false)
+    @Column(nullable = false)
     private String school;
 
-    @Column(name = "grade", nullable = false)
+    @Column(nullable = false)
     private Integer grade;
 
     @Enumerated(EnumType.STRING)
@@ -46,11 +46,6 @@ public class ChildEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "animon_id")
     private AnimonEntity animon;
-
-//    @Getter
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "child_animon_id")
-//    private List<ChildAnimonEntity> animonList;
 
     public static ChildEntity of(UserEntity user, String name, Date birth, char gender, String school, int grade) {
         ChildEntity entity = new ChildEntity();
