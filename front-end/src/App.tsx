@@ -17,11 +17,11 @@ function App() {
         <RecoilRoot>
           <Router>
             <Routes>
-              <Route path="/" element={<Main />} /> 
+              <Route path="/" element={<Main />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/stream" element={<Stream />} />
+              <Route path="/session" element={<Session />} />
               <Route path="/friends" element={<Friends />} />
               <Route path="/record" element={<Record />} />
             </Routes>
