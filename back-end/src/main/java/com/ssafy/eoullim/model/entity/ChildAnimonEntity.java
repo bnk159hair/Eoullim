@@ -2,6 +2,7 @@ package com.ssafy.eoullim.model.entity;
 
 import com.ssafy.eoullim.model.Animon;
 import com.ssafy.eoullim.model.Child;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.Date;
 @Entity
 @Table(name = "child_animon")
 @NoArgsConstructor
+@AllArgsConstructor
 public class ChildAnimonEntity {
     @Id
     @Column(name = "child_animon_id")
@@ -28,10 +30,7 @@ public class ChildAnimonEntity {
     @JoinColumn(name = "animon_id", referencedColumnName = "animon_id", nullable = false)
     private AnimonEntity animon;
 
-    public static ChildAnimonEntity of(Child child, Animon animon) {
-        ChildAnimonEntity childAnimonEntity = new ChildAnimonEntity();
-        childAnimonEntity.setChild(ChildEntity.of(child));
-        childAnimonEntity.setAnimon(AnimonEntity.of(animon));
-        return childAnimonEntity;
+    public static ChildAnimonEntity of(ChildEntity child, AnimonEntity animon) {
+        return new ChildAnimonEntity(null, child, animon);
     }
 }

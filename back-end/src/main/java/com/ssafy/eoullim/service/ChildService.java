@@ -57,11 +57,10 @@ public class ChildService {
         ChildEntity childEntity = ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade);
         childRepository.save(childEntity);
         // 기본 애니몬 4종을 해당 Child에 부여
-        List<Animon> animonList = animonRepository.getDefaultAnimon()
-                .stream().map(Animon::fromEntity).collect(Collectors.toList());
-        for (Animon animon : animonList) {
-            if (animon.getId() == 1) childEntity.setAnimon(AnimonEntity.of(animon));    // 4종 중 1번 애니몬을 선택
-            childAnimonRepository.save(ChildAnimonEntity.of(Child.fromEntity(childEntity), animon));
+        List<AnimonEntity> animonList = animonRepository.getDefaultAnimon();
+        for (AnimonEntity animonEntity : animonList) {
+            if (animonEntity.getId() == 1) childEntity.setAnimon(animonEntity);    // 4종 중 1번 애니몬을 선택
+            childAnimonRepository.save(ChildAnimonEntity.of(childEntity, animonEntity));
         }
         return Child.fromEntity(childEntity);
     }

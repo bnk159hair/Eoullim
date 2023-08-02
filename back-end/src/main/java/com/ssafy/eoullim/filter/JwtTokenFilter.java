@@ -35,6 +35,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        System.out.println(header);
         final String token;
         try {
             if (TOKEN_IN_PARAM_URLS.contains(request.getRequestURI())) {
@@ -50,7 +51,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             String userName = JwtTokenUtils.getUsername(token, secretKey);
             User userDetails = userService.loadUserByUsername(userName);
-
+            System.out.println(userName);
+            System.out.println(userDetails);
             if (!JwtTokenUtils.validate(token, userDetails.getUsername(), secretKey)) {
                 chain.doFilter(request, response);
                 log.info("invalid");
@@ -68,6 +70,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (RuntimeException e) {
+            System.out.println("error");
             chain.doFilter(request, response);
             return;
         }
