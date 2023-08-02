@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "child_animon")
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChildAnimonEntity {
     @Id
     @Column(name = "child_animon_id")
@@ -20,14 +19,10 @@ public class ChildAnimonEntity {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "child_id", referencedColumnName = "child_id", nullable = false)
+    @JoinColumn(name = "child_id")
     private ChildEntity child;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "animon_id", referencedColumnName = "animon_id", nullable = false)
+    @JoinColumn(name = "animon_id")
     private AnimonEntity animon;
-
-    public static ChildAnimonEntity of(ChildEntity child, AnimonEntity animon) {
-        return new ChildAnimonEntity(null, child, animon);
-    }
 }

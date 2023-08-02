@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public Response<Void> logout(Authentication authentication) {
-        userService.logout(authentication.getName());
+//        String token = userService.logout();
         return Response.success();
     }
 
