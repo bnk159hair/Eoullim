@@ -10,3 +10,8 @@ export const ProfileCreateBox=styled.div `
     border-radius: 30%;
     border: solid 2px;
 `
+export const ProfileListBox =styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+`

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProfileListItem from './ProfileListItem';
-import { ProfileCreateBox } from './profileList.styles';
+import { ProfileCreateBox,ProfileListBox } from './profileList.styles';
 import CreateModal from './CreateModal';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
+
 
 interface Profile {
   id: number;
@@ -21,6 +22,7 @@ const ProfileList: React.FC = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const BASEURL = 'http://localhost:8080/api/v1';
   const token = useRecoilValue(tokenState);
+  
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -29,6 +31,8 @@ const ProfileList: React.FC = () => {
   const handleModalClose = () => {
     setModalOpen(false);
   };
+
+
 
   useEffect(() => {
     axios
@@ -47,13 +51,14 @@ const ProfileList: React.FC = () => {
   });
 
   return (
-    <div>
-      {profiles.map((profile) => (
+    <ProfileListBox>
+      <ProfileListItem/>
+      {/* {profiles.map((profile) => (
         <ProfileListItem key={profile.id} name={profile.name} />
-      ))}
-      {profiles.length < 3 && <ProfileCreateBox onClick={handleModalOpen} />} {/* profiles 배열의 길이가 3 이상인 경우에만 보여줌 */}
+      ))} */}
+      {profiles.length < 3 && <ProfileCreateBox onClick={handleModalOpen} />}
       {isModalOpen && <CreateModal onClose={handleModalClose} />}
-    </div>
+    </ProfileListBox>
   );
 };
 
