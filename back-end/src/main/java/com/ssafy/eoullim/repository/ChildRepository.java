@@ -20,4 +20,7 @@ public interface ChildRepository  extends JpaRepository<ChildEntity, Integer> {
 //    Optional<ChildEntity> selectChildByName(@Param(value = "userName") String userName,
 //                                            @Param(value = "name") String name);
     List<ChildEntity> findAllByUserId(Integer userId);
+
+    @Override
+    void delete(ChildEntity childEntity);
 }

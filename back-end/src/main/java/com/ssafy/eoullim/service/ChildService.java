@@ -52,20 +52,18 @@ public class ChildService {
     private String serviceKey;
     private String schoolApiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_elesch_mskul_lc_api";
 
+    @Transactional
     public Child create(User user, String name, Date birth, char gender, String school, Integer grade) {
         ChildEntity childEntity = ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade);
         childRepository.save(childEntity);
-        return Child.fromEntity(childEntity);
-    }
-
-    @Transactional
-    public void createDefaultChildAnimon(Child child) {
+        // 기본 애니몬 4종을 해당 Child에 부여
         List<Animon> animonList = animonRepository.getDefaultAnimon()
                 .stream().map(Animon::fromEntity).collect(Collectors.toList());
         for (Animon animon : animonList) {
-            childAnimonRepository.save(ChildAnimonEntity.of(child, animon));
-            if (animon.getId() == 1) ChildEntity.of(child).setAnimon(AnimonEntity.of(animon));   // Child의 기본 애니몬을 1번 애니몬으로
+            if (animon.getId() == 1) childEntity.setAnimon(AnimonEntity.of(animon));    // 4종 중 1번 애니몬을 선택
+            childAnimonRepository.save(ChildAnimonEntity.of(Child.fromEntity(childEntity), animon));
         }
+        return Child.fromEntity(childEntity);
     }
 
     public List<Child> getList(Integer userId) {
@@ -105,6 +103,7 @@ public class ChildService {
         childEntity.setGrade(request.getGrade());
     }
 
+    @Transactional
     public void delete(Integer childId, String userName) {
         // ERROR : 자녀 ID 잘못 접근 시
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
@@ -114,7 +113,7 @@ public class ChildService {
             throw new EoullimApplicationException(ErrorCode.INVALID_PERMISSION,
                     String.format("user %s has no permission with child %d", userName, childId));
         }
-        childRepository.deleteById(childId);
+        childRepository.delete(childEntity);
     }
 
     public List<Animon> getAnimonList(Integer childId) {
