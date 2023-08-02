@@ -2,25 +2,18 @@ import axios from 'axios';
 
 const SERVER_URL = 'https://i9c207.p.ssafy.io/';
 
-export const getToken: () => Promise<any> = async () => {
+export const getToken: (userInfo: object) => Promise<any> = async (
+  userInfo
+) => {
   console.log('토큰 가져오기');
   return await axios
-    .post(
-      `${SERVER_URL}api/sessions/match`,
-      {
-        childId: 11,
-        name: '홍길동',
-        gender: 'M',
-        school: '곡란초',
-        grade: 3,
-      },
-      {
-        headers: { 'Content-Type': 'application/json' },
-      }
-    )
+    .post(`${SERVER_URL}api/sessions/match`, userInfo, {
+      headers: { 'Content-Type': 'application/json' },
+    })
     .then((response) => {
       console.log('토큰 가져오기 성공!');
-      return response.data.getToken;
+      console.log(response);
+      return response.data.token;
     })
     .catch((error) => {
       console.log('토큰 가져오기 실패ㅠ');
@@ -28,37 +21,15 @@ export const getToken: () => Promise<any> = async () => {
     });
 };
 
-export const destroySession: (session: any) => Promise<void> = async (
+export const destroySession: ({ session }: any) => Promise<void> = async (
   session
 ) => {
   console.log('세션 파괴!!!!!!');
-  await axios.post(`${SERVER_URL}/api/sessions/matchstop`, {
-    sessionId: session.sessionId,
-  });
+  console.log(session.sessionId);
+  await axios
+    .post(`${SERVER_URL}api/sessions/matchstop`, {
+      sessionId: session.sessionId,
+    })
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error));
 };
-
-// const getToken = async (mySessionId: any) => {
-//   return createSession(mySessionId).then((sessionId) => createToken(sessionId));
-// };
-
-// const createSession = async (sessionId: any) => {
-//   const response = await axios.post(
-//     `${SERVER_URL}api/sessions`,
-//     { customSessionId: sessionId },
-//     {
-//       headers: { 'Content-Type': 'application/json' },
-//     }
-//   );
-//   return response.data;
-// };
-
-// const createToken = async (sessionId: any) => {
-//   const response = await axios.post(
-//     `${SERVER_URL}api/sessions/${sessionId}/connections`,
-//     {},
-//     {
-//       headers: { 'Content-Type': 'application/json' },
-//     }
-//   );
-//   return response.data;
-// };

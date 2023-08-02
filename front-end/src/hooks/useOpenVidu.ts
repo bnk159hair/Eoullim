@@ -6,12 +6,15 @@ export const useOpenVidu = (userId: any) => {
   const [session, setSession] = useState<any>(null);
   const [publisher, setPublisher] = useState<any>(null);
   const [subscribers, setSubscribers] = useState<any[]>([]);
-
   console.log('session, publisher, subscribers 생성');
+
   const leaveSession = useCallback(() => {
     console.log('나가기 실행');
     if (session) {
+      console.log('나랑 세션이랑 연결 끊기');
       session.disconnect();
+      console.log(session);
+      console.log('서버에 세션 끊어달라고 보내기');
       destroySession(session);
     }
     setSession(null);
@@ -24,7 +27,7 @@ export const useOpenVidu = (userId: any) => {
     const OV = new OpenVidu();
     //   OV.enableProdMode(); // 배포 시 사용 production 모드로 전환
     console.log('세션 시작');
-    const mySession = OV.initSession();
+    let mySession = OV.initSession();
 
     mySession.on('streamCreated', (event) => {
       console.log('스트림 생성');
@@ -32,10 +35,10 @@ export const useOpenVidu = (userId: any) => {
       const data = JSON.parse(event.stream.connection.data);
       setSubscribers((prev) => {
         return [
-          ...prev.filter((sub) => sub.userId !== +data.userId),
+          ...prev.filter((sub) => sub.userId !== data.userId),
           {
             streamManager: subscriber,
-            userId: +data.userId,
+            userId: data.userId,
           },
         ];
       });
@@ -44,12 +47,18 @@ export const useOpenVidu = (userId: any) => {
     mySession.on('streamDestroyed', () => leaveSession());
     mySession.on('exception', (exception) => console.warn(exception));
 
-    getToken().then((token) => {
-      console.log('토큰은 일단 가져왔고!! 다음은 세션에 연결하기!');
+    getToken({
+      childId: 103,
+      name: '홍길동',
+      gender: 'M',
+      school: '곡란초',
+      grade: 3,
+    }).then((token: any) => {
+      console.log('가져온 토큰 :', token);
+      console.log('가져온 토큰으로 세션에 연결');
       mySession
-        .connect(token, JSON.stringify({ userId }))
+        .connect(token, { clientData: userId })
         .then(async () => {
-          console.log('나를 publisher라고 하자!');
           await navigator.mediaDevices.getUserMedia({
             audio: true,
             video: true,
@@ -59,6 +68,7 @@ export const useOpenVidu = (userId: any) => {
             (device) => device.kind === 'videoinput'
           );
 
+          console.log('나를 publisher라고 하자!');
           const publisher = OV.initPublisher('', {
             audioSource: undefined,
             videoSource: videoDevices[0].deviceId,
@@ -69,12 +79,12 @@ export const useOpenVidu = (userId: any) => {
             insertMode: 'APPEND',
             mirror: false,
           });
-          console.log('publisher의 옵션을 설정했고 publish했다!');
+          console.log('publisher의 옵션을 설정했고 세션 연결을 성공했다!');
           setPublisher(publisher);
           mySession.publish(publisher);
         })
         .catch((error) => {
-          console.log('토큰 가져오는 걸 실패했다!!');
+          console.log('세션 연결을 실패했다!');
           console.log(
             'There was an error connecting to the session:',
             error.code,
@@ -82,21 +92,31 @@ export const useOpenVidu = (userId: any) => {
           );
         });
     });
-    console.log(
-      '토큰으로 세션에 연결하고, publisher옵션까지 모두 설정 완료했다!!'
-    );
     setSession(mySession);
+
     return () => {
       console.log('useEffect가 return했다!!');
-      leaveSession();
+      if (mySession) {
+        console.log('나랑 세션이랑 연결 끊기');
+        mySession.disconnect();
+        console.log('서버에 세션 끊어달라고 보내기');
+        console.log(mySession);
+        destroySession(mySession);
+      }
+      setSession(null);
+      setPublisher(null);
+      setSubscribers([]);
     };
-  }, [leaveSession, userId]);
+  }, [userId]);
 
   useEffect(() => {
     console.log('탭 종료!!');
-    window.addEventListener('beforeunload', () => leaveSession());
+    const beforeUnloadHandler = () => leaveSession();
+
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+
     return () => {
-      window.removeEventListener('beforeunload', () => leaveSession());
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
     };
   }, [leaveSession]);
 
@@ -104,7 +124,7 @@ export const useOpenVidu = (userId: any) => {
     () => [{ streamManager: publisher, userId }, ...subscribers],
     [publisher, subscribers, userId]
   );
-
+  console.log(streamList);
   return {
     publisher,
     streamList,

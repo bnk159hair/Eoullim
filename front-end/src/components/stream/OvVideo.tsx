@@ -1,39 +1,15 @@
-import { useRef, useEffect } from 'react';
-import './StreamComponent.css';
+import { useEffect, useRef } from 'react';
 
-const OvVideoComponent = (user: any) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (user && user.streamManager && videoRef.current) {
-      console.log('PROPS: ', user);
-      user.getStreamManager().addVideoElement(videoRef.current);
-    }
-
-    if (user && user.streamManager.session && user && videoRef.current) {
-      user.streamManager.session.on('signal:userChanged', (event: any) => {
-        const data = JSON.parse(event.data);
-        if (data.isScreenShareActive !== undefined) {
-          user.getStreamManager().addVideoElement(videoRef.current);
-        }
-      });
-    }
-  }, [user]);
+const OpenViduVideoComponent = ({ streamManager }: any) => {
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      user.getStreamManager().addVideoElement(videoRef.current);
+    if (streamManager && videoRef.current) {
+      streamManager.addVideoElement(videoRef.current);
     }
-  }, [user]);
+  }, [streamManager]);
 
-  return (
-    <video
-      autoPlay={true}
-      id={'video-' + user.getStreamManager().stream.streamId}
-      ref={videoRef}
-      muted={false}
-    />
-  );
+  return <video autoPlay ref={videoRef} />;
 };
 
-export default OvVideoComponent;
+export default OpenViduVideoComponent;
