@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const Record = () => {
     const [password, setPassword] = useState('');
     const BASEURL = 'http://localhost:8080/api/v1';
-    const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
+    const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
     const navigate = useNavigate();
 
     const passwordClick = () =>{
