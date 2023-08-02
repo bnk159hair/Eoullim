@@ -86,12 +86,6 @@ public class MatchController {
             else{ // 없는거 확인했으면 세로운 세션 Id 만들기
                 try{
                     System.out.println("[EMPTY] Session created: " + sessionId);
-//                    RecordingProperties recordingProperties = new RecordingProperties.Builder()
-//                            .outputMode(Recording.OutputMode.INDIVIDUAL)
-//                            .resolution("640x480")
-//                            .frameRate(24)
-//                            .name("VideoInfo")
-//                            .build();
 
                     SessionProperties sessionProperties = new SessionProperties.Builder()
                             .customSessionId(sessionId)
@@ -144,7 +138,6 @@ public class MatchController {
                 
                 sessionRecordings.put(sessionId, recording.getId());
                 existingRoom.setRecordingId(recording.getId());
-//                mapRooms.put(sessionId, existingRoom);
                 existingRoom.setChildTwo(matchRequest.getChildId()); // 두번째 입장자 아이디 저장
                 
                 return new ResponseEntity<>(result, HttpStatus.OK);
