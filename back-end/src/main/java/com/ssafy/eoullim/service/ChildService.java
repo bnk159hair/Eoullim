@@ -12,6 +12,7 @@ import com.ssafy.eoullim.model.entity.AnimonEntity;
 import com.ssafy.eoullim.model.entity.ChildAnimonEntity;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.model.entity.UserEntity;
+import com.ssafy.eoullim.repository.AnimonRepository;
 import com.ssafy.eoullim.repository.ChildAnimonRepository;
 import com.ssafy.eoullim.repository.ChildRepository;
 import com.ssafy.eoullim.repository.UserRepository;
@@ -45,17 +46,31 @@ import java.util.stream.Collectors;
 public class ChildService {
     private final ChildRepository childRepository;
     private final ChildAnimonRepository childAnimonRepository;
+    private final AnimonRepository animonRepository;
 
     @Value("${public-api.service-key}")
     private String serviceKey;
     private String schoolApiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_elesch_mskul_lc_api";
 
-    public void create(User user, String name, Date birth, char gender, String school, Integer grade) {
-        childRepository.save(ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade));
+    public Child create(User user, String name, Date birth, char gender, String school, Integer grade) {
+        ChildEntity childEntity = ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade);
+        childRepository.save(childEntity);
+        return Child.fromEntity(childEntity);
     }
 
-    public List<Child> list(Integer userId) {
-        return childRepository.findAllByUserId(userId).stream().map(Child::fromEntity).collect(Collectors.toList());
+    @Transactional
+    public void createDefaultChildAnimon(Child child) {
+        List<Animon> animonList = animonRepository.getDefaultAnimon()
+                .stream().map(Animon::fromEntity).collect(Collectors.toList());
+        for (Animon animon : animonList) {
+            childAnimonRepository.save(ChildAnimonEntity.of(child, animon));
+            if (animon.getId() == 1) ChildEntity.of(child).setAnimon(AnimonEntity.of(animon));   // Child의 기본 애니몬을 1번 애니몬으로
+        }
+    }
+
+    public List<Child> getList(Integer userId) {
+        return childRepository.findAllByUserId(userId)
+                .stream().map(Child::fromEntity).collect(Collectors.toList());
     }
 
     @Transactional
@@ -73,7 +88,7 @@ public class ChildService {
         childEntity.setStatus(Status.OFF);
     }
 
-    public Child info(Integer childId) {
+    public Child getChildInfo(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
                 new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         return Child.fromEntity(childEntity);
@@ -102,7 +117,7 @@ public class ChildService {
         childRepository.deleteById(childId);
     }
 
-    public List<Animon> animonList(Integer childId) {
+    public List<Animon> getAnimonList(Integer childId) {
         return childAnimonRepository.findAnimonsByChildId(childId)
                 .stream().map(Animon::fromEntity).collect(Collectors.toList());
 //        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
@@ -111,9 +126,8 @@ public class ChildService {
 //                .stream().map(ChildAnimonEntity::getAnimonEntity).collect(Collectors.toList())
 //                .stream().map(Animon::fromEntity).collect(Collectors.toList());
     }
-
     @Transactional
-    public Animon selectAnimon(Integer childId, Integer animonId) {
+    public Animon setAnimon(Integer childId, Integer animonId) {
         ChildAnimonEntity childAnimonEntity = childAnimonRepository.findByChildIdAndAnimonId(childId, animonId).orElseThrow(() ->
                 new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         AnimonEntity animonEntity = childAnimonEntity.getAnimon();
