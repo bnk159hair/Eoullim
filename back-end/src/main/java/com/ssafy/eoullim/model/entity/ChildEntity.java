@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.model.entity;
 
+import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,6 +61,17 @@ public class ChildEntity {
         entity.setSchool(school);
         entity.setGrade(grade);
         entity.setUser(user);
+        return entity;
+    }
+
+    public static ChildEntity of(Child child) {
+        ChildEntity entity = new ChildEntity();
+        entity.setId(child.getId());
+        entity.setName(child.getName());
+        entity.setBirth(child.getBirth());
+        entity.setGender(child.getGender());
+        entity.setSchool(child.getSchool());
+        entity.setGrade(child.getGrade());
         return entity;
     }
 }
