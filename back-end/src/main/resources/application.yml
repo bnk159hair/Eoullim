@@ -12,6 +12,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  redis:
+    port: 6379
+    host: localhost
 
 jwt:
   secret-key: ssafy_9th_gwanju_c207_eoullim_secret_key
