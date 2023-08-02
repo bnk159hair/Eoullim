@@ -66,8 +66,8 @@ const SignUpTag = () => {
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
         />
-        <button onClick={handleIdCheck} disabled={resultCode}>
-          {resultCode ? "중복체크 완료" : "아이디 중복 체크"}
+        <button onClick={handleIdCheck}>
+          중복체크
         </button>
         {resultCode && (
           <div style={{ color: "green" }}>사용 가능한 아이디입니다.</div>

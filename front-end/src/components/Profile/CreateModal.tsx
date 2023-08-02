@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import tw from 'twin.macro';
-import styled from 'styled-components';
 import { ModalOverlay, ModalContent } from './CreateModal.styles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
@@ -15,11 +13,16 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
   const [birth, setChildBirth] = useState('');
   const [gender, setChildGender] = useState(''); 
   const [school, setChildSchool] = useState('');
-  const [grade, setChildGrade] = useState(''); 
+  const [grade, setChildGrade] = useState('');
+  const [resultCode, setIsresultCode] = useState(false);
   const BASEURL = 'http://localhost:8080/api/v1';
   const token = useRecoilValue(tokenState);
 
   const handleCreateProfile = async () => {
+    if (!resultCode) {
+      alert("학교 확인을 해주세요");
+      return;
+    }
     if (!name || !birth || !gender || !school || !grade) {
       alert('모든 정보를 입력해주세요.');
       return;
@@ -37,6 +40,19 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
     } catch (error) {
         console.log(token)
       console.log('프로필 생성실패:', error);
+    }
+  };
+
+  const handleSchoolCheck = async () => {
+    try {
+      const response = await axios.post(`${BASEURL}/children/school`, {
+        keyword: school  
+      });
+      setIsresultCode(response.data.resultCode);
+      alert(response.data.resultCode ? "올바른 학교정보입니다" : "다시 입력해주세요");
+    } catch (error) {
+      console.error(error);
+      alert("잘못된 입력입니다.");
     }
   };
 
@@ -84,6 +100,10 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
           value={school}
           onChange={(e) => setChildSchool(e.target.value)}
         />
+        <button onClick={handleSchoolCheck}>학교 확인</button>
+        {resultCode && (
+          <div style={{ color: "green" }}>학교 등록이 완료되었습니다.</div>
+        )}
         <div>
           <label>
             <input
