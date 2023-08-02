@@ -21,11 +21,11 @@ public class ChildAnimonEntity {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "child_id")
+    @JoinColumn(name = "child_id", referencedColumnName = "child_id", nullable = false)
     private ChildEntity child;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "animon_id")
+    @JoinColumn(name = "animon_id", referencedColumnName = "animon_id", nullable = false)
     private AnimonEntity animon;
 
     public static ChildAnimonEntity of(Child child, Animon animon) {

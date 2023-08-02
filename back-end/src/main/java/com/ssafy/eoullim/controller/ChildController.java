@@ -43,7 +43,7 @@ public class ChildController {
                 request.getSchool(),
                 request.getGrade()
         );
-        childService.createDefaultChildAnimon(child);       // 생성된 child에 기본 마스크 4종 지급
+//        childService.createDefaultChildAnimon(child);       // 생성된 child에 기본 마스크 4종 지급
         return Response.success();
     }
 

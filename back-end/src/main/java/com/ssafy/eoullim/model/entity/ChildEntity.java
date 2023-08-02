@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.model.entity;
 
+import com.ssafy.eoullim.model.Animon;
 import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.Status;
 import lombok.Getter;
@@ -48,10 +49,9 @@ public class ChildEntity {
     @JoinColumn(name = "animon_id")
     private AnimonEntity animon;
 
-//    @Getter
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "child_animon_id")
-//    private List<ChildAnimonEntity> animonList;
+    // child 삭제할 때 cascade delete를 위함.
+//    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+//    private List<ChildAnimonEntity> childAnimons;
 
     public static ChildEntity of(UserEntity user, String name, Date birth, char gender, String school, int grade) {
         ChildEntity entity = new ChildEntity();
@@ -66,12 +66,17 @@ public class ChildEntity {
 
     public static ChildEntity of(Child child) {
         ChildEntity entity = new ChildEntity();
+        entity.setUser(UserEntity.of(child.getUser()));
+
         entity.setId(child.getId());
         entity.setName(child.getName());
         entity.setBirth(child.getBirth());
         entity.setGender(child.getGender());
         entity.setSchool(child.getSchool());
         entity.setGrade(child.getGrade());
+
+        Animon animon = child.getAnimon();
+        if (animon != null) entity.setAnimon(AnimonEntity.of(animon));
         return entity;
     }
 }
