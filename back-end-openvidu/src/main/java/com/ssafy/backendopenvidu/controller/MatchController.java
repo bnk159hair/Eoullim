@@ -2,6 +2,7 @@ package com.ssafy.backendopenvidu.controller;
 import com.google.gson.JsonObject;
 import com.ssafy.backendopenvidu.dto.request.MatchRequest;
 import com.ssafy.backendopenvidu.model.entity.Room;
+import com.ssafy.backendopenvidu.service.MatchService;
 import io.openvidu.java.client.*;
 import io.openvidu.java.client.Connection;
 import io.openvidu.java.client.ConnectionProperties;
@@ -13,13 +14,18 @@ import io.openvidu.java.client.RecordingProperties;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
+
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequiredArgsConstructor
 public class MatchController {
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -48,6 +55,8 @@ public class MatchController {
     // Collection to pair session names and recording objects
     private Map<String, String> sessionRecordings = new ConcurrentHashMap<>();
     private Map<String, Room> mapRooms = new ConcurrentHashMap<>();
+
+    private final MatchService matchService;
 
 
     @PostConstruct
@@ -103,6 +112,10 @@ public class MatchController {
                     mapSessions.put(sessionId, session);
                     mapSessionNamesTokens.put(sessionId, new ConcurrentHashMap<>());
                     mapSessionNamesTokens.get(sessionId).put(token, token);
+
+                    newRoom.setChildOne(matchRequest.getChildId()); // 첫 입장자 아이디 저장
+                    mapRooms.put(sessionId, newRoom);
+
                     return new ResponseEntity<>(result, HttpStatus.OK);
 
                 }catch (Exception e){
@@ -119,9 +132,8 @@ public class MatchController {
                 Map<String, String> result = new HashMap<>();
                 result.put("sessionId", sessionId);
                 result.put("token", token);
-                System.out.println(sessionId);
-                System.out.println(token);
-                
+                mapSessionNamesTokens.get(sessionId).put(token, token);
+
                 RecordingProperties recordingProperties = new RecordingProperties.Builder() // 녹화 설정
                         .outputMode(Recording.OutputMode.INDIVIDUAL)
                         .resolution("640x480")
@@ -132,7 +144,9 @@ public class MatchController {
                 
                 sessionRecordings.put(sessionId, recording.getId());
                 existingRoom.setRecordingId(recording.getId());
-                mapRooms.put(sessionId, existingRoom);
+//                mapRooms.put(sessionId, existingRoom);
+                existingRoom.setChildTwo(matchRequest.getChildId()); // 두번째 입장자 아이디 저장
+                
                 return new ResponseEntity<>(result, HttpStatus.OK);
             }else{
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -142,44 +156,46 @@ public class MatchController {
     @PostMapping("/api/sessions/matchstop")
     public ResponseEntity<?> stopMatch(
             @RequestBody Map<String, Object> params
-    ) throws OpenViduJavaClientException, OpenViduHttpException {
+    ) throws OpenViduJavaClientException, OpenViduHttpException, IOException, ParseException, org.json.simple.parser.ParseException {
+
         String sessionId = (String) params.get("sessionId");
         System.out.println("[STOP] Session created: " + sessionId);
 
+
+
         if(mapSessions.get(sessionId) != null && mapSessionNamesTokens.get(sessionId) != null && mapRooms.get(sessionId)!= null){
             Session session = mapSessions.get(sessionId);
-            String recordId = sessionRecordings.get(sessionId);
-            System.out.println(recordId+ " " + sessionId);
-            Recording recording = openvidu.stopRecording(recordId);
+            if(matchingQueue.contains(mapRooms.get(sessionId))){ // 매치가 안되었는데 나갔을 경우
 
-            sessionRecordings.remove(sessionId);
-            mapSessions.remove(sessionId);
-            mapSessionNamesTokens.remove(sessionId);
-            mapRooms.remove(sessionId);
-            session.close();
+                matchingQueue.remove(mapRooms.get(sessionId));
+                mapSessions.remove(sessionId);
+                mapSessionNamesTokens.remove(sessionId);
+                mapRooms.remove(sessionId);
 
-            return new ResponseEntity<>(recording, HttpStatus.OK);
 
+                return new ResponseEntity<>(HttpStatus.OK);
+
+            }else{ // 매치가 된 후 나갔을 경우
+                String recordId = sessionRecordings.get(sessionId);
+                Recording recording = openvidu.stopRecording(recordId);
+
+                sessionRecordings.remove(sessionId);
+                mapSessions.remove(sessionId);
+                mapSessionNamesTokens.remove(sessionId);
+                //matchService.writeVideoToDB(recordId, mapRooms.get(sessionId));
+
+                mapRooms.remove(sessionId);
+                session.close();
+
+
+
+                return new ResponseEntity<>(recording, HttpStatus.OK);
+            }
         }else{
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
 
         }
-//        try {
-//            System.out.println("[STOP] Session created: " + sessionId);
-//
-//            mapRooms.remove(sessionId);
-//            System.out.println("[STOP] Session created: " + sessionId);
-//
-//            Session session = openvidu.getActiveSession(sessionId);
-//            System.out.println("[STOP] Session created: " + sessionId);
-//
-//            session.close();
-//            System.out.println("[STOP] Session created: " + sessionId);
-//
-//            return new ResponseEntity<>(recording, HttpStatus.OK);
-//        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
+
     }
 
     /* 녹화를 위함 */
