@@ -68,6 +68,6 @@ public class MatchService {
 
 
         /* JSON Parse 종료 */
-        
+
     }
 }
