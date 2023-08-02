@@ -77,15 +77,14 @@ public class MatchController {
             else{ // 없는거 확인했으면 세로운 세션 Id 만들기
                 try{
                     System.out.println("[EMPTY] Session created: " + sessionId);
-                    RecordingProperties recordingProperties = new RecordingProperties.Builder()
-                            .outputMode(Recording.OutputMode.INDIVIDUAL)
-                            .resolution("640x480")
-                            .frameRate(24)
-                            .name("VideoInfo")
-                            .build();
+//                    RecordingProperties recordingProperties = new RecordingProperties.Builder()
+//                            .outputMode(Recording.OutputMode.INDIVIDUAL)
+//                            .resolution("640x480")
+//                            .frameRate(24)
+//                            .name("VideoInfo")
+//                            .build();
 
                     SessionProperties sessionProperties = new SessionProperties.Builder()
-                            .defaultRecordingProperties(recordingProperties)
                             .customSessionId(sessionId)
                             .recordingMode(RecordingMode.MANUAL)
                             .build();
@@ -122,7 +121,15 @@ public class MatchController {
                 result.put("token", token);
                 System.out.println(sessionId);
                 System.out.println(token);
-                Recording recording = openvidu.startRecording(sessionId);
+                
+                RecordingProperties recordingProperties = new RecordingProperties.Builder() // 녹화 설정
+                        .outputMode(Recording.OutputMode.INDIVIDUAL)
+                        .resolution("640x480")
+                        .frameRate(24)
+                        .name("VideoInfo")
+                        .build();
+                Recording recording = openvidu.startRecording(sessionId, recordingProperties); // 녹화 시작
+                
                 sessionRecordings.put(sessionId, recording.getId());
                 existingRoom.setRecordingId(recording.getId());
                 mapRooms.put(sessionId, existingRoom);
@@ -144,12 +151,13 @@ public class MatchController {
             String recordId = sessionRecordings.get(sessionId);
             System.out.println(recordId+ " " + sessionId);
             Recording recording = openvidu.stopRecording(recordId);
+
             sessionRecordings.remove(sessionId);
             mapSessions.remove(sessionId);
             mapSessionNamesTokens.remove(sessionId);
             mapRooms.remove(sessionId);
             session.close();
-            
+
             return new ResponseEntity<>(recording, HttpStatus.OK);
 
         }else{
