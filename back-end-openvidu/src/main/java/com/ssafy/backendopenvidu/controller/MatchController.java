@@ -1,10 +1,9 @@
 package com.ssafy.backendopenvidu.controller;
 import com.google.gson.JsonObject;
 import com.ssafy.backendopenvidu.dto.request.MatchRequest;
-import com.ssafy.backendopenvidu.model.entity.Room;
+import com.ssafy.backendopenvidu.model.Room;
 import com.ssafy.backendopenvidu.service.MatchService;
 import io.openvidu.java.client.*;
-import io.openvidu.java.client.Connection;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduHttpException;
@@ -22,14 +21,12 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -175,7 +172,7 @@ public class MatchController {
                 sessionRecordings.remove(sessionId);
                 mapSessions.remove(sessionId);
                 mapSessionNamesTokens.remove(sessionId);
-                //matchService.writeVideoToDB(recordId, mapRooms.get(sessionId));
+                matchService.writeVideoToDB(recordId, mapRooms.get(sessionId));
 
                 mapRooms.remove(sessionId);
                 session.close();
