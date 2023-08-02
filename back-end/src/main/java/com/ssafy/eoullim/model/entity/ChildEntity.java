@@ -77,6 +77,7 @@ public class ChildEntity {
 
         Animon animon = child.getAnimon();
         if (animon != null) entity.setAnimon(AnimonEntity.of(animon));
+
         return entity;
     }
 }
