@@ -1,14 +1,11 @@
 package com.ssafy.eoullim.model.entity;
 
-import com.ssafy.eoullim.model.Animon;
-import com.ssafy.eoullim.model.Child;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Setter
 @Getter
