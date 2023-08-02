@@ -33,10 +33,6 @@ public class JwtTokenUtils {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public static Long getExpiration(){
-
-    }
-
     public static Boolean isTokenExpired(String token, String key) {
         Date expiration = extractAllClaims(token, key).getExpiration();
         return expiration.before(new Date());

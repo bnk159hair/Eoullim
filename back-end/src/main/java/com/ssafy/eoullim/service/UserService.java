@@ -9,6 +9,7 @@ import com.ssafy.eoullim.repository.UserRepository;
 import com.ssafy.eoullim.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final UserCacheRepository userCacheRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -47,6 +49,7 @@ public class UserService {
 
     public String login(String userName, String password) {
         User savedUser = loadUserByUsername(userName);
+        userCacheRepository.setUser(savedUser);
         if (!encoder.matches(password, savedUser.getPassword())) {
             throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
         }
@@ -54,10 +57,7 @@ public class UserService {
     }
 
     public void logout(String userName){
-        // 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장하기
-        Long expiration = JwtTokenUtils.getExpiration(tokenRequestDto.getAccessToken());
-        redisTemplate.opsForValue().set(tokenRequestDto.getAccessToken(),"logout", expiration, TimeUnit.MILLISECONDS);
-
+        redisTemplate.opsForValue().set(userName,"logout", expiredTimeMs, TimeUnit.MILLISECONDS);
     }
 
     @Transactional

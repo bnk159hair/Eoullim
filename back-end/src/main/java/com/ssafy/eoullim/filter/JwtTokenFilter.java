@@ -3,8 +3,10 @@ package com.ssafy.eoullim.filter;
 import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.service.UserService;
 import com.ssafy.eoullim.utils.JwtTokenUtils;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,12 +23,12 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserService userService;
-    private final String secretKey;
     private final RedisTemplate<String, Object> redisTemplate;
+    private String secretKey;
 
     private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/alarm/subscribe");
 
@@ -51,10 +53,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             if (!JwtTokenUtils.validate(token, userDetails.getUsername(), secretKey)) {
                 chain.doFilter(request, response);
+                log.info("invalid");
                 return;
             }
 
-            String isLogout = (String) redisTemplate.opsForValue().get(token);
+            String isLogout = (String) redisTemplate.opsForValue().get(userName);
+            log.info(isLogout);
             if (ObjectUtils.isEmpty(isLogout)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null,
