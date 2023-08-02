@@ -26,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final UserCacheRepository userCacheRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> blackList;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -57,7 +57,7 @@ public class UserService {
     }
 
     public void logout(String userName){
-        redisTemplate.opsForValue().set(userName,"logout", expiredTimeMs, TimeUnit.MILLISECONDS);
+        blackList.opsForValue().set(userName,"logout", expiredTimeMs, TimeUnit.MILLISECONDS);
     }
 
     @Transactional

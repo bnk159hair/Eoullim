@@ -27,7 +27,7 @@ public class ChildController {
     @GetMapping
     public Response<List<Child>> list(Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
-        List<Child> childList = childService.list(user.getId());
+        List<Child> childList = childService.getList(user.getId());
         return Response.success(childList);
     }
 
@@ -59,7 +59,7 @@ public class ChildController {
 
     @GetMapping("/{childId}")
     public Response<Child> info(@PathVariable Integer childId) {
-        Child child = childService.info(childId);
+        Child child = childService.getChildInfo(childId);
         return Response.success(child);
     }
 
@@ -78,13 +78,13 @@ public class ChildController {
 
     @GetMapping("/{childId}/animons")
     public Response<List<Animon>> animonlist(@PathVariable Integer childId) {
-        List<Animon> animonList = childService.animonList(childId);
+        List<Animon> animonList = childService.getAnimonList(childId);
         return Response.success(animonList);
     }
 
     @GetMapping("/{childId}/animons/{animonId}")
     public Response<Animon> selectAnimon(@PathVariable Integer childId, @PathVariable Integer animonId) {
-        Animon animon = childService.selectAnimon(childId, animonId);
+        Animon animon = childService.setAnimon(childId, animonId);
         return Response.success(animon);
     }
 
