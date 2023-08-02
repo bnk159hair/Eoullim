@@ -5,7 +5,6 @@ import loginBackground from "../../assets/background/login.gif"; // 이미지를
 export const LoginPageContainer = styled.div`
     height: 100vh;
     background-size: 100% 100%;
-    background-attachment: scroll;
     background-image: url(${loginBackground}); // 이미지 경로를 문자열로 감싸줍니다.
 `;
 export const LoginTagContainer = styled.div`
