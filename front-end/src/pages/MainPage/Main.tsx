@@ -3,25 +3,24 @@ import LoginUser from '../../components/main/LoginUser';
 import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleStreamClick = () => {
-        navigate('/stream'); 
-      };
-    
-    const handleFriendsClick = () => {
-        navigate('/friends'); 
-      };
-    
+  const getNewFriend = () => {
+    navigate('/session');
+  };
 
-    return (
-        <div>
-            메인페이지
-            <button onClick={handleStreamClick}>새친구 만들기</button>
-            <button onClick={handleFriendsClick}>내친구 목록</button>
-            <LoginUser/>
-        </div>
-    );
+  const handleFriendsClick = () => {
+    navigate('/friends');
+  };
+
+  return (
+    <div>
+      메인페이지
+      <button onClick={getNewFriend}>새친구 만들기</button>
+      <button onClick={handleFriendsClick}>내친구 목록</button>
+      <LoginUser />
+    </div>
+  );
 };
 
 export default Main;
