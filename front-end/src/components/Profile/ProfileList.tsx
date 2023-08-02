@@ -17,7 +17,7 @@ interface Profile {
   status: string;
 }
 
-const ProfileList: React.FC = () => {
+const ProfileList = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const BASEURL = 'http://localhost:8080/api/v1';
