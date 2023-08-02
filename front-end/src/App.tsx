@@ -8,7 +8,7 @@ import Signup from './pages/SignupPage/Signup';
 import Profile from './pages/ProfilePage/ProfileSelect';
 import Stream from './pages/StreamPage/Stream';
 import Friends from './pages/Friendspage/Friends';
-
+import Record from './pages/RecordPage/Record';
 
 function App() {
   return (
@@ -23,6 +23,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/stream" element={<Stream />} />
               <Route path="/friends" element={<Friends />} />
+              <Route path="/record" element={<Record />} />
             </Routes>
           </Router>
         </RecoilRoot>

@@ -11,7 +11,7 @@ const SignUpTag = () => {
   const [resultCode, setIsresultCode] = useState(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const navigate = useNavigate();
-  const BASEURL = 'https://i9c207.p.ssafy.io/api/v1';
+  const BASEURL = 'http://localhost:8080/api/v1';
 
   const handleSignUp = async () => {
     if (!resultCode) {
@@ -32,7 +32,7 @@ const SignUpTag = () => {
     try {
       const signUpData = { userName , password, name, phoneNumber };
       const response = await axios.post(`${BASEURL}/users/join`, signUpData);
-      console.log("회원가입 성공:", response.data);
+      console.log("회원가입 성공:", response);
       navigate("/login");
     } catch (error) {
       console.error("회원가입 실패:", error);
@@ -45,7 +45,7 @@ const SignUpTag = () => {
         userName: userName  
       });
       setIsresultCode(response.data.resultCode);
-      console.log("아이디 중복 체크 결과:", response.data.resultCode);
+      console.log("아이디 중복 체크 결과:", response);
       alert(response.data.resultCode ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다.");
     } catch (error) {
       console.error("아이디 중복 체크 에러:", error);
