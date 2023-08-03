@@ -26,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final UserCacheRepository userCacheRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> blackListTemplate;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -49,6 +49,8 @@ public class UserService {
 
     public String login(String userName, String password) {
         User savedUser = loadUserByUsername(userName);
+        String key = setBlackListKey(userName);
+        blackListTemplate.delete(key);
         userCacheRepository.setUser(savedUser);
         if (!encoder.matches(password, savedUser.getPassword())) {
             throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
@@ -56,8 +58,13 @@ public class UserService {
         return JwtTokenUtils.generateAccessToken(userName, secretKey, expiredTimeMs);
     }
 
-    public void logout(String userName){
-        redisTemplate.opsForValue().set(userName,"logout", expiredTimeMs, TimeUnit.MILLISECONDS);
+    public void logout(String userName) {
+        String key = setBlackListKey(userName);
+        blackListTemplate.opsForValue().set(key,"logout", expiredTimeMs, TimeUnit.MILLISECONDS);
+    }
+
+    public String setBlackListKey(String userName) {
+        return "BlackList:" + userName;
     }
 
     @Transactional

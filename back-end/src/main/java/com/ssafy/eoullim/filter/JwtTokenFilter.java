@@ -27,15 +27,14 @@ import java.util.List;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserService userService;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private String secretKey;
+    private final RedisTemplate<String, Object> blackList;
+    private final String secretKey;
 
     private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/alarm/subscribe");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        System.out.println(header);
         final String token;
         try {
             if (TOKEN_IN_PARAM_URLS.contains(request.getRequestURI())) {
@@ -51,16 +50,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             String userName = JwtTokenUtils.getUsername(token, secretKey);
             User userDetails = userService.loadUserByUsername(userName);
-            System.out.println(userName);
-            System.out.println(userDetails);
+
             if (!JwtTokenUtils.validate(token, userDetails.getUsername(), secretKey)) {
                 chain.doFilter(request, response);
                 log.info("invalid");
                 return;
             }
 
-            String isLogout = (String) redisTemplate.opsForValue().get(userName);
-            log.info(isLogout);
+            String key = "BlackList:" + userName;
+            String isLogout = (String) blackList.opsForValue().get(key);
+            log.info(String.valueOf(isLogout));
             if (ObjectUtils.isEmpty(isLogout)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null,
@@ -70,7 +69,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (RuntimeException e) {
-            System.out.println("error");
+            System.out.println(e);
             chain.doFilter(request, response);
             return;
         }

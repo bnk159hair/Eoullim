@@ -20,16 +20,16 @@ public class FriendshipEntity {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "child_id", nullable = false, referencedColumnName = "child_id")
-    private ChildEntity child;
+    @JoinColumn(name = "my_id", nullable = false, referencedColumnName = "child_id")
+    private ChildEntity my;
 
     @ManyToOne
     @JoinColumn(name = "friend_id", nullable = false, referencedColumnName = "child_id")
     private ChildEntity friend;
 
-    public static FriendshipEntity of(ChildEntity child, ChildEntity friend) {
+    public static FriendshipEntity of(ChildEntity my, ChildEntity friend) {
         FriendshipEntity friendship = new FriendshipEntity();
-        friendship.setChild(child);
+        friendship.setMy(my);
         friendship.setFriend(friend);
         return friendship;
     }
