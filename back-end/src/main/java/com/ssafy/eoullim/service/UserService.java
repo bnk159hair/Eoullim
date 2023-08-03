@@ -35,10 +35,9 @@ public class UserService {
     private Long expiredTimeMs;
 
     public User loadUserByUsername(String userName) throws UsernameNotFoundException {
-//        userCacheRepository.getUser(userName).orElseGet(
-//                () ->
-        return userRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(
-                        () -> new EoullimApplicationException(ErrorCode.USER_NOT_FOUND));
+        return userCacheRepository.getUser(userName).orElseGet(
+                () -> userRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(
+                        () -> new EoullimApplicationException(ErrorCode.USER_NOT_FOUND)));
     }
 
     public void join(String userName, String password, String name, String phoneNumber) {
