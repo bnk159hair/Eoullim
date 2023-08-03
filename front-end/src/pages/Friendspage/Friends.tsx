@@ -1,6 +1,7 @@
 import React from 'react';
 import MyFriendsList from '../../components/MyFriends/MyFriendsList';
 import { useNavigate } from 'react-router-dom'
+import {FriendsPageContainer} from './Friends.styles'
 
 const Friends = () => {
 
@@ -11,11 +12,11 @@ const Friends = () => {
       };
 
     return (
-        <div>
+        <FriendsPageContainer>
             내친구 목록
             <MyFriendsList/>
             <button onClick={handleMainClick}>뒤로 가기</button>
-        </div>
+        </FriendsPageContainer>
     );
 };
 
