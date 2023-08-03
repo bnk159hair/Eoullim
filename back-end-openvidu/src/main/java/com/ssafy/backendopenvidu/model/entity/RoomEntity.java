@@ -15,14 +15,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="record_info")
 @NoArgsConstructor
-@AllArgsConstructor
 public class RoomEntity {
-//    public RoomEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId) {
-//        this.recordId = recordId;
-//        this.videoPath = videoPath;
-//        this.masterId = masterId;
-//        this.participantId = participantId;
-//    }
+    public RoomEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId) {
+        this.recordId = recordId;
+        this.videoPath = videoPath;
+        this.masterId = masterId;
+        this.participantId = participantId;
+    }
 
     @Id
     @Column(name="record_id")
@@ -44,7 +43,6 @@ public class RoomEntity {
 
     public static RoomEntity of(String videoPath, Integer masterId, Integer participantId){
         return new RoomEntity(
-                null,
                 null,
                 videoPath,
                 masterId,
