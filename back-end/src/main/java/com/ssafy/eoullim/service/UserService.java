@@ -62,7 +62,7 @@ public class UserService {
     }
 
     public String setKey(String userName) {
-        return "blackLisk:" + userName;
+        return "BlackLisk: " + userName;
     }
 
     @Transactional

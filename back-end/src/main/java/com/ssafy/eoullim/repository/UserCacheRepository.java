@@ -16,7 +16,7 @@ public class UserCacheRepository {
 
     private final RedisTemplate<String, User> userRedisTemplate;
 
-    private final static Duration USER_CACHE_TTL = Duration.ofDays(3);
+    private final static Duration USER_CACHE_TTL = Duration.ofMinutes(5);
 
     public void setUser(User user) {
         String key = getKey(user.getUsername());
@@ -32,6 +32,6 @@ public class UserCacheRepository {
     }
 
     private String getKey(String userName) {
-        return "UID:" + userName;
+        return "UserCache: " + userName;
     }
 }
