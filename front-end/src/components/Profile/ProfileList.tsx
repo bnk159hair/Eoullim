@@ -5,6 +5,7 @@ import { ProfileCreateBox,ProfileListBox } from './profileList.styles';
 import CreateModal from './CreateModal';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
+import {BASEURL} from '../../apis/api'
 
 
 interface Profile {
@@ -20,7 +21,6 @@ interface Profile {
 const ProfileList = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const BASEURL = 'http://localhost:8080/api/v1';
   const token = useRecoilValue(tokenState);
   
 
@@ -44,6 +44,7 @@ const ProfileList = () => {
       .then((response) => {
         const data = response.data.result;
         setProfiles(data);
+        // console.log(profiles)
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -52,11 +53,11 @@ const ProfileList = () => {
 
   return (
     <ProfileListBox>
-      <ProfileListItem/>
-      {/* {profiles.map((profile) => (
-        <ProfileListItem key={profile.id} name={profile.name} />
-      ))} */}
-      {profiles.length < 3 && <ProfileCreateBox onClick={handleModalOpen} />}
+      {profiles.map((profile) => (
+        <ProfileListItem key={profile.id} ChildId={profile.id} name={profile.name} />
+      ))}
+      
+      {profiles.length < 3 && <ProfileCreateBox onClick={handleModalOpen} /> }
       {isModalOpen && <CreateModal onClose={handleModalClose} />}
     </ProfileListBox>
   );

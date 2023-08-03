@@ -1,121 +1,199 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ModalOverlay, ModalContent } from './ModifyModal.styles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
+import {BASEURL} from '../../apis/api'
+
+interface ChildProfile {
+  id: number;
+  name: string;
+  birth: string;
+  gender: string;
+  school: string;
+  grade: number;
+  status: string;
+}
 
 interface ModifyModalProps {
   onClose: () => void;
+  ChildId:number;
 }
 
-const ModifyModal: React.FC<ModifyModalProps> = ({ onClose }) => {
-  const [name, setChildName] = useState('');
-  const [birth, setChildBirth] = useState('');
-  const [gender, setChildGender] = useState(''); 
-  const [school, setChildSchool] = useState('');
-  const [grade, setChildGrade] = useState(''); 
-  const BASEURL = 'http://localhost:8080/api/v1';
+const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId }) => {
+  const [childProfile, setChildProfile] = useState<ChildProfile>({
+    id: 0,
+    name: '',
+    birth: '',
+    gender: '',
+    school: '',
+    grade: 0,
+    status: '',
+  });
+
+
   const token = useRecoilValue(tokenState);
+  const [password, setPassword] = useState('');
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
 
-  const handleCreateProfile = async () => {
-    if (!name || !birth || !gender || !school || !grade) {
-      alert('모든 정보를 입력해주세요.');
-      return;
-    }
+  useEffect(() => {
+    const fetchChildProfile = () => {
+      axios
+        .get(`${BASEURL}/children/${ChildId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setChildProfile(response.data.result);
+        })
+        .catch((error) => {
+          console.log('아이 프로필을 불러오는데 실패했습니다:', error);
+        });
+    };
 
-    try {
-      const profileData = { name, birth, gender, school, grade };
-      const response = await axios.post(`${BASEURL}/children`, profileData, {
+    fetchChildProfile();
+  }, [ChildId, token]);
+
+  const passwordClick = () => {
+    axios
+      .post(`${BASEURL}/users/pw-check`, { password },
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+      })
+      .then((response) => {
+        setIsPasswordCorrect(true);
+      })
+      .catch((error) => {
+        alert('비밀번호를 확인해주세요.');
       });
-      console.log('프로필 생성 성공:', response);
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      const response = await axios.put(
+        `${BASEURL}/children/${childProfile.id}`,
+        childProfile,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log('프로필 수정 성공:', response);
       onClose();
     } catch (error) {
-        console.log(token)
-      console.log('프로필 생성실패:', error);
+      console.log('프로필 수정 실패:', error);
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setChildProfile((prevProfile) => ({
+      ...prevProfile,
+      [name]: value,
+    }));
   };
 
   return (
     <ModalOverlay>
       <ModalContent>
         <h2>프로필 수정</h2>
-        <input
-          type="text"
-          placeholder="이름"
-          value={name}
-          onChange={(e) => setChildName(e.target.value)}
-        />
-        <input
-          type="date" 
-          placeholder="생년월일"
-          value={birth}
-          onChange={(e) => setChildBirth(e.target.value)}
-        />
-        <div>
-          <label>
+        {!isPasswordCorrect ? (
+          <>
             <input
-              type="radio" 
-              name="gender"
-              value="M"
-              checked={gender === 'M'}
-              onChange={(e) => setChildGender(e.target.value)}
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            남성
-          </label>
-          <label>
+            <button onClick={passwordClick}>확인</button>
+            <button onClick={onClose}>닫기</button>
+          </>
+        ) : (
+          <>
             <input
-              type="radio"
-              name="gender"
-              value="W"
-              checked={gender === 'W'}
-              onChange={(e) => setChildGender(e.target.value)}
+              type="text"
+              placeholder="이름"
+              name="name"
+              value={childProfile.name}
+              onChange={handleInputChange}
             />
-            여성
-          </label>
-        </div>
-        <input
-          type="text"
-          placeholder="학교"
-          value={school}
-          onChange={(e) => setChildSchool(e.target.value)}
-        />
-        <div>
-          <label>
             <input
-              type="radio"
-              name="grade"
-              value="1"
-              checked={grade === '1'}
-              onChange={(e) => setChildGrade(e.target.value)}
+              type="date"
+              placeholder="생년월일"
+              name="birth"
+              value={childProfile.birth}
+              onChange={handleInputChange}
             />
-            1학년
-          </label>
-          <label>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="M"
+                  checked={childProfile.gender === 'M'}
+                  onChange={handleInputChange}
+                />
+                남성
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="W"
+                  checked={childProfile.gender === 'W'}
+                  onChange={handleInputChange}
+                />
+                여성
+              </label>
+            </div>
             <input
-              type="radio"
-              name="grade"
-              value="2"
-              checked={grade === '2'}
-              onChange={(e) => setChildGrade(e.target.value)}
+              type="text"
+              placeholder="학교"
+              name="school"
+              value={childProfile.school}
+              onChange={handleInputChange}
             />
-            2학년
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="grade"
-              value="3"
-              checked={grade === '3'}
-              onChange={(e) => setChildGrade(e.target.value)}
-            />
-            3학년
-          </label>
-        </div>
-        <button onClick={handleCreateProfile}>수정</button>
-        <button onClick={onClose}>닫기</button>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="grade"
+                  value="1"
+                  checked={childProfile.grade === 1}
+                  onChange={handleInputChange}
+                />
+                1학년
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="grade"
+                  value="2"
+                  checked={childProfile.grade === 2}
+                  onChange={handleInputChange}
+                />
+                2학년
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="grade"
+                  value="3"
+                  checked={childProfile.grade === 3}
+                  onChange={handleInputChange}
+                />
+                3학년
+              </label>
+            </div>
+            <button onClick={handleUpdateProfile}>수정</button>
+            <button onClick={onClose}>닫기</button>
+          </>
+        )}
       </ModalContent>
     </ModalOverlay>
   );

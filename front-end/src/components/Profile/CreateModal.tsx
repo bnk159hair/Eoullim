@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ModalOverlay, ModalContent } from './CreateModal.styles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
+import {BASEURL} from '../../apis/api'
 
 interface CreateModalProps {
   onClose: () => void;
@@ -15,7 +16,6 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
   const [school, setChildSchool] = useState('');
   const [grade, setChildGrade] = useState('');
   const [resultCode, setIsresultCode] = useState(false);
-  const BASEURL = 'http://localhost:8080/api/v1';
   const token = useRecoilValue(tokenState);
 
   const handleCreateProfile = async () => {
@@ -47,8 +47,14 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
     try {
       const response = await axios.post(`${BASEURL}/children/school`, {
         keyword: school  
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       setIsresultCode(response.data.resultCode);
+      
       alert(response.data.resultCode ? "올바른 학교정보입니다" : "다시 입력해주세요");
     } catch (error) {
       console.error(error);
@@ -60,18 +66,21 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
     <ModalOverlay>
       <ModalContent>
         <h2>프로필 생성</h2>
+        이름
         <input
           type="text"
           placeholder="이름"
           value={name}
           onChange={(e) => setChildName(e.target.value)}
         />
+        생년월일
         <input
           type="date" 
           placeholder="생년월일"
           value={birth}
           onChange={(e) => setChildBirth(e.target.value)}
         />
+        성별
         <div>
           <label>
             <input
@@ -94,6 +103,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
             여성
           </label>
         </div>
+        학교
         <input
           type="text"
           placeholder="학교"
@@ -104,6 +114,9 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
         {resultCode && (
           <div style={{ color: "green" }}>학교 등록이 완료되었습니다.</div>
         )}
+        <div>
+          학년
+        </div>
         <div>
           <label>
             <input

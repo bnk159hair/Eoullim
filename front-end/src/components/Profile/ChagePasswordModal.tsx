@@ -3,6 +3,8 @@ import axios from 'axios';
 import { ModalOverlay, ModalContent } from './ChagePasswordModal.styles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
+import {BASEURL} from '../../apis/api'
+import { useNavigate } from 'react-router-dom';
 
 interface ChagePasswordModalProps {
   onClose: () => void;
@@ -13,8 +15,8 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
     const [newPassword,setNewPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
-    const BASEURL = 'http://localhost:8080/api/v1';
     const token = useRecoilValue(tokenState);
+    const navigate = useNavigate();
 
     const handlePasswordConfirmation = () => {
         setIsPasswordMatch(newPassword === passwordConfirmation);
@@ -38,7 +40,8 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
         },
       });
       console.log('비밀번호 변경성공', response);
-      onClose();
+      // onClose();
+      navigate('/login');
     } catch (error) {
         console.log(token)
       console.log('비밀번호 변경 실패', error);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
+import {BASEURL} from '../../apis/api'
 
 const SignUpTag = () => {
   const [userName, setUserName] = useState("");
@@ -11,7 +12,6 @@ const SignUpTag = () => {
   const [resultCode, setIsresultCode] = useState(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const navigate = useNavigate();
-  const BASEURL = 'http://localhost:8080/api/v1';
 
   const handleSignUp = async () => {
     if (!resultCode) {

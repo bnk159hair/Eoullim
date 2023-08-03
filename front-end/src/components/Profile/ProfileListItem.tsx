@@ -3,11 +3,12 @@ import { ProfileUsereBox } from './profileListItem.styles';
 import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
 
-// interface ProfileListItemProps {
-//   name: string;
-// }
+interface ProfileListItemProps {
+  name: string;
+  ChildId: number
+}
 
-const ProfileListItem: React.FC = () => {
+const ProfileListItem: React.FC<ProfileListItemProps> = ({name,ChildId}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -30,22 +31,16 @@ const ProfileListItem: React.FC = () => {
   return (
     <div>
       <ProfileUsereBox onClick={handleMainClick}>
-        이름
+        {name}
+        {ChildId}
       </ProfileUsereBox>
         <button onClick={handleModalOpen} >수정</button>
-        {isModalOpen && <ModifyModal onClose={handleModalClose} />}
+        {isModalOpen && <ModifyModal onClose={handleModalClose} ChildId={ChildId}/>}
         <button>삭제</button>
         <button onClick={handleRecordClick}>녹화영상</button>
     </div>
   );
 };
 
-// const ProfileListItem: React.FC<ProfileListItemProps> = ({ name }) => {
-//   return (
-//     <ProfileUsereBox>
-//       {name}
-//     </ProfileUsereBox>
-//   );
-// };
 
 export default ProfileListItem;
