@@ -2,6 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
 import { CanvasTag } from '../../components/stream/CanvasTag';
+import {
+  Buttons,
+  Character,
+  Container,
+  MainWrapper,
+  MyVideo,
+  SideBar,
+  YourVideo,
+} from './SessionStyles';
 
 const Session = () => {
   const navigate = useNavigate();
@@ -14,8 +23,9 @@ const Session = () => {
   };
 
   return (
-    <div>
-      {publisher
+    <Container>
+      <MainWrapper>
+        {/* {publisher
         ? streamList.map((stream, idx) =>
             stream.streamManager ? (
               <div key={idx} className="stream-container col-md-6 col-xs-6">
@@ -31,10 +41,38 @@ const Session = () => {
               </div>
             ) : null
           )
-        : null}
-      <h1>Character</h1>
-      <button onClick={leaveSession}>나가기 컴포넌트</button>
-    </div>
+        : null} */}
+
+        <YourVideo>
+          {streamList.length > 1 ? (
+            <CanvasTag
+              streamManager={streamList[1].streamManager}
+              name={streamList[1].userId}
+              avatarPath="http://localhost:3000/image.png"
+            />
+          ) : null}
+        </YourVideo>
+        {/* <Loading /> */}
+      </MainWrapper>
+      <SideBar>
+        <Character>Character</Character>
+        <MyVideo>
+          <YourVideo>
+            {streamList.length > 1 ? (
+              <CanvasTag
+                streamManager={streamList[0].streamManager}
+                name={streamList[0].userId}
+                avatarPath="http://localhost:3000/image.png"
+              />
+            ) : null}
+          </YourVideo>
+        </MyVideo>
+        <Buttons>
+          <button>애니몬</button>
+          <button onClick={leaveSession}>나가기</button>
+        </Buttons>
+      </SideBar>
+    </Container>
   );
 };
 

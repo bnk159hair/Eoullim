@@ -1,18 +1,17 @@
-import styled from "styled-components";
-import tw from "twin.macro";
-import LoginBox from "../../assets/box/loginbox.png";
+import styled from 'styled-components';
+import LoginBox from '../../assets/box/loginbox.png';
 
 export const LoginTagContainer = styled.div`
-    width: 560px;
-    height: 300px;
-    padding: 50px;
-    background-size: cover;
-    background-image: url(${LoginBox});
-    display: grid;
-    grid-template-columns: 300px 100px;
-    gap: 10px;
-    justify-content: space-evenly;
-    align-content: center;
+  width: 560px;
+  height: 300px;
+  padding: 50px;
+  background-size: cover;
+  background-image: url(${LoginBox});
+  display: grid;
+  grid-template-columns: 300px 100px;
+  gap: 10px;
+  justify-content: space-evenly;
+  align-content: center;
 `;
 
 export const LoginInput = styled.input`
@@ -30,6 +29,11 @@ export const LoginButtonContainer = styled.div`
 `;
 
 export const LoginButton = styled.button`
-  ${tw`bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4`}
-
+  background-color: #3b82f6;
+  color: #fff;
+  font-weight: bold;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 0.25rem;
+  margin-top: 1rem;
+  width: 100px;
 `;
