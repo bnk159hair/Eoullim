@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserCacheRepository {
 
-    private final RedisTemplate<String, Object> userRedisTemplate;
+    private final RedisTemplate<String, User> userRedisTemplate;
 
     private final static Duration USER_CACHE_TTL = Duration.ofDays(3);
 
@@ -25,7 +25,8 @@ public class UserCacheRepository {
     }
 
     public Optional<User> getUser(String userName) {
-        User data = (User) userRedisTemplate.opsForValue().get(getKey(userName));
+        System.out.println("here");
+        User data = userRedisTemplate.opsForValue().get(getKey(userName));
         log.info("Get User from Redis {}", data);
         return Optional.ofNullable(data);
     }
