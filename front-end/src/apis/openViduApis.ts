@@ -6,6 +6,7 @@ export const getToken: (userInfo: object) => Promise<any> = async (
   userInfo
 ) => {
   console.log('토큰 가져오기');
+  console.log(userInfo);
   return await axios
     .post(`${SERVER_URL}api/sessions/match`, userInfo, {
       headers: { 'Content-Type': 'application/json' },
@@ -21,7 +22,7 @@ export const getToken: (userInfo: object) => Promise<any> = async (
     });
 };
 
-export const destroySession: ({ session }: any) => Promise<void> = async (
+export const destroySession: (session: any) => Promise<void> = async (
   session
 ) => {
   console.log('세션 파괴!!!!!!');

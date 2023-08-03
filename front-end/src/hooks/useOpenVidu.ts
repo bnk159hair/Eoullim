@@ -22,6 +22,8 @@ export const useOpenVidu = (userId: any) => {
     setSubscribers([]);
   }, [session]);
 
+  console.log(userId);
+
   useEffect(() => {
     console.log('새로운 OV 객체 생성');
     const OV = new OpenVidu();
@@ -48,7 +50,7 @@ export const useOpenVidu = (userId: any) => {
     mySession.on('exception', (exception) => console.warn(exception));
 
     getToken({
-      childId: 103,
+      childId: 4,
       name: '홍길동',
       gender: 'M',
       school: '곡란초',
@@ -93,7 +95,7 @@ export const useOpenVidu = (userId: any) => {
         });
     });
     setSession(mySession);
-
+    console.log(mySession);
     return () => {
       console.log('useEffect가 return했다!!');
       if (mySession) {

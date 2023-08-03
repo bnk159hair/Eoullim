@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const tokenState = atom<string>({
+export const Profilekey = atom<string>({
   key: 'tokenState',
   default: '',
 });
