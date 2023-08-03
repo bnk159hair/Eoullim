@@ -57,7 +57,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String key = "blackLisk:" + userName;
+            String key = "BlackList:" + userName;
             String isLogout = (String) blackList.opsForValue().get(key);
             log.info(String.valueOf(isLogout));
             if (ObjectUtils.isEmpty(isLogout)) {
