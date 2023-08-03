@@ -27,7 +27,6 @@ public class MatchService {
         System.out.println(room.getChildTwo());
 
         /* 압축 해제 코드 시작 */
-        //recordingId = "103";
 //        String dir = "C:\\Users\\ssafy\\Downloads\\";
         String dir = "/var/lib/recordings/";
 
@@ -71,20 +70,13 @@ public class MatchService {
             int userId = Integer.parseInt((String)clientData.get("childId"));
             System.out.println(userId);
             if(room.getChildOne().intValue() == userId){ // 영상의 주인이 첫번째 사람
-                System.out.println("---");
                 roomRepository.save(RoomEntity.of(downFolder+name, userId, room.getChildTwo()));
             }
             if(room.getChildTwo().intValue() == userId){ // 영상의 주인이 두번째 사람
-                System.out.println("---");
-
                 roomRepository.save(RoomEntity.of(downFolder+name, userId, room.getChildOne()));
-
             }
 
         }
-
-
         /* JSON Parse 종료 */
-
     }
 }
