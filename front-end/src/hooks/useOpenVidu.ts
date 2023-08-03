@@ -1,6 +1,7 @@
 import { OpenVidu } from 'openvidu-browser';
 import { getToken, destroySession } from '../apis/openViduApis';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useWebSocket } from './useWebSocket';
 
 export const useOpenVidu = (userId: any) => {
   const [session, setSession] = useState<any>(null);
@@ -122,6 +123,21 @@ export const useOpenVidu = (userId: any) => {
     };
   }, [leaveSession]);
 
+  const onChangeCameraStatus = useCallback(
+    (status: boolean) => {
+      console.log(status);
+      publisher?.publishVideo(status);
+    },
+    [publisher]
+  );
+
+  const onChangeMicStatus = useCallback(
+    (status: boolean) => {
+      publisher?.publishAudio(status);
+    },
+    [publisher]
+  );
+
   const streamList = useMemo(
     () => [{ streamManager: publisher, userId }, ...subscribers],
     [publisher, subscribers, userId]
@@ -130,5 +146,7 @@ export const useOpenVidu = (userId: any) => {
   return {
     publisher,
     streamList,
+    onChangeCameraStatus,
+    onChangeMicStatus,
   };
 };

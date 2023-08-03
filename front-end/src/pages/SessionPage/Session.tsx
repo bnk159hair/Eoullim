@@ -2,13 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
 import { CanvasTag } from '../../components/stream/CanvasTag';
+import { ControlBar } from '../../components/stream/ControlBox';
+import { useWebSocket } from '../../hooks/useWebSocket';
 
 const Session = () => {
   const navigate = useNavigate();
 
   console.log('오픈비두 시작');
   const userId = 'user01';
-  const { publisher, streamList } = useOpenVidu(userId);
+  const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } =
+    useOpenVidu(userId);
   const leaveSession = async () => {
     navigate('/');
   };
@@ -33,7 +36,10 @@ const Session = () => {
           )
         : null}
       <h1>Character</h1>
-      <button onClick={leaveSession}>나가기 컴포넌트</button>
+      <ControlBar
+        onChangeMicStatus={onChangeMicStatus}
+        onChangeCameraStatus={onChangeCameraStatus}
+      />
     </div>
   );
 };
