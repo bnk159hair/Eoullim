@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="record_info")
 @NoArgsConstructor
-//@AllArgsConstructor
 public class RoomEntity {
     public RoomEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId) {
         this.recordId = recordId;
@@ -29,8 +29,8 @@ public class RoomEntity {
     private Integer recordId;
 
     @Column(name="create_time")
-//    @Temporal(value = TemporalType.TIMESTAMP)
-    private String createTime;
+    @CreationTimestamp
+    private LocalDateTime createTime;
 
     @Column(name="video_path")
     private String videoPath;
