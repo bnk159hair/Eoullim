@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { formToJSON } from 'axios';
 
 const SERVER_URL = 'https://i9c207.p.ssafy.io/';
 

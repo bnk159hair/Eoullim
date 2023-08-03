@@ -7,6 +7,7 @@ import Login from './pages/LoginPage/Login';
 import Signup from './pages/SignupPage/Signup';
 import Profile from './pages/ProfilePage/ProfileSelect';
 import Session from './pages/SessionPage/Session';
+import Session2 from './pages/SessionPage/Session2';
 import Friends from './pages/Friendspage/Friends';
 import Record from './pages/RecordPage/Record';
 
@@ -21,7 +22,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/session" element={<Session />} />
+              <Route path="/session" element={<Session2 />} />
               <Route path="/friends" element={<Friends />} />
               <Route path="/record" element={<Record />} />
             </Routes>

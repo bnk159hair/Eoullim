@@ -3,8 +3,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { tokenState } from '../../atoms/Auth';
-import {LoginTagContainer, LoginInput, LoginButton, LoginButtonContainer} from './LoginTag.styles'
-
+import {
+  LoginTagContainer,
+  LoginInput,
+  LoginButton,
+  LoginButtonContainer,
+} from './LoginTag.styles';
 
 const LoginTag = () => {
   const [userName, setUsername] = useState('');
@@ -13,14 +17,14 @@ const LoginTag = () => {
   const BASEURL = 'http://localhost:8080/api/v1';
   const [token, setToken] = useRecoilState(tokenState);
 
-  const handleLogin = () => { 
-    axios.post(`${BASEURL}/users/login`, { userName, password })
+  const handleLogin = () => {
+    axios
+      .post(`${BASEURL}/users/login`, { userName, password })
       .then((response) => {
         setToken(response.data.result);
         navigate('/profile');
       })
       .catch((error) => {
-      
         alert('아이디와 비밀번호를 확인해주세요.');
       });
   };
@@ -34,16 +38,26 @@ const LoginTag = () => {
       <LoginTagContainer>
         <div>
           <div>
-            <LoginInput type="text" placeholder="아이디" value={userName} onChange={(e) => setUsername(e.target.value)} />
+            <LoginInput
+              type="text"
+              placeholder="아이디"
+              value={userName}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
           <div>
-            <LoginInput type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <LoginInput
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
         </div>
         <div>
-        <LoginButtonContainer>
+          <LoginButtonContainer>
             <LoginButton onClick={handleLogin}>로그인</LoginButton>
-        </LoginButtonContainer>     
+          </LoginButtonContainer>
           <button onClick={handleSignup}>회원가입</button>
         </div>
       </LoginTagContainer>
