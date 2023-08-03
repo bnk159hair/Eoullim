@@ -20,7 +20,7 @@ public class FriendshipEntity {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "child_id", nullable = false, referencedColumnName = "child_id")
+    @JoinColumn(name = "my_id", nullable = false, referencedColumnName = "child_id")
     private ChildEntity child;
 
     @ManyToOne
