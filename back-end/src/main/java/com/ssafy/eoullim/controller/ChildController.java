@@ -88,7 +88,7 @@ public class ChildController {
     }
 
     // 학교 API
-    @GetMapping("/school")
+    @PostMapping("/school")
     public Response<Void> checkSchool(@RequestBody ChildSchoolRequest request) {
         childService.checkSchool(request.getKeyword());
         return Response.success();
