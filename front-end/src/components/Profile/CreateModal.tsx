@@ -36,6 +36,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
         },
       });
       console.log('프로필 생성 성공:', response);
+      console.log(profileData)
       onClose();
     } catch (error) {
         console.log(token)

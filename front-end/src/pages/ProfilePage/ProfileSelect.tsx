@@ -5,14 +5,14 @@ import {ProfileSelectPageContainer, PasswordChange, MarginContainer } from './Pr
 import ChagePasswordModal from '../../components/Profile/ChagePasswordModal';
 import {BASEURL} from '../../apis/api'
 import { tokenState } from '../../atoms/Auth';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue,useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileSelect = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const token = useRecoilValue(tokenState);
     const navigate = useNavigate();
-  
+    const [, setToken] = useRecoilState(tokenState);
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -31,14 +31,14 @@ const ProfileSelect = () => {
         })
         .then((response)=>
         {
-          console.log(token)
-          console.log(response)
+          setToken('');
           navigate('/login')
 
         })
         .catch((error)=>{
           console.log(token)
           console.log('로그아웃 오류:',error)
+          setToken('');
           navigate('/login')
         })
     }

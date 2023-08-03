@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ModalOverlay, ModalContent } from './ModifyModal.styles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import {BASEURL} from '../../apis/api'
+import { BASEURL } from '../../apis/api';
 
 interface ChildProfile {
   id: number;
@@ -17,10 +17,10 @@ interface ChildProfile {
 
 interface ModifyModalProps {
   onClose: () => void;
-  ChildId:number;
+  ChildId: number;
 }
 
-const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId }) => {
+const ModifyModal: React.FC<ModifyModalProps> = ({ onClose, ChildId }) => {
   const [childProfile, setChildProfile] = useState<ChildProfile>({
     id: 0,
     name: '',
@@ -30,7 +30,6 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId }) => {
     grade: 0,
     status: '',
   });
-
 
   const token = useRecoilValue(tokenState);
   const [password, setPassword] = useState('');
@@ -57,12 +56,15 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId }) => {
 
   const passwordClick = () => {
     axios
-      .post(`${BASEURL}/users/pw-check`, { password },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .post(
+        `${BASEURL}/users/pw-check`,
+        { password },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         setIsPasswordCorrect(true);
       })
@@ -92,9 +94,13 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    // 학년 값은 숫자로 변환
+    const gradeValue = name === 'grade' ? parseInt(value, 10) : value;
+
     setChildProfile((prevProfile) => ({
       ...prevProfile,
-      [name]: value,
+      [name]: gradeValue, // 숫자로 변환한 값으로 업데이트
     }));
   };
 

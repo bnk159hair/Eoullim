@@ -36,7 +36,7 @@ const ProfileList = () => {
 
   useEffect(() => {
     axios
-      .get<{ resultCode: string; result: Profile[] }>(`${BASEURL}/children`,{
+      .get(`${BASEURL}/children`,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -44,12 +44,11 @@ const ProfileList = () => {
       .then((response) => {
         const data = response.data.result;
         setProfiles(data);
-        // console.log(profiles)
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
       });
-  });
+  },[handleModalClose]);
 
   return (
     <ProfileListBox>
