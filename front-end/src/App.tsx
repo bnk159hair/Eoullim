@@ -6,7 +6,7 @@ import Main from './pages/MainPage/Main';
 import Login from './pages/LoginPage/Login';
 import Signup from './pages/SignupPage/Signup';
 import Profile from './pages/ProfilePage/ProfileSelect';
-import Stream from './pages/StreamPage/Stream';
+import Session from './pages/SessionPage/Session';
 import Friends from './pages/Friendspage/Friends';
 import Record from './pages/RecordPage/Record';
 
