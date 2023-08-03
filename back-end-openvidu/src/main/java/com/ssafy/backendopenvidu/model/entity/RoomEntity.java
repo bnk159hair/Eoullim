@@ -4,24 +4,33 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @Entity
 @Table(name="record_info")
 @NoArgsConstructor
-@AllArgsConstructor
 public class RoomEntity {
+    public RoomEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId) {
+        this.recordId = recordId;
+        this.videoPath = videoPath;
+        this.masterId = masterId;
+        this.participantId = participantId;
+    }
+
     @Id
     @Column(name="record_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer recordId;
 
     @Column(name="create_time")
-//    @Temporal(value = TemporalType.TIMESTAMP)
-    private String createTime;
+    @CreationTimestamp
+    private LocalDateTime createTime;
 
     @Column(name="video_path")
     private String videoPath;
@@ -34,7 +43,6 @@ public class RoomEntity {
 
     public static RoomEntity of(String videoPath, Integer masterId, Integer participantId){
         return new RoomEntity(
-                null,
                 null,
                 videoPath,
                 masterId,

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FriendshipRequest {
-    private Integer childId;
+    private Integer myId;
     private Integer friendId;
 }

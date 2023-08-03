@@ -14,6 +14,8 @@ import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -65,9 +67,9 @@ public class MatchController {
     public ResponseEntity<?> randomMatch(
             @RequestBody MatchRequest matchRequest
     ) throws OpenViduJavaClientException, OpenViduHttpException {
-        OpenViduRole role = OpenViduRole.PUBLISHER;
+//        OpenViduRole role = OpenViduRole.PUBLISHER;
 
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>(); // 빈 파일
 
         ConnectionProperties connectionProperties = ConnectionProperties
                 .fromJson(params)
@@ -75,7 +77,9 @@ public class MatchController {
 
 
         if(matchingQueue.isEmpty()){ // 비어있다면
-            String sessionId = matchRequest.getChildId().toString()+matchRequest.getGrade();
+            LocalDateTime now = LocalDateTime.now();
+            String formatNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+            String sessionId = matchRequest.getChildId().toString()+"_"+formatNow; // sessionId 결정
 
             if (this.mapSessions.get(sessionId) != null) { // 만드려는 세션 Id가 이미 존재하는지
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -96,7 +100,8 @@ public class MatchController {
                     Room newRoom = new Room();
                     newRoom.setSessionId(session.getSessionId());
                     matchingQueue.add(newRoom);
-                    Map<String, String> result = new HashMap<>();
+                    
+                    Map<String, String> result = new HashMap<>(); // 리턴할 결과 객체
                     result.put("sessionId", session.getSessionId());
                     result.put("token", token);
 
@@ -172,6 +177,7 @@ public class MatchController {
                 sessionRecordings.remove(sessionId);
                 mapSessions.remove(sessionId);
                 mapSessionNamesTokens.remove(sessionId);
+
                 matchService.writeVideoToDB(recordId, mapRooms.get(sessionId));
 
                 mapRooms.remove(sessionId);

@@ -20,17 +20,17 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final ChildRepository childRepository;
 
-    public void regist(Integer childId, Integer friendId) {
+    public void regist(Integer myId, Integer friendId) {
         // ERROR : childId가 없는 경우
-        ChildEntity child = childRepository.findById(childId).orElseThrow(() ->
+        ChildEntity child = childRepository.findById(myId).orElseThrow(() ->
                 new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         ChildEntity friend = childRepository.findById(friendId).orElseThrow(() ->
                 new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         // ERROR : 두 childId가 같은 경우
-        if (childId.equals(friendId))
+        if (myId.equals(friendId))
             throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("childIds are same"));
         // ERROR : 이미 좋아요 누른 친구인 경우
-        friendshipRepository.findByChildIdAndFriendId(childId, friendId)
+        friendshipRepository.findByMyIdAndFriendId(myId, friendId)
             .ifPresent(it -> {
                 throw new EoullimApplicationException(ErrorCode.LIKE_ALREADY_FOUND);
             }
@@ -38,8 +38,8 @@ public class FriendshipService {
         friendshipRepository.save(FriendshipEntity.of(child, friend));
     }
 
-    public List<Child> friendList(Integer childId) {
-        return friendshipRepository.findFriendsByChildId(childId)
+    public List<Child> friendList(Integer myId) {
+        return friendshipRepository.findFriendsByMyId(myId)
                 .stream()
                 .map(Child::fromEntity)
                 .collect(Collectors.toList());
