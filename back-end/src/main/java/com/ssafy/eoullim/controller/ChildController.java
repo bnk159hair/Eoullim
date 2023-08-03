@@ -27,7 +27,7 @@ public class ChildController {
     @GetMapping
     public Response<List<Child>> list(Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
-        List<Child> childList = childService.getList(user.getId());
+        List<Child> childList = childService.getChildList(user.getId());
         return Response.success(childList);
     }
 
@@ -77,7 +77,7 @@ public class ChildController {
     }
 
     @GetMapping("/{childId}/animons")
-    public Response<List<Animon>> animonlist(@PathVariable Integer childId) {
+    public Response<List<Animon>> getAnimonList(@PathVariable Integer childId) {
         List<Animon> animonList = childService.getAnimonList(childId);
         return Response.success(animonList);
     }
@@ -90,7 +90,7 @@ public class ChildController {
 
     // 학교 API
     @PostMapping("/school")
-    public Response<?> checkSchool(@RequestBody ChildSchoolRequest request) {
+    public Response<Void> checkSchool(@RequestBody ChildSchoolRequest request) {
         childService.checkSchool(request.getKeyword());
         return Response.success();
     }

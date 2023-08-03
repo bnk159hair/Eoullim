@@ -15,9 +15,11 @@ public enum ErrorCode {
     CHILD_NOT_FOUND(HttpStatus.NOT_FOUND, "Child not founded"),
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "Data not founded"),
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
+    DUPLICATED_CHILD_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "API Connection error occurs"),
     LIKE_ALREADY_FOUND(HttpStatus.FOUND, "Like Relationship already founded"),
+    DELETE_FAILED(HttpStatus.BAD_REQUEST, "Profile or User ID wass wrong")
     ;
 
     private final HttpStatus status;
