@@ -27,7 +27,7 @@ public class MatchService {
         System.out.println(room.getChildTwo());
 
         /* 압축 해제 코드 시작 */
-        recordingId = "103";
+        //recordingId = "103";
 //        String dir = "C:\\Users\\ssafy\\Downloads\\";
         String dir = "/var/lib/recordings/";
 
