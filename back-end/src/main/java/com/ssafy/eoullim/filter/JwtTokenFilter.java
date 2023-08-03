@@ -35,7 +35,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        System.out.println(header);
         final String token;
         try {
             if (TOKEN_IN_PARAM_URLS.contains(request.getRequestURI())) {
@@ -58,7 +57,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String isLogout = (String) blackList.opsForValue().get(userName);
+            String key = "blackLisk:" + userName;
+            String isLogout = (String) blackList.opsForValue().get(key);
             log.info(String.valueOf(isLogout));
             if (ObjectUtils.isEmpty(isLogout)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
