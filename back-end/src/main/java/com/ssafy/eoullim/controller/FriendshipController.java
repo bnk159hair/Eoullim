@@ -20,14 +20,14 @@ public class FriendshipController {
 
     @PostMapping
     public Response<Void> regist(@RequestBody FriendshipRequest request) {
-        friendshipService.regist(request.getChildId(), request.getFriendId());
+        friendshipService.regist(request.getMyId(), request.getFriendId());
         return Response.success();
     }
 
     @GetMapping("/{childId}")
     public Response<List<Child>> friendList(@PathVariable Integer childId) {
-        List<Child> childList = friendshipService.friendList(childId);
-        return Response.success(childList);
+        List<Child> friendList = friendshipService.friendList(childId);
+        return Response.success(friendList);
     }
 
 }
