@@ -49,9 +49,10 @@ public class UserService {
 
     public String login(String userName, String password) {
         User savedUser = loadUserByUsername(userName);
-        String key = setBlackListKey(userName);
-        blackListTemplate.delete(key);
-        userCacheRepository.setUser(savedUser);
+
+        String key = setBlackListKey(userName); // BlackList Key
+        blackListTemplate.delete(key); // BlackList에서 삭제
+        userCacheRepository.setUser(savedUser); // UserCache에 저장
         if (!encoder.matches(password, savedUser.getPassword())) {
             throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
         }
@@ -60,6 +61,7 @@ public class UserService {
 
     public void logout(String userName) {
         String key = setBlackListKey(userName);
+        userCacheRepository.delete(userName); // UserCache에서 삭제
         blackListTemplate.opsForValue().set(key,"logout", expiredTimeMs, TimeUnit.MILLISECONDS);
     }
 

@@ -25,10 +25,14 @@ public class UserCacheRepository {
     }
 
     public Optional<User> getUser(String userName) {
-        System.out.println("here");
         User data = userRedisTemplate.opsForValue().get(getKey(userName));
         log.info("Get User from Redis {}", data);
         return Optional.ofNullable(data);
+    }
+
+    public void delete(String userName) {
+        String key = getKey(userName);
+        userRedisTemplate.delete(key);
     }
 
     private String getKey(String userName) {
