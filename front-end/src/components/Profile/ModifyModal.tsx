@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import tw from 'twin.macro';
-import styled from 'styled-components';
 import { ModalOverlay, ModalContent } from './ModifyModal.styles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
 
-interface CreateModalProps {
+interface ModifyModalProps {
   onClose: () => void;
 }
 
-const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
+const ModifyModal: React.FC<ModifyModalProps> = ({ onClose }) => {
   const [name, setChildName] = useState('');
   const [birth, setChildBirth] = useState('');
   const [gender, setChildGender] = useState(''); 
@@ -123,4 +121,4 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
   );
 };
 
-export default CreateModal;
+export default ModifyModal;
