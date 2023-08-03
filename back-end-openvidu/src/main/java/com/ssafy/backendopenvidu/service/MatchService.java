@@ -28,8 +28,10 @@ public class MatchService {
 
         /* 압축 해제 코드 시작 */
         recordingId = "103";
-        String dir = "C:\\Users\\ssafy\\Downloads\\";
-        String recordFolder = dir+recordingId+"\\";
+//        String dir = "C:\\Users\\ssafy\\Downloads\\";
+        String dir = "/var/lib/recordings/";
+
+        String recordFolder = dir+recordingId+"/";
         File recordZip = new File(recordFolder, "VideoInfo.zip");
 
         try(BufferedInputStream in = new BufferedInputStream(new FileInputStream(recordZip))){
