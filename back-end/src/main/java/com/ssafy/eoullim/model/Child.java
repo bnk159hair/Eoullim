@@ -17,16 +17,18 @@ public class Child {
     private String school;
     private Integer grade;
     private Status status;
+    private Animon animon;
 
     public static Child fromEntity(ChildEntity entity) {
         return new Child(
-            entity.getId(),
-            entity.getName(),
-            entity.getBirth(),
-            entity.getGender(),
-            entity.getSchool(),
-            entity.getGrade(),
-            entity.getStatus()
+                entity.getId(),
+                entity.getName(),
+                entity.getBirth(),
+                entity.getGender(),
+                entity.getSchool(),
+                entity.getGrade(),
+                entity.getStatus(),
+                Animon.fromEntity(entity.getAnimon())
         );
     }
 }
