@@ -33,7 +33,8 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.cors().and()
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/*/users/join", "/api/*/users/login").permitAll()
                 .antMatchers("/api/*/users/id-check").permitAll()

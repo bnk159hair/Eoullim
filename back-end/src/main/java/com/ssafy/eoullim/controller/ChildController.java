@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/children")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class ChildController {
 
     private final ChildService childService;
