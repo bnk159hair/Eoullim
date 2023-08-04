@@ -1,17 +1,21 @@
 import styled from 'styled-components';
 
 export const SpinnerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Spinner = styled.div`
   position: relative;
 `;
 
 export const AnimalEmoji = styled.span`
-  font-size: 40px;
+  font-size: 80px;
   position: absolute;
-  top: 26%;
-  left: 24%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;

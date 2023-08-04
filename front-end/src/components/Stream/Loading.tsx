@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-import { SpinnerContainer, AnimalEmoji } from './LoadingStyles';
+import { SpinnerContainer, AnimalEmoji, Spinner } from './LoadingStyles';
 
 const Loading = () => {
   const [animal, setAnimal] = useState('🐱');
@@ -34,8 +34,10 @@ const Loading = () => {
 
   return (
     <SpinnerContainer>
-      <AnimalEmoji>{animal}</AnimalEmoji>
-      <CircularProgress size={100} />
+      <Spinner>
+        <CircularProgress size={200} />
+        <AnimalEmoji>{animal}</AnimalEmoji>
+      </Spinner>
     </SpinnerContainer>
   );
 };
