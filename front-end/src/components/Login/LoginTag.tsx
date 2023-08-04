@@ -4,13 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { tokenState } from '../../atoms/Auth';
 import {LoginTagContainer, LoginInput, LoginButton, LoginButtonContainer} from './LoginTag.styles'
-
+import {BASEURL} from '../../apis/api'
 
 const LoginTag = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const BASEURL = 'http://localhost:8080/api/v1';
   const [token, setToken] = useRecoilState(tokenState);
 
   const handleLogin = () => { 

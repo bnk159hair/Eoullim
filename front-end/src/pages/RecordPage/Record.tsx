@@ -3,15 +3,23 @@ import RecordListItem from './../../components/Record/RecordListItem';
 import {RecordPageContainer,Passwordcofile} from './Record.styles'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { tokenState } from '../../atoms/Auth';
+import { useRecoilValue } from 'recoil';
+import {BASEURL} from '../../apis/api'
 
 const Record = () => {
     const [password, setPassword] = useState('');
-    const BASEURL = 'http://localhost:8080/api/v1';
+    const token = useRecoilValue(tokenState);
     const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
     const navigate = useNavigate();
 
     const passwordClick = () =>{
-        axios.post(`${BASEURL}/users/pw-check`, { password })
+        axios.post(`${BASEURL}/users/pw-check`, { password },
+        {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },}  
+        )
             .then((response) => {
                 setIsPasswordCorrect(true);
             })
