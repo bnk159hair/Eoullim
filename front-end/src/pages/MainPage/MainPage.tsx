@@ -1,12 +1,12 @@
 import React from 'react';
 import LoginUser from '../../components/main/LoginUser';
 import { useNavigate } from 'react-router-dom';
-import { MainPageContainer } from './Main.styles';
+import { MainPageContainer } from './MainPageStyles';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useRecoilValue } from 'recoil';
 import { Profilekey } from '../../atoms/Profile';
 
-const Main = () => {
+const MainPage = () => {
   const navigate = useNavigate();
   const profileId = useRecoilValue(Profilekey);
 
@@ -34,4 +34,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default MainPage;

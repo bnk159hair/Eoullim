@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import RecordListItem from './../../components/Record/RecordListItem';
-import { RecordPageContainer, Passwordcofile } from './Record.styles';
+import { useState } from 'react';
+import RecordListItem from '../../components/record/RecordListItem';
+import { RecordPageContainer, Passwordcofile } from './RecordPageStyles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
 import { BASEURL } from '../../apis/urls';
 
-const Record = () => {
+const RecordPage = () => {
   const [password, setPassword] = useState('');
   const token = useRecoilValue(tokenState);
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
@@ -56,4 +56,4 @@ const Record = () => {
   );
 };
 
-export default Record;
+export default RecordPage;

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import tw from 'twin.macro';
 import loginBackground from '../../assets/background/login.gif';
 import password from '../../assets/ecc/password.png';
 

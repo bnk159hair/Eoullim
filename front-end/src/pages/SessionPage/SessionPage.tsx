@@ -11,16 +11,16 @@ import {
   MyVideo,
   SideBar,
   YourVideo,
-} from './SessionStyles';
+} from './SessionPageStyles';
 import { Modal, Box, Typography, IconButton } from '@mui/material';
 
 const SessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
-  // console.log('오픈비두 시작');
-  // const userId = 'user01';
-  // const { publisher, streamList } = useOpenVidu(userId);
+  console.log('오픈비두 시작');
+  const userId = 'user01';
+  const { streamList } = useOpenVidu(userId);
   const sessionOver = () => {
     setOpen(true);
   };
@@ -54,29 +54,29 @@ const SessionPage = () => {
           : null} */}
 
             <YourVideo>
-              {/* {streamList.length > 1 ? (
-            <StreamCanvas
-            streamManager={streamList[1].streamManager}
-            name={streamList[1].userId}
-            avatarPath="http://localhost:3000/image.png"
-            />
-            ) : (
-            )} */}
-              <Loading />
+              {streamList.length > 1 ? (
+                <StreamCanvas
+                  streamManager={streamList[1].streamManager}
+                  name={streamList[1].userId}
+                  avatarPath="http://localhost:3000/image.png"
+                />
+              ) : (
+                <Loading />
+              )}
             </YourVideo>
           </MainWrapper>
           <SideBar>
             <Character>Character</Character>
             <MyVideo>
-              {/* {streamList.length > 1 ? (
-            <StreamCanvas
-            streamManager={streamList[0].streamManager}
-            name={streamList[0].userId}
-            avatarPath="http://localhost:3000/image.png"
-            />
-            ) : (
-            )} */}
-              <Loading />
+              {streamList.length > 1 ? (
+                <StreamCanvas
+                  streamManager={streamList[0].streamManager}
+                  name={streamList[0].userId}
+                  avatarPath="http://localhost:3000/image.png"
+                />
+              ) : (
+                <Loading />
+              )}
             </MyVideo>
             <Buttons>
               <button>애니몬</button>

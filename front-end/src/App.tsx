@@ -1,14 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import './App.css';
-import Main from './pages/MainPage/Main';
-import Login from './pages/LoginPage/Login';
+import MainPage from './pages/MainPage/MainPage';
+import LoginPage from './pages/LoginPage/LoginPage';
 import SignupPage from './pages/SignupPage/SignupPage';
-import Profile from './pages/ProfilePage/ProfileSelect';
+import ProfileSelect from './pages/ProfilePage/ProfileSelect';
 import SessionPage from './pages/SessionPage/SessionPage';
-import Friends from './pages/Friendspage/Friends';
-import Record from './pages/RecordPage/Record';
+import FriendsPage from './pages/Friendspage/FriendsPage';
+import RecordPage from './pages/RecordPage/RecordPage';
 
 function App() {
   return (
@@ -17,13 +16,13 @@ function App() {
         <RecoilRoot>
           <Router>
             <Routes>
-              <Route path="/" element={<Main />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<MainPage />} />
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile" element={<ProfileSelect />} />
               <Route path="/session" element={<SessionPage />} />
-              <Route path="/friends" element={<Friends />} />
-              <Route path="/record" element={<Record />} />
+              <Route path="/friends" element={<FriendsPage />} />
+              <Route path="/record" element={<RecordPage />} />
             </Routes>
           </Router>
         </RecoilRoot>

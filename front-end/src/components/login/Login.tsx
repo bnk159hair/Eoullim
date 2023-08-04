@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { tokenState } from '../../atoms/Auth';
 import {
-  LoginTagContainer,
-  LoginInput,
+  LoginContainer,
   LoginButton,
   LoginButtonContainer,
-} from './LoginTag.styles';
+} from './LoginPageStyles';
 import { TextField, Box } from '@mui/material';
 import { BASEURL } from '../../apis/urls';
 
-const LoginTag = () => {
+const Login = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -37,52 +36,34 @@ const LoginTag = () => {
 
   return (
     <div>
-      <LoginTagContainer>
+      <LoginContainer>
         <div>
           <Box component="form" onSubmit={handleLogin}>
             <div>
               <TextField
-                required
                 label="아이디"
                 variant="filled"
                 color="success"
                 margin="dense"
                 value={userName}
-                sx={{ bgcolor: 'beige', borderRadius: '5px' }}
+                sx={{ bgcolor: 'white', borderRadius: '5px' }}
                 onChange={(e) => setUsername(e.target.value)}
                 fullWidth
               />
               <TextField
-                required
                 label="비밀번호"
                 variant="filled"
                 color="success"
                 margin="dense"
                 type="password"
                 value={password}
-                sx={{ bgcolor: 'beige', borderRadius: '5px' }}
+                sx={{ bgcolor: 'white', borderRadius: '5px' }}
                 onChange={(e) => setPassword(e.target.value)}
                 fullWidth
               />
             </div>
             <LoginButton onClick={handleLogin}>로그인</LoginButton>
           </Box>
-          {/* <div>
-            <LoginInput
-              type="text"
-              placeholder="아이디"
-              value={userName}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <LoginInput
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div> */}
         </div>
         <div>
           <LoginButtonContainer>
@@ -90,9 +71,9 @@ const LoginTag = () => {
           </LoginButtonContainer>
           <button onClick={handleSignup}>회원가입</button>
         </div>
-      </LoginTagContainer>
+      </LoginContainer>
     </div>
   );
 };
 
-export default LoginTag;
+export default Login;

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import LoginBox from '../../assets/box/loginbox.png';
 
-export const LoginTagContainer = styled.div`
+export const LoginContainer = styled.div`
   width: 560px;
   height: 300px;
   padding: 50px;
