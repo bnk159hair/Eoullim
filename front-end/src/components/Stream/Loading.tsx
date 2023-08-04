@@ -18,6 +18,7 @@ const Loading = () => {
       '🦄',
       '🐻',
       '🐵',
+      '🐲',
     ];
     const randomAnimal = setInterval(() => {
       const animalIndex = Math.floor(Math.random() * animalArray.length);

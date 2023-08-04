@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProfileListItem from './ProfileListItem';
-import { ProfileCreateBox, ProfileListBox } from './profileList.styles';
+import { ProfileCreateBox, ProfileListBox } from './ProfileListStyles';
 import CreateModal from './CreateModal';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
