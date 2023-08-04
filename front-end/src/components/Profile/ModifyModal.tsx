@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ModalOverlay, ModalContent } from './ModifyModal.styles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import {BASEURL} from '../../apis/api'
+import { BASEURL } from '../../apis/urls';
 
 interface ChildProfile {
   id: number;
@@ -17,11 +17,15 @@ interface ChildProfile {
 
 interface ModifyModalProps {
   onClose: () => void;
-  ChildId:number;
+  ChildId: number;
   resetList: () => void;
 }
 
-const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId,resetList }) => {
+const ModifyModal: React.FC<ModifyModalProps> = ({
+  onClose,
+  ChildId,
+  resetList,
+}) => {
   const [childProfile, setChildProfile] = useState<ChildProfile>({
     id: 0,
     name: '',
@@ -32,14 +36,11 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId,resetList }) 
     status: '',
   });
 
-
   const token = useRecoilValue(tokenState);
   const [password, setPassword] = useState('');
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
 
   useEffect(() => {
-
-
     fetchChildProfile();
   }, [ChildId, token]);
 
@@ -51,7 +52,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId,resetList }) 
         },
       })
       .then((response) => {
-        console.log(response)
+        console.log(response);
         setChildProfile(response.data.result);
       })
       .catch((error) => {
@@ -61,12 +62,15 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId,resetList }) 
 
   const passwordClick = () => {
     axios
-      .post(`${BASEURL}/users/pw-check`, { password },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .post(
+        `${BASEURL}/users/pw-check`,
+        { password },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         setIsPasswordCorrect(true);
       })
@@ -104,8 +108,10 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId,resetList }) 
   };
   const convertTimestampToKoreanDate = (timestamp: number) => {
     const utcDate = new Date(timestamp);
-    const koreaTimezoneOffset = 9 * 60; 
-    const koreaDate = new Date(utcDate.getTime() + koreaTimezoneOffset * 60 * 1000);
+    const koreaTimezoneOffset = 9 * 60;
+    const koreaDate = new Date(
+      utcDate.getTime() + koreaTimezoneOffset * 60 * 1000
+    );
     const koreanDateString = koreaDate.toISOString().slice(0, 10);
     return koreanDateString;
   };

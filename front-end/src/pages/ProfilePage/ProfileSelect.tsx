@@ -1,60 +1,62 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import ProfileList from '../../components/Profile/ProfileList';
-import {ProfileSelectPageContainer, PasswordChange, MarginContainer } from './ProfileSelect.styles'
+import {
+  ProfileSelectPageContainer,
+  PasswordChange,
+  MarginContainer,
+} from './ProfileSelect.styles';
 import ChagePasswordModal from '../../components/Profile/ChagePasswordModal';
-import {BASEURL} from '../../apis/api'
+import { BASEURL } from '../../apis/urls';
 import { tokenState } from '../../atoms/Auth';
-import { useRecoilValue,useRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileSelect = () => {
-    const [isModalOpen, setModalOpen] = useState(false);
-    const token = useRecoilValue(tokenState);
-    const navigate = useNavigate();
-    const [, setToken] = useRecoilState(tokenState);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const token = useRecoilValue(tokenState);
+  const navigate = useNavigate();
+  const [, setToken] = useRecoilState(tokenState);
 
-    const handleModalOpen = () => {
-        setModalOpen(true);
-      };
-    
-    const handleModalClose = () => {
-      setModalOpen(false);
-    };
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
 
-    const logoutClick = () =>{
-      axios
-        .get(`${BASEURL}/users/logout`,{
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response)=>
-        {
-          setToken('');
-          navigate('/login')
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
-        })
-        .catch((error)=>{
-          console.log(token)
-          console.log('로그아웃 오류:',error)
-          setToken('');
-          navigate('/login')
-        })
-    }
-    
-    return (
-        <ProfileSelectPageContainer>
-          <MarginContainer>
-            <PasswordChange onClick={handleModalOpen}/>
-          </MarginContainer>
-            {isModalOpen && <ChagePasswordModal onClose={handleModalClose} />}
-            <ProfileList/>
-          <MarginContainer>
-            <button onClick={logoutClick}>로그아웃</button>
-          </MarginContainer>
-        </ProfileSelectPageContainer>
-    );
+  const logoutClick = () => {
+    axios
+      .get(`${BASEURL}/users/logout`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setToken('');
+        navigate('/login');
+      })
+      .catch((error) => {
+        console.log(token);
+        console.log('로그아웃 오류:', error);
+        setToken('');
+        navigate('/login');
+      });
+  };
+
+  return (
+    <ProfileSelectPageContainer>
+      <MarginContainer>
+        <PasswordChange onClick={handleModalOpen} />
+      </MarginContainer>
+      {isModalOpen && <ChagePasswordModal onClose={handleModalClose} />}
+      <ProfileList />
+      <MarginContainer>
+        <button onClick={logoutClick}>로그아웃</button>
+      </MarginContainer>
+    </ProfileSelectPageContainer>
+  );
 };
 
 export default ProfileSelect;
