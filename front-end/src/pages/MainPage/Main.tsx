@@ -3,9 +3,12 @@ import LoginUser from '../../components/main/LoginUser';
 import { useNavigate } from 'react-router-dom';
 import { MainPageContainer } from './Main.styles';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import { useRecoilValue } from 'recoil';
+import { Profilekey } from '../../atoms/Profile';
 
 const Main = () => {
   const navigate = useNavigate();
+  const profileId = useRecoilValue(Profilekey);
 
   const getNewFriend = () => {
     navigate('/session');

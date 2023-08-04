@@ -4,9 +4,9 @@ import { RecoilRoot } from 'recoil';
 import './App.css';
 import Main from './pages/MainPage/Main';
 import Login from './pages/LoginPage/Login';
-import Signup from './pages/SignupPage/Signup';
+import SignupPage from './pages/SignupPage/SignupPage';
 import Profile from './pages/ProfilePage/ProfileSelect';
-import Session from './pages/SessionPage/Session';
+import SessionPage from './pages/SessionPage/SessionPage';
 import Friends from './pages/Friendspage/Friends';
 import Record from './pages/RecordPage/Record';
 
@@ -19,9 +19,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Main />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+              <Route path="/signup" element={<SignupPage />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/session" element={<Session />} />
+              <Route path="/session" element={<SessionPage />} />
               <Route path="/friends" element={<Friends />} />
               <Route path="/record" element={<Record />} />
             </Routes>

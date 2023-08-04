@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
-import { CanvasTag } from '../../components/stream/CanvasTag';
+import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
   Buttons,
   Character,
@@ -14,7 +14,7 @@ import {
 } from './SessionStyles';
 import { Modal, Box, Typography, IconButton } from '@mui/material';
 
-const Session = () => {
+const SessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -43,7 +43,7 @@ const Session = () => {
           {stream.streamManager !== publisher ? (
             <h1>FriendVideo</h1>
             ) : null}
-            <CanvasTag
+            <StreamCanvas
             streamManager={stream.streamManager}
             name={stream.userId}
             avatarPath="http://localhost:3000/image.png"
@@ -55,7 +55,7 @@ const Session = () => {
 
             <YourVideo>
               {/* {streamList.length > 1 ? (
-            <CanvasTag
+            <StreamCanvas
             streamManager={streamList[1].streamManager}
             name={streamList[1].userId}
             avatarPath="http://localhost:3000/image.png"
@@ -69,7 +69,7 @@ const Session = () => {
             <Character>Character</Character>
             <MyVideo>
               {/* {streamList.length > 1 ? (
-            <CanvasTag
+            <StreamCanvas
             streamManager={streamList[0].streamManager}
             name={streamList[0].userId}
             avatarPath="http://localhost:3000/image.png"
@@ -122,4 +122,4 @@ const Session = () => {
   );
 };
 
-export default Session;
+export default SessionPage;

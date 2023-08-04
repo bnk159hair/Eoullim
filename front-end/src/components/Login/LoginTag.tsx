@@ -9,14 +9,13 @@ import {
   LoginButton,
   LoginButtonContainer,
 } from './LoginTag.styles';
-import { TextField } from '@mui/material';
-import { Box } from '@mui/system';
+import { TextField, Box } from '@mui/material';
+import { BASEURL } from '../../apis/urls';
 
 const LoginTag = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const BASEURL = 'http://localhost:8080/api/v1';
   const [token, setToken] = useRecoilState(tokenState);
 
   const handleLogin = (event: any) => {
