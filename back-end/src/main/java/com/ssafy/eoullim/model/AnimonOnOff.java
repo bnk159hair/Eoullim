@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class AnimonOnOff {
     private String userName;
-    private String status;
+    private boolean status;
 }
