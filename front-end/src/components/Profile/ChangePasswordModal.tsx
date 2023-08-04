@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ModalOverlay, ModalContent } from './ChagePasswordModal.styles';
+import { ModalOverlay, ModalContent } from './ChangePasswordModalStyles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { BASEURL } from '../../apis/urls';

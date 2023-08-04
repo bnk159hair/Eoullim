@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import ProfileList from '../../components/Profile/ProfileList';
+import ProfileList from '../../components/profile/ProfileList';
 import {
-  ProfileSelectPageContainer,
+  ProfilePageContainer,
   PasswordChange,
   MarginContainer,
-} from './ProfileSelect.styles';
-import ChagePasswordModal from '../../components/Profile/ChagePasswordModal';
+} from './ProfilePageStyles';
+import ChagePasswordModal from '../../components/profile/ChangePasswordModal';
 import { BASEURL } from '../../apis/urls';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
-const ProfileSelect = () => {
+const ProfilePage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const token = useRecoilValue(tokenState);
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const ProfileSelect = () => {
   };
 
   return (
-    <ProfileSelectPageContainer>
+    <ProfilePageContainer>
       <MarginContainer>
         <PasswordChange onClick={handleModalOpen} />
       </MarginContainer>
@@ -55,8 +55,8 @@ const ProfileSelect = () => {
       <MarginContainer>
         <button onClick={logoutClick}>로그아웃</button>
       </MarginContainer>
-    </ProfileSelectPageContainer>
+    </ProfilePageContainer>
   );
 };
 
-export default ProfileSelect;
+export default ProfilePage;

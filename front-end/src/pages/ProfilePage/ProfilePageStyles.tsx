@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import loginBackground from '../../assets/background/login.gif';
 import password from '../../assets/ecc/password.png';
 
-export const ProfileSelectPageContainer = styled.div`
+export const ProfilePageContainer = styled.div`
   height: 100vh;
   background-size: 100% 100%;
   background-image: url(${loginBackground});

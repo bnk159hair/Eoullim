@@ -7,7 +7,7 @@ import {
   LoginContainer,
   LoginButton,
   LoginButtonContainer,
-} from './LoginPageStyles';
+} from './LoginStyles';
 import { TextField, Box } from '@mui/material';
 import { BASEURL } from '../../apis/urls';
 

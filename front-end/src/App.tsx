@@ -4,7 +4,7 @@ import './App.css';
 import MainPage from './pages/MainPage/MainPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SignupPage from './pages/SignupPage/SignupPage';
-import ProfileSelect from './pages/ProfilePage/ProfileSelect';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SessionPage from './pages/SessionPage/SessionPage';
 import FriendsPage from './pages/Friendspage/FriendsPage';
 import RecordPage from './pages/RecordPage/RecordPage';
@@ -19,7 +19,7 @@ function App() {
               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
-              <Route path="/profile" element={<ProfileSelect />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/session" element={<SessionPage />} />
               <Route path="/friends" element={<FriendsPage />} />
               <Route path="/record" element={<RecordPage />} />
