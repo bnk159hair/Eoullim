@@ -1,55 +1,59 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate, NavLink } from "react-router-dom";
-import {BASEURL} from '../../apis/api'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate, NavLink } from 'react-router-dom';
+import { BASEURL } from '../../apis/urls';
 
-const SignUpTag = () => {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+const SignUp = () => {
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [resultCode, setIsresultCode] = useState(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
     if (!resultCode) {
-      alert("아이디 중복 체크를 해주세요.");
+      alert('아이디 중복 체크를 해주세요.');
       return;
     }
 
     if (!userName || !password || !name || !phoneNumber) {
-      alert("모든 정보를 입력해주세요.");
+      alert('모든 정보를 입력해주세요.');
       return;
     }
 
     if (!isPasswordMatch) {
-      alert("비밀번호 확인이 일치하지 않습니다.");
+      alert('비밀번호 확인이 일치하지 않습니다.');
       return;
     }
 
     try {
-      const signUpData = { userName , password, name, phoneNumber };
+      const signUpData = { userName, password, name, phoneNumber };
       const response = await axios.post(`${BASEURL}/users/join`, signUpData);
-      console.log("회원가입 성공:", response);
-      navigate("/login");
+      console.log('회원가입 성공:', response);
+      navigate('/login');
     } catch (error) {
-      console.error("회원가입 실패:", error);
+      console.error('회원가입 실패:', error);
     }
   };
 
   const handleIdCheck = async () => {
     try {
       const response = await axios.post(`${BASEURL}/users/id-check`, {
-        userName: userName  
+        userName: userName,
       });
       setIsresultCode(response.data.resultCode);
-      console.log("아이디 중복 체크 결과:", response);
-      alert(response.data.resultCode ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다.");
+      console.log('아이디 중복 체크 결과:', response);
+      alert(
+        response.data.resultCode
+          ? '사용 가능한 아이디입니다.'
+          : '이미 사용 중인 아이디입니다.'
+      );
     } catch (error) {
-      console.error("아이디 중복 체크 에러:", error);
-      alert("이미 사용 중인 아이디입니다.");
+      console.error('아이디 중복 체크 에러:', error);
+      alert('이미 사용 중인 아이디입니다.');
     }
   };
 
@@ -66,11 +70,9 @@ const SignUpTag = () => {
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
         />
-        <button onClick={handleIdCheck}>
-          중복체크
-        </button>
+        <button onClick={handleIdCheck}>중복체크</button>
         {resultCode && (
-          <div style={{ color: "green" }}>사용 가능한 아이디입니다.</div>
+          <div style={{ color: 'green' }}>사용 가능한 아이디입니다.</div>
         )}
       </div>
       <div>
@@ -90,7 +92,7 @@ const SignUpTag = () => {
           onBlur={handlePasswordConfirmation}
         />
         {!isPasswordMatch && (
-          <div style={{ color: "red" }}>비밀번호가 일치하지 않습니다.</div>
+          <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>
         )}
       </div>
       <div>
@@ -119,4 +121,4 @@ const SignUpTag = () => {
   );
 };
 
-export default SignUpTag;
+export default SignUp;

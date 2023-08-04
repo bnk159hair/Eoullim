@@ -128,7 +128,6 @@ export const useOpenVidu = (userId: any) => {
   );
   console.log(streamList);
   return {
-    publisher,
     streamList,
   };
 };
