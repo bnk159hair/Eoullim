@@ -12,12 +12,14 @@ interface ProfileListItemProps {
   name: string;
   ChildId: number;
   resetList: () => void;
+  imgurl: string;
 }
 
 const ProfileListItem: React.FC<ProfileListItemProps> = ({
   name,
   ChildId,
   resetList,
+  imgurl,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -34,12 +36,32 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
 
   const handleMainClick = () => {
     setProfileKey(ChildId);
+    profileLogin();
     navigate('/');
   };
 
   const handleRecordClick = () => {
     setProfileKey(ChildId);
     navigate('/record');
+  };
+
+  const profileLogin = () => {
+    axios
+      .post(
+        `${BASEURL}/children/login/${ChildId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log('프로필로그인');
+      })
+      .catch((error) => {
+        console.log('프로필 로그인 오류', error);
+      });
   };
 
   const deleteProfile = () => {
@@ -61,6 +83,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
       <ProfileUsereBox onClick={handleMainClick}>
         {name}
         {ChildId}
+        {imgurl}
       </ProfileUsereBox>
       <button onClick={handleModalOpen}>수정</button>
       {isModalOpen && (

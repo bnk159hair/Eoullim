@@ -15,6 +15,7 @@ interface Profile {
   school: string;
   grade: number;
   status: string;
+  animon: { id: 0; imagePath: ''; name: '' };
 }
 
 const ProfileList = () => {
@@ -59,6 +60,7 @@ const ProfileList = () => {
           ChildId={profile.id}
           name={profile.name}
           resetList={resetList}
+          imgurl={profile.animon.imagePath}
         />
       ))}
 
