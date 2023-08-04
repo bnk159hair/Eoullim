@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { ModalOverlay, ModalContent } from './ChagePasswordModal.styles';
 import { tokenState } from '../../atoms/Auth';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import {BASEURL} from '../../apis/api'
+import { useNavigate } from 'react-router-dom';
 
 interface ChagePasswordModalProps {
   onClose: () => void;
@@ -13,12 +15,34 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
     const [newPassword,setNewPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
-    const BASEURL = 'http://localhost:8080/api/v1';
     const token = useRecoilValue(tokenState);
+    const [, setToken] = useRecoilState(tokenState);
+    const navigate = useNavigate();
 
     const handlePasswordConfirmation = () => {
         setIsPasswordMatch(newPassword === passwordConfirmation);
       };
+
+      const logoutClick = () =>{
+        axios
+          .get(`${BASEURL}/users/logout`,{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response)=>
+          {
+            setToken('');
+            navigate('/login')
+  
+          })
+          .catch((error)=>{
+            console.log(token)
+            console.log('로그아웃 오류:',error)
+            setToken('');
+            navigate('/login')
+          })
+      }
 
     const handleChagePassword = async () => {
         if (!curPassword) {
@@ -38,7 +62,8 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
         },
       });
       console.log('비밀번호 변경성공', response);
-      onClose();
+      // onClose();
+      logoutClick()
     } catch (error) {
         console.log(token)
       console.log('비밀번호 변경 실패', error);
