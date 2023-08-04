@@ -11,7 +11,11 @@ interface IProps {
   balance?: boolean;
 }
 
-export const CanvasTag: FC<IProps> = ({ streamManager, name, avatarPath }) => {
+export const StreamCanvas: FC<IProps> = ({
+  streamManager,
+  name,
+  avatarPath,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { videoRef, speaking, micStatus, videoStatus } =
     useStream(streamManager);
@@ -49,4 +53,4 @@ export const CanvasTag: FC<IProps> = ({ streamManager, name, avatarPath }) => {
   );
 };
 
-export default CanvasTag;
+export default StreamCanvas;

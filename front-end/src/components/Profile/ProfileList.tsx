@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProfileListItem from './ProfileListItem';
-import { ProfileCreateBox,ProfileListBox } from './profileList.styles';
+import { ProfileCreateBox, ProfileListBox } from './profileList.styles';
 import CreateModal from './CreateModal';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import {BASEURL} from '../../apis/api'
-
+import { BASEURL } from '../../apis/urls';
 
 interface Profile {
   id: number;
@@ -16,14 +15,14 @@ interface Profile {
   school: string;
   grade: number;
   status: string;
-  animon: { id: 0, imagePath: '', name: '' },
+  animon: { id: 0; imagePath: ''; name: '' };
 }
 
 const ProfileList = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const token = useRecoilValue(tokenState);
-  
+
   useEffect(() => {
     resetList();
   }, []);
@@ -35,7 +34,6 @@ const ProfileList = () => {
   const handleModalClose = () => {
     setModalOpen(false);
   };
-
 
   const resetList = () => {
     axios
@@ -57,11 +55,19 @@ const ProfileList = () => {
   return (
     <ProfileListBox>
       {profiles.map((profile) => (
-        <ProfileListItem key={profile.id} ChildId={profile.id} name={profile.name} resetList={resetList} imgurl={profile.animon.imagePath}/>
+        <ProfileListItem
+          key={profile.id}
+          ChildId={profile.id}
+          name={profile.name}
+          resetList={resetList}
+          imgurl={profile.animon.imagePath}
+        />
       ))}
-      
-      {profiles.length < 3 && <ProfileCreateBox onClick={handleModalOpen} /> }
-      {isModalOpen && <CreateModal onClose={handleModalClose} resetList={resetList} />}
+
+      {profiles.length < 3 && <ProfileCreateBox onClick={handleModalOpen} />}
+      {isModalOpen && (
+        <CreateModal onClose={handleModalClose} resetList={resetList} />
+      )}
     </ProfileListBox>
   );
 };

@@ -7,7 +7,7 @@ import * as tf from '@tensorflow/tfjs';
 
 tf.env().set('WEBGL_CPU_FORWARD', false);
 
-console.log(tf.getBackend());
+console.log('tf서버:', tf.getBackend());
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

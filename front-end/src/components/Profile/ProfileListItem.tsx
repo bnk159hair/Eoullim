@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ProfileUsereBox } from './profileListItem.styles';
 import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
-import { BASEURL } from '../../apis/api';
+import { BASEURL } from '../../apis/urls';
 import axios from 'axios';
 import { tokenState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
@@ -12,14 +12,19 @@ interface ProfileListItemProps {
   name: string;
   ChildId: number;
   resetList: () => void;
-  imgurl: string
+  imgurl: string;
 }
 
-const ProfileListItem: React.FC<ProfileListItemProps> = ({ name, ChildId,resetList,imgurl }) => {
+const ProfileListItem: React.FC<ProfileListItemProps> = ({
+  name,
+  ChildId,
+  resetList,
+  imgurl,
+}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const token = useRecoilValue(tokenState);
-  const [profilekey, setProfileKey] = useRecoilState(Profilekey); 
+  const [profilekey, setProfileKey] = useRecoilState(Profilekey);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -40,20 +45,24 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({ name, ChildId,resetLi
     navigate('/record');
   };
 
-  const profileLogin = () =>{
+  const profileLogin = () => {
     axios
-      .post (`${BASEURL}/children/login/${ChildId}` ,{},{
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      .post(
+        `${BASEURL}/children/login/${ChildId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log('프로필로그인');
       })
-      .then((response)=>{
-        console.log('프로필로그인')
-      })
-      .catch((error)=>{
-        console.log('프로필 로그인 오류',error)
-      })
-  }
+      .catch((error) => {
+        console.log('프로필 로그인 오류', error);
+      });
+  };
 
   const deleteProfile = () => {
     axios
@@ -62,12 +71,10 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({ name, ChildId,resetLi
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response) =>{
+      .then((response) => {
         resetList();
         console.log('삭제완료');
-      }
-       
-      )
+      })
       .catch((error) => console.log('실패'));
   };
 
@@ -79,7 +86,13 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({ name, ChildId,resetLi
         {imgurl}
       </ProfileUsereBox>
       <button onClick={handleModalOpen}>수정</button>
-      {isModalOpen && <ModifyModal onClose={handleModalClose} ChildId={ChildId} resetList={resetList} />}
+      {isModalOpen && (
+        <ModifyModal
+          onClose={handleModalClose}
+          ChildId={ChildId}
+          resetList={resetList}
+        />
+      )}
       <button onClick={deleteProfile}>삭제</button>
       <button onClick={handleRecordClick}>녹화영상</button>
     </div>

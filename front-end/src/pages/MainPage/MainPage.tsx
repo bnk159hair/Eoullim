@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MainPageContainer } from './Main.styles';
+import { MainPageContainer } from './MainPageStyles';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { Profilekey } from '../../atoms/Profile';
 import { tokenState } from '../../atoms/Auth';
 import AnimonModal from '../../components/main/AnimonModal';
 import axios from 'axios';
-import { BASEURL } from '../../apis/api';
+import { BASEURL } from '../../apis/urls';
 
 interface Animon {
   id: number;
@@ -25,7 +26,7 @@ interface ChildProfile {
   status: string;
 }
 
-const Main: React.FC = () => {
+const MainPage: React.FC = () => {
   const navigate = useNavigate();
   const profileId = useRecoilValue(Profilekey);
   const token = useRecoilValue(tokenState);
@@ -72,20 +73,24 @@ const Main: React.FC = () => {
       });
   };
 
-  const profileLogout = () =>{
+  const profileLogout = () => {
     axios
-      .post (`${BASEURL}/children/logout/${profileId}` ,{},{
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      .post(
+        `${BASEURL}/children/logout/${profileId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        console.log('프로필로그아웃');
       })
-      .then(()=>{
-        console.log('프로필로그아웃')
-      })
-      .catch((error)=>{
-        console.log('프로필 로그아웃 오류',error)
-      })
-  }
+      .catch((error) => {
+        console.log('프로필 로그아웃 오류', error);
+      });
+  };
 
   const openModal = () => {
     setModalOpen(true);
@@ -99,13 +104,18 @@ const Main: React.FC = () => {
 
   return (
     <MainPageContainer>
+      <ArrowLeftIcon
+        onClick={getBack}
+        sx={{ fontSize: '140px', position: 'absolute', top: '0', left: '0' }}
+      />
       <div onClick={openModal}>
         프로필 사진
         {childProfile.name}
       </div>
       <div>{childProfile.animon.imagePath}</div>
-      {isModalOpen && <AnimonModal onClose={closeModal} profile={getprofilelist} />}
-      
+      {isModalOpen && (
+        <AnimonModal onClose={closeModal} profile={getprofilelist} />
+      )}
       메인페이지
       <button onClick={getNewFriend}>새친구 만들기</button>
       <button onClick={handleFriendsClick}>내친구 목록</button>
@@ -115,4 +125,4 @@ const Main: React.FC = () => {
   );
 };
 
-export default Main;
+export default MainPage;
