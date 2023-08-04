@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ProfileUsereBox } from './profileListItem.styles';
+import { ProfileUsereBox } from './ProfileListItemStyles';
 import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
 import { BASEURL } from '../../apis/urls';

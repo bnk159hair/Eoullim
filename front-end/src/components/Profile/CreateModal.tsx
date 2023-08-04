@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ModalOverlay, ModalContent } from './CreateModal.styles';
+import { ModalOverlay, ModalContent } from './CreateModalStyles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
 import { BASEURL } from '../../apis/urls';
