@@ -38,8 +38,6 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId,resetList }) 
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
 
   useEffect(() => {
-
-
     fetchChildProfile();
   }, [ChildId, token]);
 
