@@ -19,7 +19,7 @@ spring:
 jwt:
   secret-key: ssafy_9th_gwanju_c207_eoullim_secret_key
   # 30 days
-  token.expired-time-ms: 300000
+  token.expired-time-ms: 3600000
 public-api:
   service-key: Ng3w6w1%2B7JypSInrX8Wa10b9j0G6%2F9ailN1XP%2FuO9oB7gfAImwjczu8kP%2F9JfDsX0wLbLW9%2Bv3NZsh2XG1Gw8Q%3D%3D
 
