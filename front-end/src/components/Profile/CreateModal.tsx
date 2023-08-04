@@ -7,9 +7,10 @@ import {BASEURL} from '../../apis/api'
 
 interface CreateModalProps {
   onClose: () => void;
+  resetList: () => void;
 }
 
-const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
+const CreateModal: React.FC<CreateModalProps> = ({ onClose,resetList }) => {
   const [name, setChildName] = useState('');
   const [birth, setChildBirth] = useState('');
   const [gender, setChildGender] = useState(''); 
@@ -38,6 +39,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose }) => {
       console.log('프로필 생성 성공:', response);
       console.log(profileData)
       onClose();
+      resetList();
     } catch (error) {
         console.log(token)
       console.log('프로필 생성실패:', error);

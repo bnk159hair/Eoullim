@@ -11,13 +11,14 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 interface ProfileListItemProps {
   name: string;
   ChildId: number;
+  resetList: () => void;
 }
 
-const ProfileListItem: React.FC<ProfileListItemProps> = ({ name, ChildId }) => {
+const ProfileListItem: React.FC<ProfileListItemProps> = ({ name, ChildId,resetList }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const token = useRecoilValue(tokenState);
-  const [profilekey, setProfileKey] = useRecoilState(Profilekey); // 변경된 부분
+  const [profilekey, setProfileKey] = useRecoilState(Profilekey); 
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -44,7 +45,12 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({ name, ChildId }) => {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response) => console.log('삭제완료'))
+      .then((response) =>{
+        resetList();
+        console.log('삭제완료');
+      }
+       
+      )
       .catch((error) => console.log('실패'));
   };
 
@@ -55,7 +61,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({ name, ChildId }) => {
         {ChildId}
       </ProfileUsereBox>
       <button onClick={handleModalOpen}>수정</button>
-      {isModalOpen && <ModifyModal onClose={handleModalClose} ChildId={ChildId} />}
+      {isModalOpen && <ModifyModal onClose={handleModalClose} ChildId={ChildId} resetList={resetList} />}
       <button onClick={deleteProfile}>삭제</button>
       <button onClick={handleRecordClick}>녹화영상</button>
     </div>

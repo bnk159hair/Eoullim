@@ -3,12 +3,12 @@ import axios from 'axios';
 import { ModalOverlay, ModalContent } from './ModifyModal.styles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import { BASEURL } from '../../apis/api';
+import {BASEURL} from '../../apis/api'
 
 interface ChildProfile {
   id: number;
   name: string;
-  birth: string;
+  birth: number;
   gender: string;
   school: string;
   grade: number;
@@ -17,54 +17,56 @@ interface ChildProfile {
 
 interface ModifyModalProps {
   onClose: () => void;
-  ChildId: number;
+  ChildId:number;
+  resetList: () => void;
 }
 
-const ModifyModal: React.FC<ModifyModalProps> = ({ onClose, ChildId }) => {
+const ModifyModal: React.FC<ModifyModalProps> = ({ onClose,ChildId,resetList }) => {
   const [childProfile, setChildProfile] = useState<ChildProfile>({
     id: 0,
     name: '',
-    birth: '',
+    birth: 0,
     gender: '',
     school: '',
     grade: 0,
     status: '',
   });
 
+
   const token = useRecoilValue(tokenState);
   const [password, setPassword] = useState('');
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
 
   useEffect(() => {
-    const fetchChildProfile = () => {
-      axios
-        .get(`${BASEURL}/children/${ChildId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          setChildProfile(response.data.result);
-        })
-        .catch((error) => {
-          console.log('아이 프로필을 불러오는데 실패했습니다:', error);
-        });
-    };
+
 
     fetchChildProfile();
   }, [ChildId, token]);
 
+  const fetchChildProfile = () => {
+    axios
+      .get(`${BASEURL}/children/${ChildId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response)
+        setChildProfile(response.data.result);
+      })
+      .catch((error) => {
+        console.log('아이 프로필을 불러오는데 실패했습니다:', error);
+      });
+  };
+
   const passwordClick = () => {
     axios
-      .post(
-        `${BASEURL}/users/pw-check`,
-        { password },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .post(`${BASEURL}/users/pw-check`, { password },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setIsPasswordCorrect(true);
       })
@@ -86,6 +88,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose, ChildId }) => {
       );
 
       console.log('프로필 수정 성공:', response);
+      resetList();
       onClose();
     } catch (error) {
       console.log('프로필 수정 실패:', error);
@@ -94,14 +97,17 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose, ChildId }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    // 학년 값은 숫자로 변환
-    const gradeValue = name === 'grade' ? parseInt(value, 10) : value;
-
     setChildProfile((prevProfile) => ({
       ...prevProfile,
-      [name]: gradeValue, // 숫자로 변환한 값으로 업데이트
+      [name]: value,
     }));
+  };
+  const convertTimestampToKoreanDate = (timestamp: number) => {
+    const utcDate = new Date(timestamp);
+    const koreaTimezoneOffset = 9 * 60; 
+    const koreaDate = new Date(utcDate.getTime() + koreaTimezoneOffset * 60 * 1000);
+    const koreanDateString = koreaDate.toISOString().slice(0, 10);
+    return koreanDateString;
   };
 
   return (
@@ -132,7 +138,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({ onClose, ChildId }) => {
               type="date"
               placeholder="생년월일"
               name="birth"
-              value={childProfile.birth}
+              value={convertTimestampToKoreanDate(childProfile.birth)}
               onChange={handleInputChange}
             />
             <div>
