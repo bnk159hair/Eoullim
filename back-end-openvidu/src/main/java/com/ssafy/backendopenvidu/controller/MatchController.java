@@ -189,7 +189,7 @@ public class MatchController {
     @GetMapping("/api/openvidu/recordings/{childId}")
     public ResponseEntity<?> getRecording(@PathVariable Integer childId
     ) throws OpenViduJavaClientException, OpenViduHttpException {
-        List<Map<String, String>> list = matchService.getRecordList(1);
+        List<Map<String, String>> list = matchService.getRecordList(childId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
