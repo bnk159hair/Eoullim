@@ -23,6 +23,7 @@ import {
   SubscriberVideoStatus,
 } from '../../atoms/Session';
 import { Client, Message } from '@stomp/stompjs';
+import { WS_BASE_URL } from '../../apis/url';
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const SessionPage = () => {
 
   setPublisherId(profileId);
 
-  const { streamList } = useOpenVidu(publisherId);
+  const { streamList } = useOpenVidu(profileId);
   const sessionOver = () => {
     setOpen(true);
   };
@@ -49,7 +50,7 @@ const SessionPage = () => {
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: 'ws://localhost:8081/ws',
+      brokerURL: WS_BASE_URL,
       reconnectDelay: 5000,
       debug: (str) => console.log(str),
     });
@@ -117,6 +118,7 @@ const SessionPage = () => {
                   streamManager={streamList[1].streamManager}
                   id={streamList[1].userId}
                   avatarPath="http://localhost:3000/image.png"
+                  videoState={subscriberVideoStatus}
                 />
               ) : (
                 <Loading />
@@ -131,6 +133,7 @@ const SessionPage = () => {
                   streamManager={streamList[0].streamManager}
                   id={streamList[0].userId}
                   avatarPath="http://localhost:3000/image.png"
+                  videoState={publisherVideoStatus}
                 />
               ) : (
                 <Loading />

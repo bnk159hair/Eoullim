@@ -15,25 +15,18 @@ interface IProps {
   streamManager: StreamManager;
   id: number;
   avatarPath: string;
+  videoState: boolean;
 }
 
-export const StreamCanvas: FC<IProps> = ({ streamManager, id, avatarPath }) => {
+export const StreamCanvas: FC<IProps> = ({
+  streamManager,
+  id,
+  avatarPath,
+  videoState,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [videoState, setVideoState] = useState<boolean>(false);
-  const publisherId = useRecoilValue(PublisherId);
-  const subscriberId = useRecoilValue(SubscriberId);
-  const publisherVideoState = useRecoilValue(PublisherVideoStatus);
-  const subscriberVideoState = useRecoilValue(SubscriberVideoStatus);
   const { videoRef, speaking, micStatus } = useStream(streamManager);
   useFaceMask(videoRef.current, canvasRef.current, avatarPath);
-
-  useEffect(() => {
-    if (id === publisherId) {
-      setVideoState(publisherVideoState);
-    } else if (id === subscriberId) {
-      setVideoState(subscriberVideoState);
-    }
-  }, [publisherVideoState, subscriberVideoState]);
 
   return (
     <div>
