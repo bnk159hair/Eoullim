@@ -6,10 +6,12 @@ import { tokenState } from '../../atoms/Auth';
 import {
   FormContainer,
   LoginButton,
-  ButtonContainer,
-  SignupButton,
+  SignupContainer,
+  SignupAnchor,
 } from './LoginStyles';
-import { TextField } from '@mui/material';
+import { TextField, InputAdornment } from '@mui/material';
+import { AccountCircle } from '@mui/icons-material';
+import KeyIcon from '@mui/icons-material/Key';
 import { BASEURL } from '../../apis/urls';
 
 const Login = () => {
@@ -18,7 +20,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [token, setToken] = useRecoilState(tokenState);
 
-  const handleLogin = (event: React.FormEvent) => {
+  const handleLogin = (event: any) => {
     event.preventDefault();
     axios
       .post(`${BASEURL}/users/login`, { userName, password })
@@ -37,47 +39,58 @@ const Login = () => {
 
   return (
     <>
-      <FormContainer>
-        <form onSubmit={handleLogin}>
-          <TextField
-            label="아이디"
-            variant="filled"
-            color="success"
-            margin="normal"
-            value={userName}
-            sx={{
-              bgcolor: 'white',
-              borderRadius: '5px',
-              marginLeft: '40px',
-              width: '90%',
-            }}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setUsername(event.target.value)
-            }
-          />
-          <TextField
-            label="비밀번호"
-            variant="filled"
-            color="success"
-            margin="normal"
-            type="password"
-            value={password}
-            sx={{
-              bgcolor: 'white',
-              borderRadius: '5px',
-              marginLeft: '40px',
-              width: '90%',
-            }}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setPassword(event.target.value)
-            }
-          />
-        </form>
-        <ButtonContainer>
-          <LoginButton onClick={handleLogin}>로그인</LoginButton>
-          <SignupButton onClick={handleSignup}>회원가입</SignupButton>
-        </ButtonContainer>
+      <FormContainer onSubmit={handleLogin}>
+        <TextField
+          label="아이디"
+          variant="filled"
+          color="success"
+          margin="dense"
+          value={userName}
+          sx={{
+            bgcolor: 'white',
+            borderRadius: '5px',
+            width: '80%',
+          }}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setUsername(event.target.value)
+          }
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <AccountCircle />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          label="비밀번호"
+          variant="filled"
+          color="success"
+          margin="dense"
+          type="password"
+          value={password}
+          sx={{
+            bgcolor: 'white',
+            borderRadius: '5px',
+            width: '80%',
+          }}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setPassword(event.target.value)
+          }
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <KeyIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <LoginButton type="submit">로그인</LoginButton>
       </FormContainer>
+      <SignupContainer>
+        <span>아직 회원이 아니신가요?</span>
+        <SignupAnchor onClick={handleSignup}>회원가입</SignupAnchor>
+      </SignupContainer>
     </>
   );
 };

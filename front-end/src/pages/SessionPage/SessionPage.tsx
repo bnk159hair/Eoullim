@@ -39,7 +39,7 @@ const SessionPage = () => {
 
   setPublisherId(profileId);
 
-  const { streamList } = useOpenVidu(publisherId);
+  const { streamList } = useOpenVidu(profileId);
   const sessionOver = () => {
     setOpen(true);
   };
