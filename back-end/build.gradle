@@ -22,26 +22,26 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'				// Spring dev tools
+	implementation 'org.springframework.boot:spring-boot-starter-web'			// Spring Web MVC
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'		// Spring JPA
+	implementation 'org.springframework.boot:spring-boot-starter-security'		// Spring Security
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'							// Spring JWT
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
-	implementation 'org.webjars:sockjs-client:1.0.2'
-	implementation 'org.webjars:stomp-websocket:2.3.3'
-
-	implementation 'org.springframework.kafka:spring-kafka'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'	// Spring REDIS
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'		// Spring Web Socket
+	implementation 'org.webjars:sockjs-client:1.0.2'							// Web Socket - SockJS
+	implementation 'org.webjars:stomp-websocket:2.3.3'							// Web Socket - Stomp
+	implementation 'org.springframework.kafka:spring-kafka'						// Spring Kafka
+	implementation 'org.webjars:webjars-locator-core'
+	compileOnly 'org.projectlombok:lombok'										// Lombok
 	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'									// MySQL Connector J
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 tasks.named('test') {

@@ -17,8 +17,11 @@ public class AnimonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "image_path", nullable = false)
-    private String imagePath;
+    @Column(name = "head_image_path", nullable = false)
+    private String headImagePath;
+
+    @Column(name = "body_image_path", nullable = false)
+    private String bodyImagePath;
 
     @Column(name = "name", nullable = false)
     private String name;

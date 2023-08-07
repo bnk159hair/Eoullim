@@ -10,14 +10,16 @@ import lombok.Getter;
 public class Animon {
 
     private Integer id;
-    private String imagePath;
+    private String headImagePath;
+    private String bodyImagePath;
     private String name;
 
     public static Animon fromEntity(AnimonEntity entity) {
         return new Animon(
             entity.getId(),
-            entity.getName(),
-            entity.getImagePath()
+            entity.getHeadImagePath(),
+            entity.getBodyImagePath(),
+            entity.getName()
         );
     }
 }
