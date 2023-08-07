@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
+import { useWebSocket } from '../../hooks/useWebSocket';
 import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
   Buttons,
@@ -13,21 +14,96 @@ import {
   YourVideo,
 } from './SessionPageStyles';
 import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { Profilekey } from '../../atoms/Profile';
+import {
+  PublisherId,
+  SubscriberId,
+  PublisherVideoStatus,
+  SubscriberVideoStatus,
+} from '../../atoms/Session';
+import { Client, Message } from '@stomp/stompjs';
 
 const SessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-
+  const [publisherId, setPublisherId] = useRecoilState(PublisherId);
+  const [subscriberId, setSubscriberId] = useRecoilState(SubscriberId);
+  const [publisherVideoStatus, setPublisherVideoStatus] =
+    useRecoilState(PublisherVideoStatus);
+  const [subscriberVideoStatus, setSubscriberVideoStatus] = useRecoilState(
+    SubscriberVideoStatus
+  );
+  const profileId = useRecoilValue(Profilekey);
   console.log('오픈비두 시작');
-  const userId = 'user01';
-  const { streamList } = useOpenVidu(userId);
+
+  setPublisherId(profileId);
+
+  const { streamList } = useOpenVidu(publisherId);
   const sessionOver = () => {
     setOpen(true);
   };
 
+  const [connected, setConnected] = useState<boolean>(false);
+  const [stompClient, setStompClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    const client = new Client({
+      brokerURL: 'ws://localhost:8081/ws',
+      reconnectDelay: 5000,
+      debug: (str) => console.log(str),
+    });
+
+    client.onConnect = () => {
+      console.log('WebSocket 연결됨');
+      setConnected(true);
+      setStompClient(client);
+
+      client.subscribe('/sub/animon', (response) => {
+        console.log('메시지 수신:', response.body);
+        const message = JSON.parse(response.body);
+        if (message.userName !== String(publisherId)) {
+          console.log(message.userName, String(publisherId));
+          console.log('상대방이 화면을 껐습니다.');
+          setSubscriberId(message.userName);
+          setSubscriberVideoStatus(message.status);
+        }
+      });
+    };
+
+    client.onDisconnect = () => {
+      console.log('WebSocket 연결 닫힘');
+      setConnected(false);
+      setStompClient(null);
+    };
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, [publisherId]);
+
   const leaveSession = () => {
     setOpen(false);
     navigate('/');
+  };
+
+  const changeVideoStatus = () => {
+    console.log(stompClient);
+    if (connected && stompClient) {
+      setPublisherVideoStatus(!publisherVideoStatus);
+      const jsonMessage = {
+        userName: String(publisherId),
+        status: publisherVideoStatus,
+      };
+      const message = JSON.stringify(jsonMessage);
+      stompClient.publish({
+        destination: '/pub/animon',
+        body: message,
+      });
+      console.log('메시지 전송:', message);
+    }
   };
 
   return (
@@ -35,29 +111,11 @@ const SessionPage = () => {
       {!open ? (
         <Container>
           <MainWrapper>
-            {/* {publisher
-        ? streamList.map((stream, idx) =>
-        stream.streamManager ? (
-          <div key={idx} className="stream-container col-md-6 col-xs-6">
-          {stream.streamManager === publisher ? <h1>MyVideo</h1> : null}
-          {stream.streamManager !== publisher ? (
-            <h1>FriendVideo</h1>
-            ) : null}
-            <StreamCanvas
-            streamManager={stream.streamManager}
-            name={stream.userId}
-            avatarPath="http://localhost:3000/image.png"
-            />
-            </div>
-            ) : null
-            )
-          : null} */}
-
             <YourVideo>
-              {streamList.length > 1 ? (
+              {streamList.length > 1 && streamList[1].streamManager ? (
                 <StreamCanvas
                   streamManager={streamList[1].streamManager}
-                  name={streamList[1].userId}
+                  id={streamList[1].userId}
                   avatarPath="http://localhost:3000/image.png"
                 />
               ) : (
@@ -68,10 +126,10 @@ const SessionPage = () => {
           <SideBar>
             <Character>Character</Character>
             <MyVideo>
-              {streamList.length > 1 ? (
+              {streamList.length > 1 && streamList[0].streamManager ? (
                 <StreamCanvas
                   streamManager={streamList[0].streamManager}
-                  name={streamList[0].userId}
+                  id={streamList[0].userId}
                   avatarPath="http://localhost:3000/image.png"
                 />
               ) : (
@@ -79,7 +137,8 @@ const SessionPage = () => {
               )}
             </MyVideo>
             <Buttons>
-              <button>애니몬</button>
+              <button onClick={changeVideoStatus}>애니몬</button>
+              <button>마이크</button>
               <button onClick={sessionOver}>나가기</button>
             </Buttons>
           </SideBar>
