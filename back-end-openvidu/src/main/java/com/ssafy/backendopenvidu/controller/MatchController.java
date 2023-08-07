@@ -189,7 +189,6 @@ public class MatchController {
             }
         }else{
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
-
         }
 
     }
@@ -201,35 +200,9 @@ public class MatchController {
     ) throws OpenViduJavaClientException, OpenViduHttpException {
         String sessionId = (String) params.get("session");
 
-        // Recording.OutputMode outputMode = Recording.OutputMode.valueOf(
-        //   (String) params.get("outputMode")
-        // );
-        // boolean hasAudio = (boolean) params.get("hasAudio");
-        // boolean hasVideo = (boolean) params.get("hasVideo");
-
-        // RecordingProperties properties = new RecordingProperties.Builder()
-        //   .outputMode(outputMode)
-        //   .hasAudio(hasAudio)
-        //   .hasVideo(hasVideo)
-        //   .build();
-
-        // System.out.println(
-        //   "Starting recording for session " +
-        //   sessionId +
-        //   " with properties {outputMode=" +
-        //   outputMode +
-        //   ", hasAudio=" +
-        //   hasAudio +
-        //   ", hasVideo=" +
-        //   hasVideo +
-        //   "}"
-        // );
-
         try {
-            // Recording recording = openvidu.startRecording(sessionId, properties);
             Recording recording = openvidu.startRecording(sessionId);
 
-            //sessionRecordings.put(sessionId, true);
             return new ResponseEntity<>(recording, HttpStatus.OK);
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
