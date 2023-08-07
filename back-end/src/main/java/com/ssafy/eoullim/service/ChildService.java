@@ -1,7 +1,6 @@
 package com.ssafy.eoullim.service;
 
 import com.ssafy.eoullim.dto.request.ChildRequest;
-import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.Animon;
@@ -15,11 +14,8 @@ import com.ssafy.eoullim.model.entity.UserEntity;
 import com.ssafy.eoullim.repository.AnimonRepository;
 import com.ssafy.eoullim.repository.ChildAnimonRepository;
 import com.ssafy.eoullim.repository.ChildRepository;
-import com.ssafy.eoullim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,16 +24,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
 
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -114,7 +103,7 @@ public class ChildService {
                 new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         // ERROR : 현재 User가 지우려는 자녀 ID 권한이 없는 경우 (다른 사용자의 user를 제거하려 할 경우)
         if (!Objects.equals(childEntity.getUser().getUserName(), userName)) {
-            throw new EoullimApplicationException(ErrorCode.INVALID_PERMISSION,
+            throw new EoullimApplicationException(ErrorCode.FORBIDDEN_NO_PERMISSION,
                     String.format("user %s has no permission with child %d", userName, childId));
         }
         childRepository.delete(childEntity);
@@ -172,7 +161,6 @@ public class ChildService {
             System.out.println(outputStringBuilder.toString());
             // ERROR : 일치하는 초등학교가 없는 경우
             if(outputStringBuilder.toString().contains("NODATA_ERROR")) {
-                System.out.println(" 여기 왔나요? ");
                 throw new EoullimApplicationException(ErrorCode.DATA_NOT_FOUND,
                         String.format("%s Elementary school has no data", keyword));
             }

@@ -42,7 +42,7 @@ public class UserService {
 
     public void join(String userName, String password, String name, String phoneNumber) {
         userRepository.findByUserName(userName).ifPresent(it -> {
-            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME);
+            throw new EoullimApplicationException(ErrorCode.DUPLICATED_NAME);
         });
         userRepository.save(UserEntity.of(name, phoneNumber, userName, encoder.encode(password)));
     }
@@ -54,7 +54,7 @@ public class UserService {
         blackListTemplate.delete(key); // BlackList에서 삭제
         userCacheRepository.setUser(savedUser); // UserCache에 저장
         if (!encoder.matches(password, savedUser.getPassword())) {
-            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
+            throw new EoullimApplicationException(ErrorCode.FORBIDDEN_INVALID_PASSWORD);
         }
         return JwtTokenUtils.generateAccessToken(userName, secretKey, expiredTimeMs);
     }
@@ -72,7 +72,7 @@ public class UserService {
     @Transactional
     public void modify(User user, String curPassword, String newPassword) {
         if (!encoder.matches(curPassword, user.getPassword())) {
-            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
+            throw new EoullimApplicationException(ErrorCode.FORBIDDEN_INVALID_PASSWORD);
         }
         user.setPassword(encoder.encode(newPassword));
         userRepository.save(UserEntity.of(user));
@@ -80,13 +80,13 @@ public class UserService {
 
     public void checkId(String userName) {
         userRepository.findByUserName(userName).ifPresent(it -> {
-            throw new EoullimApplicationException(ErrorCode.DUPLICATED_USER_NAME);
+            throw new EoullimApplicationException(ErrorCode.DUPLICATED_NAME);
         });
     }
 
     public void checkPw(String pwRequest, String pwCorrect) {
         if (!encoder.matches(pwRequest, pwCorrect)) {
-            throw new EoullimApplicationException(ErrorCode.INVALID_PASSWORD);
+            throw new EoullimApplicationException(ErrorCode.FORBIDDEN_INVALID_PASSWORD);
         }
     }
 
