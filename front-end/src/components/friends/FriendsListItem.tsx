@@ -1,7 +1,23 @@
 import React from 'react';
 
-const FriendsListItem = () => {
-  return <div>친구 1 친구 2</div>;
+interface FriendsListItemProps {
+  name: string;
+  ChildId: number;
+  imgurl: string;
+}
+
+const FriendsListItem: React.FC<FriendsListItemProps> = ({
+  name,
+  ChildId,
+  imgurl,
+}) => {
+  return( 
+  <div>
+    {name}
+    {ChildId}
+    {imgurl}
+
+  </div>);
 };
 
 export default FriendsListItem;

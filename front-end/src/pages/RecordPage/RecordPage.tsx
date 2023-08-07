@@ -32,6 +32,21 @@ const RecordPage = () => {
       });
   };
 
+  const getRecord = () =>{
+    axios
+      .get(`${BASEURL}` , {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response)=>{
+        console.log('녹화영상 불러오기')
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+  }
+
   const getBack = () => {
     navigate('/profile');
   };

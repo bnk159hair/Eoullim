@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import loginBackground from '../../assets/background/login.gif'; // 이미지를 import 해옵니다.
-import signupBoxBackground from '../../assets/box/메뉴판.jpg';
+import signupBoxBackground from '../../assets/box/woodbox.jpg';
 
 export const SignupPageContainer = styled.div`
   height: 100vh;
