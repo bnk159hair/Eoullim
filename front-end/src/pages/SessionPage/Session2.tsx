@@ -1,46 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Client, Message } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 
 const MyComponent: React.FC = () => {
   const [connected, setConnected] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageInput, setMessageInput] = useState('');
 
+  const stompClientRef = useRef<Client>();
+
   useEffect(() => {
-    const stompClient = new Client({
-      brokerURL: 'ws://localhost:8080/ws', // WebSocket 서버 URL로 바꾸세요.
-      reconnectDelay: 5000,
+    stompClientRef.current = new Client({
+      brokerURL: 'ws://localhost:8081/ws', // WebSocket 서버 URL로 바꾸세요.
       debug: (str) => console.log(str),
     });
 
-    stompClient.onConnect = () => {
-      console.log('WebSocket 연결됨');
+    stompClientRef.current.onConnect = () => {
       setConnected(true);
-      stompClient.subscribe('/topic/messages', (message) => {
-        console.log('메시지 수신:', message.body);
-        setMessages((prevMessages) => [...prevMessages, message]);
-      });
+      console.log('WebSocket 연결됨');
+      if (connected && stompClientRef.current) {
+        stompClientRef.current.subscribe('/sub/animon', (message) => {
+          console.log('메시지 수신:', message.body);
+          setMessages((prevMessages) => [...prevMessages, message]);
+        });
+      }
     };
 
-    stompClient.onDisconnect = () => {
+    stompClientRef.current.onDisconnect = () => {
       console.log('WebSocket 연결 닫힘');
       setConnected(false);
     };
 
-    stompClient.activate();
+    stompClientRef.current.activate();
 
     return () => {
-      stompClient.deactivate();
+      if (connected && stompClientRef.current) {
+        stompClientRef.current.deactivate();
+      }
     };
   }, []);
 
   const handleSendMessage = () => {
-    if (connected) {
-      const stompClient = new Client({
-        brokerURL: 'ws://your-websocket-server-url', // WebSocket 서버 URL로 바꾸세요.
+    if (connected && stompClientRef.current) {
+      stompClientRef.current.publish({
+        destination: '/pub/animon',
+        body: messageInput,
       });
-
-      stompClient.publish({ destination: '/app/chat', body: messageInput });
       console.log('메시지 전송:', messageInput);
       setMessageInput('');
     }

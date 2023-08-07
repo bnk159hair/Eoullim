@@ -1,46 +1,58 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Client, Frame, StompConfig } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../apis/url';
 import { WebSocketApis } from '../apis/webSocketApis';
-import SockJS from 'sockjs-client';
+import { PublisherId, PublisherVideoStatus } from '../atoms/Session';
+import { useRecoilValue } from 'recoil';
 
-export const useWebSocket = (userId: string, status: boolean) => {
+interface Param {
+  onConnect: (frame: Frame, client: Client) => void;
+  reconnectDelay?: number;
+}
+
+export const useWebSocket = (param: Param) => {
   const [connected, setConnected] = useState<boolean>(false);
+  const stompClientRef = useRef<Client>();
+  const publisherId = useRecoilValue(PublisherId);
+  const publisherVideoStatus = useRecoilValue(PublisherVideoStatus);
 
   useEffect(() => {
-    const socket = new SockJS(WS_BASE_URL); // WebSocket 서버 URL로 바꾸세요.
-
-    socket.onopen = () => {
-      console.log('WebSocket 연결됨');
+    const config: StompConfig = {
+      connectHeaders: WebSocketApis.getInstance().header,
+      brokerURL: WS_BASE_URL,
+      reconnectDelay: param.reconnectDelay ? param.reconnectDelay : 5000,
+      onConnect: (frame) => {
+        console.log('소켓 연결 성공!!', frame);
+        setConnected(true);
+        param.onConnect(frame, stompClientRef.current!);
+      },
+      onDisconnect: (frame) => {
+        console.log('소켓 연결 끊음!!', frame);
+        setConnected(false);
+      },
+      logRawCommunication: false,
     };
-
-    socket.onmessage = (event) => {
-      console.log('메시지 수신:', event.data);
-      const message = event.data.split();
-      return message;
-    };
-
-    socket.onclose = () => {
-      console.log('WebSocket 연결 닫힘');
-    };
+    stompClientRef.current = new Client(config);
+    stompClientRef.current.activate();
 
     return () => {
-      socket.close();
+      stompClientRef.current?.deactivate();
     };
   }, []);
 
-  const handleSendMessage = (userName: string, status: boolean) => {
-    if (connected) {
-      const socket = new SockJS(WS_BASE_URL);
-      const messageToSend = JSON.stringify({
-        userName: userName,
-        status: status,
+  const changeVideoStatus = () => {
+    if (connected && stompClientRef.current) {
+      const jsonMessage = {
+        userName: publisherId,
+        status: publisherVideoStatus,
+      };
+      const message = JSON.stringify(jsonMessage);
+      stompClientRef.current.publish({
+        destination: '/pub/animon',
+        body: message,
       });
-      if (messageToSend) {
-        socket.send(messageToSend);
-        console.log('메시지 전송', messageToSend);
-      }
-      socket.close();
+      console.log('메시지 전송:', message);
     }
   };
 
