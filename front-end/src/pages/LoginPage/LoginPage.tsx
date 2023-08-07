@@ -1,5 +1,10 @@
 import Login from '../../components/login/Login';
-import { LoginPageContainer, LoginContainer, Logo } from './LoginPageStyles';
+import {
+  LoginPageContainer,
+  LoginContainer,
+  Logo,
+  ImageContainer,
+} from './LoginPageStyles';
 
 const LoginPage = () => {
   return (
@@ -7,7 +12,9 @@ const LoginPage = () => {
       <LoginContainer>
         <Login />
       </LoginContainer>
-      <Logo />
+      <ImageContainer>
+        <Logo />
+      </ImageContainer>
     </LoginPageContainer>
   );
 };
