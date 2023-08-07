@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import SignupPage from './pages/SignupPage/SignupPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SessionPage from './pages/SessionPage/SessionPage';
+import Session2 from './pages/SessionPage/Session2';
 import FriendsPage from './pages/Friendspage/FriendsPage';
 import RecordPage from './pages/RecordPage/RecordPage';
 

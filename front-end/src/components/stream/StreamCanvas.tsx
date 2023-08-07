@@ -1,30 +1,46 @@
 import React, { FC } from 'react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFaceMask } from '../../hooks/useFaceMesh';
 import { StreamManager } from 'openvidu-browser';
 import { useStream } from '../../hooks/useStream';
+import { useRecoilValue } from 'recoil';
+import {
+  PublisherId,
+  SubscriberId,
+  PublisherVideoStatus,
+  SubscriberVideoStatus,
+} from '../../atoms/Session';
 
 interface IProps {
   streamManager: StreamManager;
-  name: string;
+  id: number;
   avatarPath: string;
-  balance?: boolean;
 }
 
-export const StreamCanvas: FC<IProps> = ({
-  streamManager,
-  name,
-  avatarPath,
-}) => {
+export const StreamCanvas: FC<IProps> = ({ streamManager, id, avatarPath }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { videoRef, speaking, micStatus, videoStatus } =
-    useStream(streamManager);
+  const [videoState, setVideoState] = useState<boolean>(false);
+  const publisherId = useRecoilValue(PublisherId);
+  const subscriberId = useRecoilValue(SubscriberId);
+  const publisherVideoState = useRecoilValue(PublisherVideoStatus);
+  const subscriberVideoState = useRecoilValue(SubscriberVideoStatus);
+  const { videoRef, speaking, micStatus } = useStream(streamManager);
   useFaceMask(videoRef.current, canvasRef.current, avatarPath);
+
+  useEffect(() => {
+    if (id === publisherId) {
+      setVideoState(publisherVideoState);
+    } else if (id === subscriberId) {
+      setVideoState(subscriberVideoState);
+    }
+  }, [publisherVideoState, subscriberVideoState]);
+
   return (
     <div>
       <video
         id="streamVideo"
         ref={videoRef}
+        hidden={videoState}
         style={{
           width: '100%',
           height: '100%',
@@ -35,6 +51,7 @@ export const StreamCanvas: FC<IProps> = ({
       <canvas
         id="faceCanvas"
         ref={canvasRef}
+        hidden={!videoState}
         tabIndex={1}
         style={{
           width: '100%',
@@ -48,7 +65,7 @@ export const StreamCanvas: FC<IProps> = ({
           borderRadius: '10px',
         }}
       />
-      <p>{name}</p>
+      <p>{id}</p>
     </div>
   );
 };
