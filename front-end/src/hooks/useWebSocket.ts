@@ -3,8 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Client, Frame, StompConfig } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../apis/url';
 import { WebSocketApis } from '../apis/webSocketApis';
-import { PublisherId, PublisherVideoStatus } from '../atoms/Session';
-import { useRecoilValue } from 'recoil';
 
 interface Param {
   onConnect: (frame: Frame, client: Client) => void;
@@ -13,48 +11,33 @@ interface Param {
 
 export const useWebSocket = (param: Param) => {
   const [connected, setConnected] = useState<boolean>(false);
-  const stompClientRef = useRef<Client>();
-  const publisherId = useRecoilValue(PublisherId);
-  const publisherVideoStatus = useRecoilValue(PublisherVideoStatus);
+  const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    const config: StompConfig = {
-      connectHeaders: WebSocketApis.getInstance().header,
-      brokerURL: WS_BASE_URL,
-      reconnectDelay: param.reconnectDelay ? param.reconnectDelay : 5000,
-      onConnect: (frame) => {
-        console.log('소켓 연결 성공!!', frame);
-        setConnected(true);
-        param.onConnect(frame, stompClientRef.current!);
-      },
-      onDisconnect: (frame) => {
-        console.log('소켓 연결 끊음!!', frame);
-        setConnected(false);
-      },
-      logRawCommunication: false,
+    const client = new Client({
+      brokerURL: 'ws://localhost:8081/ws',
+      reconnectDelay: 5000,
+      debug: (str) => console.log(str),
+    });
+
+    client.onConnect = () => {
+      console.log('WebSocket 연결됨');
+      setConnected(true);
+      setStompClient(client);
     };
-    stompClientRef.current = new Client(config);
-    stompClientRef.current.activate();
+
+    client.onDisconnect = () => {
+      console.log('WebSocket 연결 닫힘');
+      setConnected(false);
+      setStompClient(null);
+    };
+
+    client.activate();
 
     return () => {
-      stompClientRef.current?.deactivate();
+      client.deactivate();
     };
   }, []);
 
-  const changeVideoStatus = () => {
-    if (connected && stompClientRef.current) {
-      const jsonMessage = {
-        userName: publisherId,
-        status: publisherVideoStatus,
-      };
-      const message = JSON.stringify(jsonMessage);
-      stompClientRef.current.publish({
-        destination: '/pub/animon',
-        body: message,
-      });
-      console.log('메시지 전송:', message);
-    }
-  };
-
-  return connected;
+  return { connected, stompClient };
 };

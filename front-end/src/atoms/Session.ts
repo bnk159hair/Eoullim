@@ -1,8 +1,8 @@
 import { atom } from 'recoil';
 
-export const PublisherId = atom<string>({
+export const PublisherId = atom<number>({
   key: 'publisherId',
-  default: '',
+  default: 0,
 });
 
 export const PublisherVideoStatus = atom<boolean>({
@@ -10,9 +10,9 @@ export const PublisherVideoStatus = atom<boolean>({
   default: false,
 });
 
-export const SubscriberId = atom<string>({
+export const SubscriberId = atom<number>({
   key: 'subscriberId',
-  default: '',
+  default: 0,
 });
 
 export const SubscriberVideoStatus = atom<boolean>({

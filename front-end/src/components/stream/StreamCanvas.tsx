@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFaceMask } from '../../hooks/useFaceMesh';
 import { StreamManager } from 'openvidu-browser';
 import { useStream } from '../../hooks/useStream';
@@ -13,16 +13,11 @@ import {
 
 interface IProps {
   streamManager: StreamManager;
-  name: string;
+  id: number;
   avatarPath: string;
-  balance?: boolean;
 }
 
-export const StreamCanvas: FC<IProps> = ({
-  streamManager,
-  name,
-  avatarPath,
-}) => {
+export const StreamCanvas: FC<IProps> = ({ streamManager, id, avatarPath }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [videoState, setVideoState] = useState<boolean>(false);
   const publisherId = useRecoilValue(PublisherId);
@@ -32,11 +27,13 @@ export const StreamCanvas: FC<IProps> = ({
   const { videoRef, speaking, micStatus } = useStream(streamManager);
   useFaceMask(videoRef.current, canvasRef.current, avatarPath);
 
-  if (name === publisherId) {
-    setVideoState(publisherVideoState);
-  } else if (name === subscriberId) {
-    setVideoState(subscriberVideoState);
-  }
+  useEffect(() => {
+    if (id === publisherId) {
+      setVideoState(publisherVideoState);
+    } else if (id === subscriberId) {
+      setVideoState(subscriberVideoState);
+    }
+  }, [publisherVideoState, subscriberVideoState]);
 
   return (
     <div>
@@ -68,7 +65,7 @@ export const StreamCanvas: FC<IProps> = ({
           borderRadius: '10px',
         }}
       />
-      <p>{name}</p>
+      <p>{id}</p>
     </div>
   );
 };
