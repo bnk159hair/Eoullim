@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import RecordListItem from '../../components/record/RecordListItem';
 import { RecordPageContainer, Passwordcofile } from './RecordPageStyles';
 import axios from 'axios';
@@ -6,12 +6,24 @@ import { useNavigate } from 'react-router-dom';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
 import { BASEURL } from '../../apis/urls';
+import { Profilekey } from '../../atoms/Profile';
+
+interface Record {
+  animonName: string;
+  create_time: Date;
+  record_id: number;
+  school: string;
+  video_path: string;
+  name: string;
+}
 
 const RecordPage = () => {
   const [password, setPassword] = useState('');
   const token = useRecoilValue(tokenState);
+  const profileId = useRecoilValue(Profilekey);
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const navigate = useNavigate();
+  const [records, setRecords] = useState<Record[]>([]);
 
   const passwordClick = () => {
     axios
@@ -32,14 +44,16 @@ const RecordPage = () => {
       });
   };
 
+  useEffect(()=>{
+    getRecord();
+  },[profileId, token])
   const getRecord = () =>{
     axios
-      .get(`${BASEURL}` , {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(`https://i9c207.p.ssafy.io/api/openvidu/recordings/${profileId}`)
       .then((response)=>{
+        const data = response.data
+        console.log(response)
+        setRecords(data)
         console.log('녹화영상 불러오기')
       })
       .catch((error)=>{
@@ -54,7 +68,10 @@ const RecordPage = () => {
   return (
     <RecordPageContainer>
       {isPasswordCorrect ? (
-        <RecordListItem />
+        records.map((record) => (
+          <RecordListItem key={record.record_id} name={record.name} animonName={record.animonName} school={record.school} video_path={record.video_path}/>
+        ))
+        
       ) : (
         <Passwordcofile>
           <input

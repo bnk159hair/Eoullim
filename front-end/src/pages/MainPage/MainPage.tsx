@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MainPageContainer,ProfileImg,MarginContainer } from './MainPageStyles';
+import { MainPageContainer,ProfileImg,MarginContainer,MainCharacter } from './MainPageStyles';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -8,6 +8,7 @@ import { tokenState } from '../../atoms/Auth';
 import AnimonModal from '../../components/main/AnimonModal';
 import axios from 'axios';
 import { BASEURL } from '../../apis/urls';
+
 
 interface Animon {
   id: number;
@@ -101,7 +102,7 @@ const MainPage: React.FC = () => {
   };
 
   const [isModalOpen, setModalOpen] = useState(false);
-
+  const IMGURL = `/${childProfile.animon.name}.png`
   return (
     <MainPageContainer>
       <ArrowLeftIcon
@@ -109,12 +110,10 @@ const MainPage: React.FC = () => {
         sx={{ fontSize: '140px', position: 'absolute', top: '0', left: '0' }}
       />
       <MarginContainer>
-        <ProfileImg onClick={openModal}>
-          프로필 사진
-          {childProfile.name}
-        </ProfileImg>
+        <ProfileImg style={{ backgroundImage: `url(${IMGURL})` }} onClick={openModal}/>
       </MarginContainer>
-      <div>{childProfile.animon.imagePath}</div>
+      <MainCharacter style={{ backgroundImage: `url(${IMGURL})` }}/>
+      <div>{childProfile.animon.name}</div>
       {isModalOpen && (
         <AnimonModal onClose={closeModal} profile={getprofilelist} />
       )}

@@ -25,6 +25,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const navigate = useNavigate();
   const token = useRecoilValue(tokenState);
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
+  const IMGURL = `/${imgurl}.png`
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -80,7 +81,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
 
   return (
     <div>
-      <ProfileUsereBox onClick={handleMainClick}>
+      <ProfileUsereBox style={{ backgroundImage: `url(${IMGURL})` }} onClick={handleMainClick}>
         {name}
         {ChildId}
         {imgurl}
