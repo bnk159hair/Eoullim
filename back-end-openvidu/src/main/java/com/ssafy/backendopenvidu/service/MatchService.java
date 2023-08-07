@@ -8,6 +8,8 @@ import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -78,5 +80,9 @@ public class MatchService {
 
         }
         /* JSON Parse 종료 */
+    }
+
+    public List<Map<String, String>> getRecordList(Integer myId){
+        return roomRepository.getRecordList(myId);
     }
 }
