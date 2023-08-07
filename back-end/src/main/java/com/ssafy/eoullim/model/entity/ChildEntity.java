@@ -32,9 +32,6 @@ public class ChildEntity {
 
     @Column(nullable = false)
     private String school;
-    public void setSchool(String school) {
-        this.school = school + " 초등학교";
-    }
 
     @Column(nullable = false)
     private Integer grade;
