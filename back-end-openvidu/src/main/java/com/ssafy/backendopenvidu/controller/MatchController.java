@@ -16,10 +16,7 @@ import io.openvidu.java.client.SessionProperties;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 
@@ -28,10 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -63,7 +57,7 @@ public class MatchController {
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    @PostMapping("/api/sessions/match")
+    @PostMapping("/api/openvidu/matchstart")
     public ResponseEntity<?> randomMatch(
             @RequestBody MatchRequest matchRequest
     ) throws OpenViduJavaClientException, OpenViduHttpException {
@@ -148,7 +142,7 @@ public class MatchController {
             }
         }
     }
-    @PostMapping("/api/sessions/matchstop")
+    @PostMapping("/api/openvidu/matchstop")
     public ResponseEntity<?> stopMatch(
             @RequestBody Map<String, Object> params
     ) throws OpenViduJavaClientException, OpenViduHttpException, IOException, ParseException, org.json.simple.parser.ParseException {
@@ -166,7 +160,6 @@ public class MatchController {
                 mapSessions.remove(sessionId);
                 mapSessionNamesTokens.remove(sessionId);
                 mapRooms.remove(sessionId);
-
 
                 return new ResponseEntity<>(HttpStatus.OK);
 
@@ -190,23 +183,14 @@ public class MatchController {
         }else{
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
         }
-
     }
 
     /* 녹화를 위함 */
-    @PostMapping("/api/sessions/recording/start")
-    public ResponseEntity<?> startRecording(
-            @RequestBody(required = false) Map<String, Object> params
+    @GetMapping("/api/openvidu/recordings/{childId}")
+    public ResponseEntity<?> getRecording(@PathVariable Integer childId
     ) throws OpenViduJavaClientException, OpenViduHttpException {
-        String sessionId = (String) params.get("session");
-
-        try {
-            Recording recording = openvidu.startRecording(sessionId);
-
-            return new ResponseEntity<>(recording, HttpStatus.OK);
-        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        List<Map<String, String>> list = matchService.getRecordList(childId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     /* 녹화 정지를 위함 */
