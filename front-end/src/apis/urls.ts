@@ -1,0 +1,1 @@
+export const BASEURL = 'https://i9c207.p.ssafy.io/api/v1'
