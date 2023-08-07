@@ -125,7 +125,7 @@ export const useOpenVidu = (userId: any) => {
 
   const onChangeCameraStatus = useCallback(
     (status: boolean) => {
-      status = !status;
+      publisher?.publishVideo(status);
     },
     [publisher]
   );
