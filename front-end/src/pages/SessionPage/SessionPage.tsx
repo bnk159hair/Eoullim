@@ -64,7 +64,7 @@ const SessionPage = () => {
         console.log('메시지 수신:', response.body);
         const message = JSON.parse(response.body);
         if (message.userName !== String(publisherId)) {
-          console.log(message.userName, String(publisherId));
+          console.log(message.userName, message.status);
           console.log('상대방이 화면을 껐습니다.');
           setSubscriberId(message.userName);
           setSubscriberVideoStatus(message.status);
@@ -93,10 +93,11 @@ const SessionPage = () => {
   const changeVideoStatus = () => {
     console.log(stompClient);
     if (connected && stompClient) {
-      setPublisherVideoStatus(!publisherVideoStatus);
+      const status = !publisherVideoStatus
+      setPublisherVideoStatus(status);
       const jsonMessage = {
         userName: String(publisherId),
-        status: publisherVideoStatus,
+        status: status,
       };
       const message = JSON.stringify(jsonMessage);
       stompClient.publish({
@@ -132,7 +133,7 @@ const SessionPage = () => {
                 <StreamCanvas
                   streamManager={streamList[0].streamManager}
                   id={streamList[0].userId}
-                  avatarPath="http://localhost:3000/image.png"
+                  avatarPath="http://localhost:3000/14.png"
                   videoState={publisherVideoStatus}
                 />
               ) : (

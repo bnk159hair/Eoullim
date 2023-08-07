@@ -33,29 +33,28 @@ export const StreamCanvas: FC<IProps> = ({
       <video
         id="streamVideo"
         ref={videoRef}
-        hidden={videoState}
         style={{
           width: '100%',
           height: '100%',
           borderRadius: '10px',
           objectFit: 'cover',
+          visibility: videoState ? 'visible' : 'hidden',
         }}
       />
       <canvas
         id="faceCanvas"
         ref={canvasRef}
-        hidden={!videoState}
         tabIndex={1}
         style={{
           width: '100%',
           height: '100%',
-          position: 'absolute',
           top: 0,
           right: 0,
           left: 0,
           bottom: 0,
           objectFit: 'cover',
           borderRadius: '10px',
+          visibility: !videoState ? 'visible' : 'hidden',
         }}
       />
       <p>{id}</p>
