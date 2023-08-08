@@ -1,10 +1,17 @@
 import React from 'react';
-import { ModalOverlay, ModalContent,Cat,Dog,Panda,Tiger } from './AnimonModalStyles';
+import {
+  ModalOverlay,
+  ModalContent,
+  Cat,
+  Dog,
+  Panda,
+  Tiger,
+} from './AnimonModalStyles';
 import { useRecoilValue } from 'recoil';
 import { Profilekey } from '../../atoms/Profile';
 import { tokenState } from '../../atoms/Auth';
 import axios from 'axios';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 
 interface AnimonModalProps {
   onClose: () => void;
@@ -17,7 +24,7 @@ const AnimonModal: React.FC<AnimonModalProps> = ({ onClose, profile }) => {
 
   const changeAnimon = (id: number) => {
     axios
-      .get(`${BASEURL}/children/${profileId}/animons/${id}`, {
+      .get(`${API_BASE_URL}/children/${profileId}/animons/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
