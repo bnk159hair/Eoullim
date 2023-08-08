@@ -182,7 +182,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                   type="radio"
                   name="grade"
                   value="1"
-                  checked={childProfile.grade === 1}
+                  checked={childProfile.grade == 1}
                   onChange={handleInputChange}
                 />
                 1학년
@@ -192,7 +192,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                   type="radio"
                   name="grade"
                   value="2"
-                  checked={childProfile.grade === 2}
+                  checked={childProfile.grade == 2}
                   onChange={handleInputChange}
                 />
                 2학년
@@ -202,7 +202,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                   type="radio"
                   name="grade"
                   value="3"
-                  checked={childProfile.grade === 3}
+                  checked={childProfile.grade == 3}
                   onChange={handleInputChange}
                 />
                 3학년

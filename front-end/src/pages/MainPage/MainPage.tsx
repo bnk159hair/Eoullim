@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MainPageContainer } from './MainPageStyles';
+import { MainPageContainer,ProfileImg,MarginContainer } from './MainPageStyles';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -108,10 +108,12 @@ const MainPage: React.FC = () => {
         onClick={getBack}
         sx={{ fontSize: '140px', position: 'absolute', top: '0', left: '0' }}
       />
-      <div onClick={openModal}>
-        프로필 사진
-        {childProfile.name}
-      </div>
+      <MarginContainer>
+        <ProfileImg onClick={openModal}>
+          프로필 사진
+          {childProfile.name}
+        </ProfileImg>
+      </MarginContainer>
       <div>{childProfile.animon.imagePath}</div>
       {isModalOpen && (
         <AnimonModal onClose={closeModal} profile={getprofilelist} />
