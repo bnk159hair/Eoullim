@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import signupBoxBackground from "../../assets/box/woodbox.jpg";
+import styled from 'styled-components';
+import signupBoxBackground from '../../assets/box/woodbox.jpg';
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -14,9 +14,9 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  width: 400px;
-  height: 500px;
-  background-image: url(${signupBoxBackground});
+  // width: 400px;
+  // height: 500px;
+  // background-image: url(${signupBoxBackground});
   background-color: #fff; /* 모달용 흰 배경 */
   padding: 20px;
   border-radius: 8px;
@@ -53,13 +53,5 @@ export const ModalContent = styled.div`
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
-  }
-
-  button:nth-child(1) {
-    background-color: #007bff; /* "생성" 버튼에 파란색 적용 */
-  }
-
-  button:nth-child(2) {
-    background-color: #dc3545; /* "닫기" 버튼에 빨간색 적용 */
   }
 `;
