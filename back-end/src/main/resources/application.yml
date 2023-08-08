@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://ssafy207.duckdns.org:3306/eoullim?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ssafy
+    password: ssafy207
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  redis:
+    port: 6379
+    host: localhost
+
+jwt:
+  secret-key: ssafy_9th_gwanju_c207_eoullim_secret_key
+  # 30 days
+  token.expired-time-ms: 3600000
+public-api:
+  service-key: Ng3w6w1%2B7JypSInrX8Wa10b9j0G6%2F9ailN1XP%2FuO9oB7gfAImwjczu8kP%2F9JfDsX0wLbLW9%2Bv3NZsh2XG1Gw8Q%3D%3D
+
+server:
+  port: 8081
