@@ -1,21 +1,15 @@
 import styled, { keyframes } from 'styled-components';
 import LoginBox from '../../assets/box/loginbox.png';
 
-export const FormContainer = styled.div`
-  width: 560px;
+export const FormContainer = styled.form`
+  width: 565px;
   height: 320px;
   padding: 30px;
   background-size: cover;
   background-image: url(${LoginBox});
   display: flex;
-  align-items: center;
-`;
-
-export const ButtonContainer = styled.div`
-  width: 250px;
-  display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 `;
 
@@ -47,19 +41,15 @@ const gelatineAnimation = keyframes`
 `;
 
 export const LoginButton = styled.button`
-  width: 100px;
-  height: 70px;
-  // background-color: #b6d36f;
-  // color: #fff;
-  // font-weight: bold;
-  // padding: 0.5rem 1rem 0.5rem 1rem;
-  // border: none;
-  // border-radius: 0.25rem;
-  // cursor: pointer;
+  width: 80%;
+  height: 15%;
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: bold;
   border: none;
   outline: none;
   color: #fefefe;
-  background-color: #9b59b6;
+  background-color: #b6d36f;
   border-radius: 3px;
   cursor: pointer;
   transition-timing-function: cubic-bezier(0.6, 4, 0.3, 0.8);
@@ -74,15 +64,31 @@ export const LoginButton = styled.button`
   }
 `;
 
-export const SignupButton = styled.button`
-  width: 100px;
-  height: 40px;
-  margin-top: 20px;
-  background-color: #b6d36f;
-  color: #fff;
+export const SignupContainer = styled.div`
+  position: absolute;
+  left: 40%;
+  top: 80%;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.7);
+`;
+
+export const SignupAnchor = styled.button`
+  margin-left: 10px;
   font-weight: bold;
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: underline;
   border: none;
-  border-radius: 0.25rem;
+  background: none;
+  padding: 0;
+  font: inherit;
   cursor: pointer;
+
+  &:hover,
+  &:focus,
+  &:link:hover,
+  &:link:focus,
+  &:visited:hover,
+  &:visited:focus {
+    animation: ${gelatineAnimation} 0.5s 1;
+  }
 `;
