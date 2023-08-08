@@ -5,7 +5,7 @@ import { ProfileCreateBox, ProfileListBox } from './ProfileListStyles';
 import CreateModal from './CreateModal';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 
 interface Profile {
   id: number;
@@ -37,7 +37,7 @@ const ProfileList = () => {
 
   const resetList = () => {
     axios
-      .get(`${BASEURL}/children`, {
+      .get(`${API_BASE_URL}/children`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
