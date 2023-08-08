@@ -9,7 +9,7 @@ export const FriendCard = styled.div`
   flex-direction: column;
   align-items: center;
   width: 300px; /* Adjust the width as needed */
-  height: 500px; /* Adjust the height as needed */
+  height: 300px; /* Adjust the height as needed */
   margin: 10px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
