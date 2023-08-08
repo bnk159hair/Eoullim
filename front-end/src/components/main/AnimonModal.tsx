@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalOverlay, ModalContent } from './AnimonModalStyles';
+import { ModalOverlay, ModalContent,Cat,Dog,Panda,Tiger } from './AnimonModalStyles';
 import { useRecoilValue } from 'recoil';
 import { Profilekey } from '../../atoms/Profile';
 import { tokenState } from '../../atoms/Auth';
@@ -36,10 +36,10 @@ const AnimonModal: React.FC<AnimonModalProps> = ({ onClose, profile }) => {
     <>
       <ModalOverlay onClick={onClose} />
       <ModalContent>
-        <div onClick={() => changeAnimon(1)}>애니몬 버튼1</div>
-        <div onClick={() => changeAnimon(2)}>애니몬 버튼2</div>
-        <div onClick={() => changeAnimon(3)}>애니몬 버튼3</div>
-        <div onClick={() => changeAnimon(4)}>애니몬 버튼4</div>
+        <Panda onClick={() => changeAnimon(1)}></Panda>
+        <Dog onClick={() => changeAnimon(2)}></Dog>
+        <Cat onClick={() => changeAnimon(3)}></Cat>
+        <Tiger onClick={() => changeAnimon(4)}></Tiger>
       </ModalContent>
     </>
   );
