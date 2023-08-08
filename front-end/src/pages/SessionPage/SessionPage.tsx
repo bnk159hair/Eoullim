@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
-import { useWebSocket } from '../../hooks/useWebSocket';
 import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
   Buttons,
@@ -24,6 +23,7 @@ import {
 } from '../../atoms/Session';
 import { Client, Message } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
+import { WebSocketApis } from '../../apis/webSocketApis';
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -50,6 +50,7 @@ const SessionPage = () => {
 
   useEffect(() => {
     const client = new Client({
+      connectHeaders: WebSocketApis.getInstance().header,
       brokerURL: WS_BASE_URL,
       reconnectDelay: 5000,
       debug: (str) => console.log(str),
