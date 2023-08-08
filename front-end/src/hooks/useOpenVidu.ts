@@ -38,10 +38,10 @@ export const useOpenVidu = (userId: any) => {
       const data = JSON.parse(event.stream.connection.data);
       setSubscribers((prev) => {
         return [
-          ...prev.filter((sub) => sub.userId !== data.userId),
+          ...prev.filter((sub) => sub.userId !== data.clientData),
           {
             streamManager: subscriber,
-            userId: data.userId,
+            userId: data.clientData,
           },
         ];
       });
@@ -59,6 +59,7 @@ export const useOpenVidu = (userId: any) => {
     }).then((token: any) => {
       console.log('가져온 토큰 :', token);
       console.log('가져온 토큰으로 세션에 연결');
+      console.log(userId);
       mySession
         .connect(token, { clientData: userId })
         .then(async () => {

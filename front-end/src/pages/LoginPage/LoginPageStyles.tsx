@@ -13,7 +13,7 @@ export const LoginPageContainer = styled.div`
 `;
 
 export const LoginContainer = styled.div`
-  // margin-left: 100px;
+  position: relative;
 `;
 
 export const ImageContainer = styled.div``;
