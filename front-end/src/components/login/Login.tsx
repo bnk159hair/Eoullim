@@ -9,10 +9,10 @@ import {
   SignupContainer,
   SignupAnchor,
 } from './LoginStyles';
+import { API_BASE_URL } from '../../apis/urls';
 import { TextField, InputAdornment } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import KeyIcon from '@mui/icons-material/Key';
-import { BASEURL } from '../../apis/urls';
 import SignupModal from './SignupModal';
 
 const Login = () => {
@@ -25,7 +25,7 @@ const Login = () => {
   const handleLogin = (event: any) => {
     event.preventDefault();
     axios
-      .post(`${BASEURL}/users/login`, { userName, password })
+      .post(`${API_BASE_URL}/users/login`, { userName, password })
       .then((response) => {
         setToken(response.data.result);
         navigate('/profile');

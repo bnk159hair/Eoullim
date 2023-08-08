@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ProfileUsereBox, NameTag } from './ProfileListItemStyles';
 import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 import axios from 'axios';
 import { tokenState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
@@ -25,7 +25,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const navigate = useNavigate();
   const token = useRecoilValue(tokenState);
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
-  const IMGURL = `/${imgurl}.png`
+  const IMGURL = `/${imgurl}.png`;
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -49,7 +49,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const profileLogin = () => {
     axios
       .post(
-        `${BASEURL}/children/login/${ChildId}`,
+        `${API_BASE_URL}/children/login/${ChildId}`,
         {},
         {
           headers: {
@@ -67,7 +67,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
 
   const deleteProfile = () => {
     axios
-      .delete(`${BASEURL}/children/${ChildId}`, {
+      .delete(`${API_BASE_URL}/children/${ChildId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -81,7 +81,10 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
 
   return (
     <div>
-      <ProfileUsereBox style={{ backgroundImage: `url(${IMGURL})` }} onClick={handleMainClick}>
+      <ProfileUsereBox
+        style={{ backgroundImage: `url(${IMGURL})` }}
+        onClick={handleMainClick}
+      >
         <NameTag>
           <div>{name}</div>
         </NameTag>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 import { ModalContent, ModalOverlay } from './SignupModalStyles';
 
 interface SignupModalProps {
@@ -34,7 +34,10 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
 
     try {
       const signUpData = { userName, password, name, phoneNumber };
-      const response = await axios.post(`${BASEURL}/users/join`, signUpData);
+      const response = await axios.post(
+        `${API_BASE_URL}/users/join`,
+        signUpData
+      );
       onClose();
       console.log('회원가입 성공:', response);
     } catch (error) {
@@ -44,7 +47,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
 
   const handleIdCheck = async () => {
     try {
-      const response = await axios.post(`${BASEURL}/users/id-check`, {
+      const response = await axios.post(`${API_BASE_URL}/users/id-check`, {
         userName: userName,
       });
       setIsresultCode(response.data.resultCode);
