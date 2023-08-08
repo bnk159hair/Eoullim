@@ -1,7 +1,7 @@
-import React,{ useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import FriendsListItem from './FriendsListItem';
 import axios from 'axios';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 import { tokenState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
 import { useRecoilValue } from 'recoil';
@@ -24,32 +24,33 @@ const FriendsList = () => {
 
   const getFriends = () => {
     axios
-      .get(`${BASEURL}/friendship/${profileId}`, {
+      .get(`${API_BASE_URL}/friendship/${profileId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response)=>{
-        const data = response.data.result
-        setFriends(data)
-        console.log(data)
+      .then((response) => {
+        const data = response.data.result;
+        setFriends(data);
+        console.log(data);
       })
-      .catch((error)=>{
-        console.log('친구목록불러오기오류',error)
-      })
-  }
-  useEffect(()=>{
+      .catch((error) => {
+        console.log('친구목록불러오기오류', error);
+      });
+  };
+  useEffect(() => {
     getFriends();
-  }, [profileId, token])
+  }, [profileId, token]);
 
   return (
     <div>
-      {friends.map((friend)=>(
-        <FriendsListItem 
+      {friends.map((friend) => (
+        <FriendsListItem
           key={friend.id}
           ChildId={friend.id}
           name={friend.name}
-          imgurl={friend.animon.imagePath} />
+          imgurl={friend.animon.imagePath}
+        />
       ))}
     </div>
   );

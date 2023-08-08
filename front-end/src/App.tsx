@@ -24,6 +24,7 @@ function App() {
               <Route path="/session" element={<SessionPage />} />
               <Route path="/friends" element={<FriendsPage />} />
               <Route path="/record" element={<RecordPage />} />
+              <Route path="/test" element={<Session2 />} />
             </Routes>
           </Router>
         </RecoilRoot>

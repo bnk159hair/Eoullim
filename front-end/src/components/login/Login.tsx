@@ -10,7 +10,7 @@ import {
   SignupButton,
 } from './LoginStyles';
 import { TextField } from '@mui/material';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 
 const Login = () => {
   const [userName, setUsername] = useState('');
@@ -21,7 +21,7 @@ const Login = () => {
   const handleLogin = (event: React.FormEvent) => {
     event.preventDefault();
     axios
-      .post(`${BASEURL}/users/login`, { userName, password })
+      .post(`${API_BASE_URL}/users/login`, { userName, password })
       .then((response) => {
         setToken(response.data.result);
         navigate('/profile');
