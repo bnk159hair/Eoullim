@@ -63,18 +63,12 @@ public class MatchService {
         JSONArray files = (JSONArray) jsonObject.get("files");
 
         String downDir = "https://i9c207.p.ssafy.io/openvidu/recordings/";
-        System.out.println("11111111111111111111");
         String downFolder = downDir+recordingId+"/";
         for(int i=0; i< files.size(); i++){
             JSONObject element = (JSONObject) files.get(i);
-            System.out.println("22222222222222222222");
-//            String name = (String)element.get("name");
             String name = String.valueOf(element.get("name"));
-            System.out.println("333333333333333333");
             JSONObject clientData = (JSONObject) parser.parse((String)element.get("clientData"));
-            System.out.println("4444444444444444444");
             int userId = Integer.parseInt((String)clientData.get("childId"));
-            System.out.println(userId + " "+ room.getChildOne().intValue() + " " + room.getChildTwo().intValue());
             if(room.getChildOne().intValue() == userId){ // 영상의 주인이 첫번째 사람
                 roomRepository.save(RoomEntity.of(downFolder+name, userId, room.getChildTwo()));
             }
