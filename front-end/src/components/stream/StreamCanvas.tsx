@@ -30,17 +30,6 @@ export const StreamCanvas: FC<IProps> = ({
 
   return (
     <div>
-      <video
-        id="streamVideo"
-        ref={videoRef}
-        style={{
-          width: '100%',
-          height: '100%',
-          borderRadius: '10px',
-          objectFit: 'cover',
-          visibility: videoState ? 'visible' : 'hidden',
-        }}
-      />
       <canvas
         id="faceCanvas"
         ref={canvasRef}
@@ -48,13 +37,22 @@ export const StreamCanvas: FC<IProps> = ({
         style={{
           width: '100%',
           height: '100%',
-          top: 0,
-          right: 0,
-          left: 0,
-          bottom: 0,
+          position: 'absolute',
           objectFit: 'cover',
           borderRadius: '10px',
           visibility: !videoState ? 'visible' : 'hidden',
+        }}
+      />
+      <video
+        id="streamVideo"
+        ref={videoRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          borderRadius: '10px',
+          objectFit: 'cover',
+          visibility: videoState ? 'visible' : 'hidden',
         }}
       />
       <p>{id}</p>
