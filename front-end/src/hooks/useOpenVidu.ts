@@ -59,6 +59,7 @@ export const useOpenVidu = (userId: any) => {
     }).then((token: any) => {
       console.log('가져온 토큰 :', token);
       console.log('가져온 토큰으로 세션에 연결');
+      console.log(userId);
       mySession
         .connect(token, { clientData: userId })
         .then(async () => {
