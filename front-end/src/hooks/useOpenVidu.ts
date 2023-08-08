@@ -11,12 +11,13 @@ export const useOpenVidu = (userId: any) => {
 
   const leaveSession = useCallback(() => {
     console.log('나가기 실행');
+    console.log(session);
     if (session) {
-      console.log('나랑 세션이랑 연결 끊기');
-      session.disconnect();
       console.log(session);
       console.log('서버에 세션 끊어달라고 보내기');
       destroySession(session);
+      console.log('나랑 세션이랑 연결 끊기');
+      session.disconnect();
     }
     setSession(null);
     setPublisher(null);
@@ -49,19 +50,19 @@ export const useOpenVidu = (userId: any) => {
 
     mySession.on('streamDestroyed', () => leaveSession());
     mySession.on('exception', (exception) => console.warn(exception));
-
+    console.log(String(userId));
     getToken({
-      childId: 4,
-      name: '홍길동',
+      childId: String(userId),
+      name: '오영재',
       gender: 'M',
-      school: '곡란초',
-      grade: 3,
+      school: '서일초',
+      grade: 1,
     }).then((token: any) => {
       console.log('가져온 토큰 :', token);
       console.log('가져온 토큰으로 세션에 연결');
-      console.log(userId);
+      console.log(String(userId));
       mySession
-        .connect(token, { clientData: userId })
+        .connect(token, { childId: String(userId) })
         .then(async () => {
           await navigator.mediaDevices.getUserMedia({
             audio: true,
@@ -96,16 +97,17 @@ export const useOpenVidu = (userId: any) => {
           );
         });
     });
+    console.log(session);
     setSession(mySession);
     console.log(mySession);
     return () => {
       console.log('useEffect가 return했다!!');
       if (mySession) {
-        console.log('나랑 세션이랑 연결 끊기');
-        mySession.disconnect();
         console.log('서버에 세션 끊어달라고 보내기');
         console.log(mySession);
         destroySession(mySession);
+        console.log('나랑 세션이랑 연결 끊기');
+        mySession.disconnect();
       }
       setSession(null);
       setPublisher(null);
@@ -114,15 +116,15 @@ export const useOpenVidu = (userId: any) => {
   }, [userId]);
 
   useEffect(() => {
-    console.log('탭 종료!!');
+    console.log('탭 종료 시에 leaveSession 함수 실행할 것이다.');
     const beforeUnloadHandler = () => leaveSession();
-
     window.addEventListener('beforeunload', beforeUnloadHandler);
 
     return () => {
+      console.log('탭이 종료되었다.');
       window.removeEventListener('beforeunload', beforeUnloadHandler);
     };
-  }, [leaveSession]);
+  }, []);
 
   const onChangeCameraStatus = useCallback(
     (status: boolean) => {
