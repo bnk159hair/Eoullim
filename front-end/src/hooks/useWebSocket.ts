@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react';
 import { Client, Frame, StompConfig } from '@stomp/stompjs';
-import { WS_BASE_URL } from '../apis/url';
-import { WebSocketApis } from '../apis/webSocketApis';
+import { WS_BASE_URL } from '../apis/urls';
 
 interface Param {
   onConnect: (frame: Frame, client: Client) => void;
@@ -15,7 +14,7 @@ export const useWebSocket = (param: Param) => {
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: 'ws://localhost:8081/ws',
+      brokerURL: WS_BASE_URL,
       reconnectDelay: 5000,
       debug: (str) => console.log(str),
     });

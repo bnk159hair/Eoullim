@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ModalOverlay, ModalContent } from './ChangePasswordModalStyles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 import { useNavigate } from 'react-router-dom';
 
 interface ChagePasswordModalProps {
@@ -25,7 +25,7 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
 
   const logoutClick = () => {
     axios
-      .get(`${BASEURL}/users/logout`, {
+      .get(`${API_BASE_URL}/users/logout`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,7 +54,7 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
 
     try {
       const usersData = { curPassword, newPassword };
-      const response = await axios.put(`${BASEURL}/users`, usersData, {
+      const response = await axios.put(`${API_BASE_URL}/users`, usersData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

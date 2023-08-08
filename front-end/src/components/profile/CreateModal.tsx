@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ModalOverlay, ModalContent } from './CreateModalStyles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 
 interface CreateModalProps {
   onClose: () => void;
@@ -31,11 +31,15 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose, resetList }) => {
 
     try {
       const profileData = { name, birth, gender, school, grade };
-      const response = await axios.post(`${BASEURL}/children`, profileData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/children`,
+        profileData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log('프로필 생성 성공:', response);
       console.log(profileData);
       onClose();
@@ -49,7 +53,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose, resetList }) => {
   const handleSchoolCheck = async () => {
     try {
       const response = await axios.post(
-        `${BASEURL}/children/school`,
+        `${API_BASE_URL}/children/school`,
         {
           keyword: school,
         },

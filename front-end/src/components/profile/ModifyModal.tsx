@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ModalOverlay, ModalContent } from './ModifyModalStyles';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 
 interface ChildProfile {
   id: number;
@@ -46,7 +46,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
 
   const fetchChildProfile = () => {
     axios
-      .get(`${BASEURL}/children/${ChildId}`, {
+      .get(`${API_BASE_URL}/children/${ChildId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,7 +63,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
   const passwordClick = () => {
     axios
       .post(
-        `${BASEURL}/users/pw-check`,
+        `${API_BASE_URL}/users/pw-check`,
         { password },
         {
           headers: {
@@ -82,7 +82,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
   const handleUpdateProfile = async () => {
     try {
       const response = await axios.put(
-        `${BASEURL}/children/${childProfile.id}`,
+        `${API_BASE_URL}/children/${childProfile.id}`,
         childProfile,
         {
           headers: {
