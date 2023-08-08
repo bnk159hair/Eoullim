@@ -1,6 +1,6 @@
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import RecordListItem from '../../components/record/RecordListItem';
-import { RecordPageContainer, Passwordcofile } from './RecordPageStyles';
+import { RecordPageContainer, Passwordcofile, EmptyRecord } from './RecordPageStyles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { tokenState } from '../../atoms/Auth';
@@ -10,7 +10,7 @@ import { Profilekey } from '../../atoms/Profile';
 
 interface Record {
   animonName: string;
-  create_time: Date;
+  create_time: string;
   record_id: number;
   school: string;
   video_path: string;
@@ -44,22 +44,23 @@ const RecordPage = () => {
       });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getRecord();
-  },[profileId, token])
-  const getRecord = () =>{
+  }, [profileId, token]);
+
+  const getRecord = () => {
     axios
       .get(`https://i9c207.p.ssafy.io/api/openvidu/recordings/${profileId}`)
-      .then((response)=>{
-        const data = response.data
-        console.log(response)
-        setRecords(data)
-        console.log('녹화영상 불러오기')
+      .then((response) => {
+        const data = response.data;
+        console.log(response);
+        setRecords(data);
+        console.log('녹화영상 불러오기');
       })
-      .catch((error)=>{
-        console.log(error)
-      })
-  }
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const getBack = () => {
     navigate('/profile');
@@ -68,10 +69,20 @@ const RecordPage = () => {
   return (
     <RecordPageContainer>
       {isPasswordCorrect ? (
-        records.map((record) => (
-          <RecordListItem key={record.record_id} name={record.name} animonName={record.animonName} school={record.school} video_path={record.video_path}/>
-        ))
-        
+        records.length > 0 ? (
+          records.map((record) => (
+            <RecordListItem
+              key={record.record_id}
+              name={record.name}
+              animonName={record.animonName}
+              school={record.school}
+              video_path={record.video_path}
+              create_time={record.create_time}
+            />
+          ))
+        ) : (
+          <EmptyRecord />
+        )
       ) : (
         <Passwordcofile>
           <input

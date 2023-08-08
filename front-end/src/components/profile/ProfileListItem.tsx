@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ProfileUsereBox } from './ProfileListItemStyles';
+import { ProfileUsereBox, NameTag } from './ProfileListItemStyles';
 import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
 import { BASEURL } from '../../apis/urls';
@@ -82,9 +82,9 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   return (
     <div>
       <ProfileUsereBox style={{ backgroundImage: `url(${IMGURL})` }} onClick={handleMainClick}>
-        {name}
-        {ChildId}
-        {imgurl}
+        <NameTag>
+          <div>{name}</div>
+        </NameTag>
       </ProfileUsereBox>
       <button onClick={handleModalOpen}>수정</button>
       {isModalOpen && (
