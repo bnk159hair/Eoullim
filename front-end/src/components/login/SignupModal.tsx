@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { WS_BASE_URL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 import { ModalContent, ModalOverlay } from './SignupModalStyles';
 
 interface SignupModalProps {
@@ -35,7 +35,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
     try {
       const signUpData = { userName, password, name, phoneNumber };
       const response = await axios.post(
-        `${WS_BASE_URL}/users/join`,
+        `${API_BASE_URL}/users/join`,
         signUpData
       );
       onClose();
@@ -47,7 +47,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
 
   const handleIdCheck = async () => {
     try {
-      const response = await axios.post(`${WS_BASE_URL}/users/id-check`, {
+      const response = await axios.post(`${API_BASE_URL}/users/id-check`, {
         userName: userName,
       });
       setIsresultCode(response.data.resultCode);
