@@ -71,6 +71,5 @@
     "@types/three": "^0.154.0"
   },
   "main": "index.js",
-  "license": "MIT",
-  "proxy": "http://localhost:8081"
+  "license": "MIT"
 }
