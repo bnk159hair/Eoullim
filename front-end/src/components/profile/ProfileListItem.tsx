@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ProfileUsereBox } from './ProfileListItemStyles';
+import { ProfileUsereBox, NameTag } from './ProfileListItemStyles';
 import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
 import { BASEURL } from '../../apis/urls';
@@ -25,6 +25,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const navigate = useNavigate();
   const token = useRecoilValue(tokenState);
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
+  const IMGURL = `/${imgurl}.png`
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -80,10 +81,10 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
 
   return (
     <div>
-      <ProfileUsereBox onClick={handleMainClick}>
-        {name}
-        {ChildId}
-        {imgurl}
+      <ProfileUsereBox style={{ backgroundImage: `url(${IMGURL})` }} onClick={handleMainClick}>
+        <NameTag>
+          <div>{name}</div>
+        </NameTag>
       </ProfileUsereBox>
       <button onClick={handleModalOpen}>수정</button>
       {isModalOpen && (

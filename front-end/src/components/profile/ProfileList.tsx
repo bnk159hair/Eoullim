@@ -60,7 +60,7 @@ const ProfileList = () => {
           ChildId={profile.id}
           name={profile.name}
           resetList={resetList}
-          imgurl={profile.animon.imagePath}
+          imgurl={profile.animon.name}
         />
       ))}
 
