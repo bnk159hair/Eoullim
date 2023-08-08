@@ -71,7 +71,7 @@ public class MatchService {
             String name = String.valueOf(element.get("name"));
             JSONObject clientData = (JSONObject) parser.parse((String)element.get("clientData"));
             int userId = Integer.parseInt((String)clientData.get("childId"));
-            System.out.println(userId);
+            System.out.println(userId + " "+ room.getChildOne().intValue() + " " + room.getChildTwo().intValue());
             if(room.getChildOne().intValue() == userId){ // 영상의 주인이 첫번째 사람
                 roomRepository.save(RoomEntity.of(downFolder+name, userId, room.getChildTwo()));
             }
