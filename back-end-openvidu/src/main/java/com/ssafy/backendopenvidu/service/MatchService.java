@@ -67,7 +67,8 @@ public class MatchService {
         String downFolder = downDir+recordingId+"/";
         for(int i=0; i< files.size(); i++){
             JSONObject element = (JSONObject) files.get(i);
-            String name = (String)element.get("name");
+//            String name = (String)element.get("name");
+            String name = String.valueOf(element.get("name"));
             JSONObject clientData = (JSONObject) parser.parse((String)element.get("clientData"));
             int userId = Integer.parseInt((String)clientData.get("childId"));
             System.out.println(userId);
