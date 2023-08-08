@@ -13,10 +13,12 @@ export const MainPageContainer = styled.div`
 
 export const ProfileImg = styled.div`
   background-size: 100% 100%;
-  background-image: url(${profileimg});
   width: 80px;
   height: 80px;
   margin-left: auto;
+  background-color: #87CEFA;
+  border-radius: 25px;
+  border: solid 2px;
 `;
 
 export const MarginContainer = styled.div`
@@ -24,3 +26,9 @@ export const MarginContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
+
+export const MainCharacter = styled.div`
+  width: 150px;
+  height: 150px;
+  background-size: 100% 100%;
+`

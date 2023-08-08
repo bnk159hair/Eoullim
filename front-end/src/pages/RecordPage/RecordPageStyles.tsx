@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import recordBackground from '../../assets/background/record.gif';
 import passwordbox from '../../assets/box/passwordbox.png';
+import emptyrecord from '../../assets/ecc/emptyrecord.png'
 
 export const RecordPageContainer = styled.div`
   height: 100vh;
@@ -22,3 +23,10 @@ export const Passwordcofile = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const EmptyRecord = styled.div`
+  height : 400px;
+  width : 800px;
+  background-image: url(${emptyrecord});
+  background-size: 100% 100%;
+`
