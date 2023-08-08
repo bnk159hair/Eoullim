@@ -28,9 +28,15 @@ export const destroySession: (session: any) => Promise<void> = async (
   console.log('세션 파괴!!!!!!');
   console.log(session.sessionId);
   await axios
-    .post(`${SERVER_URL}api/openvidu/matchstop`, {
-      sessionId: session.sessionId,
-    })
+    .post(
+      `${SERVER_URL}api/openvidu/matchstop`,
+      {
+        sessionId: session.sessionId,
+      },
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
     .then((response) => console.log(response))
     .catch((error) => console.log(error));
 };

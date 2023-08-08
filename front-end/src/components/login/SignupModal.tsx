@@ -1,34 +1,41 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { API_BASE_URL } from '../../apis/urls';
-import { ModalContent, ModalOverlay } from './SignupModalStyles';
+import React, { useState } from "react";
+import axios from "axios";
+import { API_BASE_URL } from "../../apis/urls";
+import {
+  ModalContent,
+  ModalOverlay,
+  ModalFormContainer,
+  IdContainer,
+} from "./SignupModalStyles";
+import { TextField } from "@mui/material";
 
 interface SignupModalProps {
   onClose: () => void;
 }
 
 const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [resultCode, setIsresultCode] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [isIdUnique, setIsIdUnique] = useState(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
 
-  const handleSignUp = async () => {
-    if (!resultCode) {
-      alert('아이디 중복 체크를 해주세요.');
+  const handleSignUp = async (event: any) => {
+    event.preventDefault();
+    if (!isIdUnique) {
+      alert("아이디 중복 확인을 해주세요.");
       return;
     }
 
     if (!userName || !password || !name || !phoneNumber) {
-      alert('모든 정보를 입력해주세요.');
+      alert("모든 정보를 입력해주세요.");
       return;
     }
 
     if (!isPasswordMatch) {
-      alert('비밀번호 확인이 일치하지 않습니다.');
+      alert("비밀번호 확인이 일치하지 않습니다.");
       return;
     }
 
@@ -39,88 +46,115 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
         signUpData
       );
       onClose();
-      console.log('회원가입 성공:', response);
+      console.log("회원가입 성공:", response);
     } catch (error) {
-      console.error('회원가입 실패:', error);
+      console.error("회원가입 실패:", error);
     }
   };
 
-  const handleIdCheck = async () => {
+  const handleIdCheck = async (event: any) => {
+    event.preventDefault();
+    if (!userName) {
+      alert("아이디를 입력해주세요!");
+      return;
+    }
+
     try {
       const response = await axios.post(`${API_BASE_URL}/users/id-check`, {
         userName: userName,
       });
-      setIsresultCode(response.data.resultCode);
-      console.log('아이디 중복 체크 결과:', response);
+      setIsIdUnique(response.data.resultCode);
+      console.log("아이디 중복 확인 결과:", response);
       alert(
         response.data.resultCode
-          ? '사용 가능한 아이디입니다.'
-          : '이미 사용 중인 아이디입니다.'
+          ? "사용 가능한 아이디입니다."
+          : "이미 사용 중인 아이디입니다."
       );
     } catch (error) {
-      console.error('아이디 중복 체크 에러:', error);
-      alert('이미 사용 중인 아이디입니다.');
+      console.error("아이디 중복 확인 에러:", error);
+      alert("이미 사용 중인 아이디입니다.");
     }
   };
 
-  const handlePasswordConfirmation = () => {
-    setIsPasswordMatch(password === passwordConfirmation);
+  const handlePasswordConfirmation = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    event.preventDefault();
+    const newValue = event.target.value;
+    setPasswordConfirmation(newValue);
+    setIsPasswordMatch(password === newValue);
   };
 
   return (
     <ModalOverlay>
       <ModalContent>
-        <h2>회원가입</h2>
-        <div>
-          <input
-            type="text"
-            placeholder="아이디"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          <button onClick={handleIdCheck}>중복체크</button>
-          {resultCode && (
-            <div style={{ color: 'green' }}>사용 가능한 아이디입니다.</div>
-          )}
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="비밀번호"
+        <h2>
+          회원가입<button onClick={onClose}>X</button>
+        </h2>
+        <ModalFormContainer>
+          <IdContainer>
+            <TextField
+              label='아이디'
+              variant='outlined'
+              margin='dense'
+              value={userName}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setUserName(event.target.value)
+              }
+              error={!isIdUnique}
+              helperText={
+                isIdUnique
+                  ? "사용 가능한 아이디입니다."
+                  : "이미 사용 중인 아이디입니다."
+              }
+            />
+            <button onClick={handleIdCheck}>중복확인</button>
+          </IdContainer>
+          <TextField
+            label='비밀번호'
+            variant='outlined'
+            margin='dense'
+            type='password'
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setPassword(event.target.value)
+            }
           />
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="비밀번호 확인"
+          <TextField
+            label='비밀번호 확인'
+            variant='outlined'
+            margin='dense'
+            type='password'
             value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
-            onBlur={handlePasswordConfirmation}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              handlePasswordConfirmation(event)
+            }
+            error={!isPasswordMatch}
+            helperText={!isPasswordMatch && "비밀번호가 일치하지 않습니다."}
           />
-          {!isPasswordMatch && (
-            <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>
-          )}
-        </div>
-        <div>
-          <input
-            type="text"
-            placeholder="이름"
+          <TextField
+            label='이름'
+            variant='outlined'
+            margin='dense'
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder='홍길동'
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setName(event.target.value)
+            }
           />
-        </div>
-        <div>
-          <input
-            type="text"
-            placeholder="전화번호"
+          <TextField
+            label='전화번호'
+            variant='outlined'
+            margin='dense'
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            placeholder='01012345678'
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setPhoneNumber(event.target.value)
+            }
+            helperText="'-'없이 입력해주세요."
           />
-        </div>
-        <button onClick={handleSignUp}>회원가입</button>
-        <button onClick={onClose}>이미 계정이 있으신가요? 로그인</button>
+          <button onClick={handleSignUp}>회원가입</button>
+        </ModalFormContainer>
       </ModalContent>
     </ModalOverlay>
   );

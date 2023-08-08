@@ -1,23 +1,25 @@
 import React from 'react';
+import {FriendCard,FriendImg,FrinedInfo} from './FriendsListItemStyles'
 
 interface FriendsListItemProps {
   name: string;
-  ChildId: number;
-  imgurl: string;
+  animon: string;
 }
 
 const FriendsListItem: React.FC<FriendsListItemProps> = ({
   name,
-  ChildId,
-  imgurl,
+  animon,
 }) => {
-  return( 
-  <div>
-    {name}
-    {ChildId}
-    {imgurl}
 
-  </div>);
+  const IMGURL = `/${animon}.png`
+
+  return( 
+  <FriendCard>
+    <FriendImg style={{ backgroundImage: `url(${IMGURL})` }}/>
+    <FrinedInfo>
+      <div>친구 이름 : {name}</div>
+    </FrinedInfo>
+  </FriendCard>);
 };
 
 export default FriendsListItem;

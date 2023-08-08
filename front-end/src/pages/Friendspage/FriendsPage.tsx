@@ -11,7 +11,6 @@ const FriendsPage = () => {
 
   return (
     <FriendsPageContainer>
-      내친구 목록
       <FriendsList />
       <button onClick={handleMainClick}>뒤로 가기</button>
     </FriendsPageContainer>
