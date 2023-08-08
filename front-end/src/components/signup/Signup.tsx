@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, NavLink } from 'react-router-dom';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 
 const SignUp = () => {
   const [userName, setUserName] = useState('');
@@ -31,7 +31,10 @@ const SignUp = () => {
 
     try {
       const signUpData = { userName, password, name, phoneNumber };
-      const response = await axios.post(`${BASEURL}/users/join`, signUpData);
+      const response = await axios.post(
+        `${API_BASE_URL}/users/join`,
+        signUpData
+      );
       console.log('회원가입 성공:', response);
       navigate('/login');
     } catch (error) {
@@ -41,7 +44,7 @@ const SignUp = () => {
 
   const handleIdCheck = async () => {
     try {
-      const response = await axios.post(`${BASEURL}/users/id-check`, {
+      const response = await axios.post(`${API_BASE_URL}/users/id-check`, {
         userName: userName,
       });
       setIsresultCode(response.data.resultCode);

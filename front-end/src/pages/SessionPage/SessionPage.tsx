@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
-import { useWebSocket } from '../../hooks/useWebSocket';
 import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
   Buttons,
@@ -23,6 +22,8 @@ import {
   SubscriberVideoStatus,
 } from '../../atoms/Session';
 import { Client, Message } from '@stomp/stompjs';
+import { WS_BASE_URL } from '../../apis/urls';
+import { WebSocketApis } from '../../apis/webSocketApis';
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const SessionPage = () => {
 
   setPublisherId(profileId);
 
-  const { streamList } = useOpenVidu(publisherId);
+  const { streamList } = useOpenVidu(profileId);
   const sessionOver = () => {
     setOpen(true);
   };
@@ -49,7 +50,8 @@ const SessionPage = () => {
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: 'ws://localhost:8081/ws',
+      connectHeaders: WebSocketApis.getInstance().header,
+      brokerURL: WS_BASE_URL,
       reconnectDelay: 5000,
       debug: (str) => console.log(str),
     });
@@ -63,7 +65,7 @@ const SessionPage = () => {
         console.log('메시지 수신:', response.body);
         const message = JSON.parse(response.body);
         if (message.userName !== String(publisherId)) {
-          console.log(message.userName, String(publisherId));
+          console.log(message.userName, message.status);
           console.log('상대방이 화면을 껐습니다.');
           setSubscriberId(message.userName);
           setSubscriberVideoStatus(message.status);
@@ -92,10 +94,11 @@ const SessionPage = () => {
   const changeVideoStatus = () => {
     console.log(stompClient);
     if (connected && stompClient) {
-      setPublisherVideoStatus(!publisherVideoStatus);
+      const status = !publisherVideoStatus;
+      setPublisherVideoStatus(status);
       const jsonMessage = {
         userName: String(publisherId),
-        status: publisherVideoStatus,
+        status: status,
       };
       const message = JSON.stringify(jsonMessage);
       stompClient.publish({
@@ -117,6 +120,7 @@ const SessionPage = () => {
                   streamManager={streamList[1].streamManager}
                   id={streamList[1].userId}
                   avatarPath="http://localhost:3000/image.png"
+                  videoState={subscriberVideoStatus}
                 />
               ) : (
                 <Loading />
@@ -130,7 +134,8 @@ const SessionPage = () => {
                 <StreamCanvas
                   streamManager={streamList[0].streamManager}
                   id={streamList[0].userId}
-                  avatarPath="http://localhost:3000/image.png"
+                  avatarPath="http://localhost:3000/14.png"
+                  videoState={publisherVideoStatus}
                 />
               ) : (
                 <Loading />
@@ -138,7 +143,6 @@ const SessionPage = () => {
             </MyVideo>
             <Buttons>
               <button onClick={changeVideoStatus}>애니몬</button>
-              <button>마이크</button>
               <button onClick={sessionOver}>나가기</button>
             </Buttons>
           </SideBar>

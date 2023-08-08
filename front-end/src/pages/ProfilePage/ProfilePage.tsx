@@ -7,7 +7,7 @@ import {
   MarginContainer,
 } from './ProfilePageStyles';
 import ChagePasswordModal from '../../components/profile/ChangePasswordModal';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,7 @@ const ProfilePage = () => {
 
   const logoutClick = () => {
     axios
-      .get(`${BASEURL}/users/logout`, {
+      .get(`${API_BASE_URL}/users/logout`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

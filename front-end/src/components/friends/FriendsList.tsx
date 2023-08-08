@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FriendsListItem from './FriendsListItem';
 import axios from 'axios';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 import { tokenState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
 import { useRecoilValue } from 'recoil';
@@ -27,7 +27,7 @@ const FriendsList = () => {
 
   const getFriends = () => {
     axios
-      .get(`${BASEURL}/friendship/${profileId}`, {
+      .get(`${API_BASE_URL}/friendship/${profileId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -41,7 +41,6 @@ const FriendsList = () => {
         console.log('친구목록불러오기오류', error);
       });
   };
-  
   useEffect(() => {
     getFriends();
   }, [profileId, token]);

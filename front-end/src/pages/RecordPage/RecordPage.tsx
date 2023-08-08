@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import RecordListItem from '../../components/record/RecordListItem';
-import { RecordPageContainer, Passwordcofile, EmptyRecord } from './RecordPageStyles';
+import {
+  RecordPageContainer,
+  Passwordcofile,
+  EmptyRecord,
+} from './RecordPageStyles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import { BASEURL } from '../../apis/urls';
+import { API_BASE_URL } from '../../apis/urls';
 import { Profilekey } from '../../atoms/Profile';
 
 interface Record {
@@ -28,7 +32,7 @@ const RecordPage = () => {
   const passwordClick = () => {
     axios
       .post(
-        `${BASEURL}/users/pw-check`,
+        `${API_BASE_URL}/users/pw-check`,
         { password },
         {
           headers: {
