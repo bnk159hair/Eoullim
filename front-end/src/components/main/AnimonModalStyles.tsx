@@ -3,6 +3,7 @@ import cat from '../../assets/animon/cat.png'
 import tiger from '../../assets/animon/tiger.png'
 import dog from '../../assets/animon/dog.png'
 import panda from '../../assets/animon/panda.png'
+import box from '../../assets/box/woodbox.jpg'
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -10,21 +11,26 @@ export const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  // background-color: rgba(0, 0, 0, 0.7);
   z-index: 1000;
 `;
 
 export const ModalContent = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 26%;
+  left: 84%;
   transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  background-color: white;
-  border: 1px solid #ccc;
+  width: 400px;
+  height: 100px;
+  // background-color: white;
+  border: 2px solid;
   padding: 20px;
   z-index: 1001;
+  display: flex;
+  justify-content: space-evenly;
+  border-radius: 25px;
+  align-items: center;
+  background-image: url(${box});
 `;
 
 export const Cat = styled.div`
