@@ -5,4 +5,8 @@ export const FriendsPageContainer = styled.div`
   height: 100vh;
   background-size: 100% 100%;
   background-image: url(${friendBackground});
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
