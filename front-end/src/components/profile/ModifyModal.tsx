@@ -1,9 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ModalOverlay, ModalContent } from './ModifyModalStyles';
+import {
+  ModalOverlay,
+  ModalContent,
+  FormContainer,
+  ButtonContainer,
+} from './ModifyModalStyles';
 import { tokenState } from '../../atoms/Auth';
-import { useRecoilValue } from 'recoil';
+import { Profilekey } from '../../atoms/Profile';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { API_BASE_URL } from '../../apis/urls';
+import {
+  Button,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 interface ChildProfile {
   id: number;
@@ -17,13 +34,13 @@ interface ChildProfile {
 
 interface ModifyModalProps {
   onClose: () => void;
-  ChildId: number;
+  childId: number;
   resetList: () => void;
 }
 
 const ModifyModal: React.FC<ModifyModalProps> = ({
   onClose,
-  ChildId,
+  childId,
   resetList,
 }) => {
   const [childProfile, setChildProfile] = useState<ChildProfile>({
@@ -39,14 +56,16 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
   const token = useRecoilValue(tokenState);
   const [password, setPassword] = useState('');
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+  const [profilekey, setProfileKey] = useRecoilState(Profilekey);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchChildProfile();
-  }, [ChildId, token]);
+  }, [childId, token]);
 
   const fetchChildProfile = () => {
     axios
-      .get(`${API_BASE_URL}/children/${ChildId}`, {
+      .get(`${API_BASE_URL}/children/${childId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +79,8 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
       });
   };
 
-  const passwordClick = () => {
+  const passwordCheck = (event: any) => {
+    event.preventDefault();
     axios
       .post(
         `${API_BASE_URL}/users/pw-check`,
@@ -99,8 +119,8 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
     setChildProfile((prevProfile) => ({
       ...prevProfile,
       [name]: value,
@@ -116,30 +136,85 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
     return koreanDateString;
   };
 
+  const handleRecordClick = () => {
+    setProfileKey(childId);
+    navigate('/record');
+  };
+  const deleteProfile = () => {
+    axios
+      .delete(`${API_BASE_URL}/children/${childId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        resetList();
+        console.log('삭제완료');
+      })
+      .catch((error) => console.log('실패'));
+  };
   return (
     <ModalOverlay>
       <ModalContent>
-        <h2>프로필 수정</h2>
         {!isPasswordCorrect ? (
-          <>
-            <input
+          <FormContainer onSubmit={passwordCheck}>
+            <h2>비밀번호 확인</h2>
+            <TextField
+              label="비밀번호 확인"
+              variant="outlined"
+              margin="dense"
               type="password"
-              placeholder="비밀번호"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(event.target.value)
+              }
             />
-            <button onClick={passwordClick}>확인</button>
-            <button onClick={onClose}>닫기</button>
-          </>
+            <ButtonContainer>
+              <Button
+                variant="contained"
+                size="small"
+                color="info"
+                sx={{ fontSize: '18px', margin: '0.5rem' }}
+                onClick={passwordCheck}
+                fullWidth
+              >
+                확인
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                color="info"
+                sx={{ fontSize: '18px', margin: '0.5rem' }}
+                onClick={onClose}
+                fullWidth
+              >
+                닫기
+              </Button>
+            </ButtonContainer>
+          </FormContainer>
         ) : (
-          <>
-            <input
-              type="text"
-              placeholder="이름"
+          <FormContainer>
+            <h2>프로필 수정</h2>
+            <TextField
+              label="이름"
+              variant="outlined"
+              margin="dense"
               name="name"
               value={childProfile.name}
-              onChange={handleInputChange}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange(event)
+              }
             />
+            <LocalizationProvider
+              dateFormats={{ fullDate: 'YYYY-MM-DD' }}
+              dateAdapter={AdapterDayjs}
+            >
+              <DatePicker
+                label="생년월일"
+                // value={convertTimestampToKoreanDate(childProfile.birth)}
+                // onChange={handleInputChange}
+              />
+            </LocalizationProvider>
             <input
               type="date"
               placeholder="생년월일"
@@ -147,6 +222,16 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
               value={convertTimestampToKoreanDate(childProfile.birth)}
               onChange={handleInputChange}
             />
+            <ToggleButtonGroup
+              color="primary"
+              // value={alignment}
+              exclusive
+              // onChange={handleChange}
+            >
+              <ToggleButton value="web">1학년</ToggleButton>
+              <ToggleButton value="android">2학년</ToggleButton>
+              <ToggleButton value="ios">3학년</ToggleButton>
+            </ToggleButtonGroup>
             <div>
               <label>
                 <input
@@ -169,12 +254,15 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 여성
               </label>
             </div>
-            <input
-              type="text"
-              placeholder="학교"
+            <TextField
+              label="학교"
+              variant="outlined"
+              margin="dense"
               name="school"
               value={childProfile.school}
-              onChange={handleInputChange}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange(event)
+              }
             />
             <div>
               <label>
@@ -208,9 +296,45 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 3학년
               </label>
             </div>
-            <button onClick={handleUpdateProfile}>수정</button>
-            <button onClick={onClose}>닫기</button>
-          </>
+            <ButtonContainer>
+              <Button
+                variant="contained"
+                size="small"
+                color="info"
+                sx={{ fontSize: '18px' }}
+                onClick={handleUpdateProfile}
+              >
+                수정
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                color="info"
+                sx={{ fontSize: '18px' }}
+                onClick={deleteProfile}
+              >
+                삭제
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                color="info"
+                sx={{ fontSize: '18px' }}
+                onClick={handleRecordClick}
+              >
+                녹화영상
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                color="info"
+                sx={{ fontSize: '18px' }}
+                onClick={onClose}
+              >
+                닫기
+              </Button>
+            </ButtonContainer>
+          </FormContainer>
         )}
       </ModalContent>
     </ModalOverlay>

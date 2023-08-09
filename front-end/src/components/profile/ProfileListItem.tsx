@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { ProfileUsereBox, NameTag } from './ProfileListItemStyles';
+import {
+  ProfileContainer,
+  ProfileUserContainer,
+  NameTag,
+} from './ProfileListItemStyles';
 import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/urls';
@@ -7,17 +11,18 @@ import axios from 'axios';
 import { tokenState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
 import { useRecoilValue, useRecoilState } from 'recoil';
+import { Button } from '@mui/material';
 
 interface ProfileListItemProps {
   name: string;
-  ChildId: number;
+  childId: number;
   resetList: () => void;
   imgurl: string;
 }
 
 const ProfileListItem: React.FC<ProfileListItemProps> = ({
   name,
-  ChildId,
+  childId,
   resetList,
   imgurl,
 }) => {
@@ -36,20 +41,15 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   };
 
   const handleMainClick = () => {
-    setProfileKey(ChildId);
+    setProfileKey(childId);
     profileLogin();
     navigate('/');
-  };
-
-  const handleRecordClick = () => {
-    setProfileKey(ChildId);
-    navigate('/record');
   };
 
   const profileLogin = () => {
     axios
       .post(
-        `${API_BASE_URL}/children/login/${ChildId}`,
+        `${API_BASE_URL}/children/login/${childId}`,
         {},
         {
           headers: {
@@ -65,41 +65,31 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
       });
   };
 
-  const deleteProfile = () => {
-    axios
-      .delete(`${API_BASE_URL}/children/${ChildId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        resetList();
-        console.log('삭제완료');
-      })
-      .catch((error) => console.log('실패'));
-  };
-
   return (
-    <div>
-      <ProfileUsereBox
+    <ProfileContainer>
+      <ProfileUserContainer
         style={{ backgroundImage: `url(${IMGURL})` }}
         onClick={handleMainClick}
       >
-        <NameTag>
-          <div>{name}</div>
-        </NameTag>
-      </ProfileUsereBox>
-      <button onClick={handleModalOpen}>수정</button>
+        <NameTag>{name}</NameTag>
+      </ProfileUserContainer>
+      <Button
+        variant="contained"
+        color="success"
+        sx={{ fontSize: '18px' }}
+        onClick={handleModalOpen}
+        fullWidth
+      >
+        프로필 관리
+      </Button>
       {isModalOpen && (
         <ModifyModal
           onClose={handleModalClose}
-          ChildId={ChildId}
+          childId={childId}
           resetList={resetList}
         />
       )}
-      <button onClick={deleteProfile}>삭제</button>
-      <button onClick={handleRecordClick}>녹화영상</button>
-    </div>
+    </ProfileContainer>
   );
 };
 
