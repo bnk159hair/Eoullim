@@ -59,7 +59,7 @@ export const useOpenVidu = (userId: any) => {
     });
 
     mySession.on('streamDestroyed', () => leaveSession());
-    mySession.on('exception', (exception) => console.warn(exception));
+    // mySession.on('exception', (exception) => console.warn(exception));
 
     getUserInfo(userId, userToken).then((userInfo: User) => {
       getToken(
@@ -162,6 +162,7 @@ export const useOpenVidu = (userId: any) => {
   return {
     publisher,
     streamList,
+    session,
     onChangeCameraStatus,
     onChangeMicStatus,
   };

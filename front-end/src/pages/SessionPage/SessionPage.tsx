@@ -38,6 +38,7 @@ const SessionPage = () => {
   const [subscriberVideoStatus, setSubscriberVideoStatus] = useRecoilState(
     SubscriberVideoStatus
   );
+
   const profileId = useRecoilValue(Profilekey);
   const token = useRecoilValue(tokenState);
   const IMGURL = '/bear.png';
@@ -46,7 +47,7 @@ const SessionPage = () => {
 
   setPublisherId(profileId);
 
-  const { streamList } = useOpenVidu(profileId);
+  const { publisher, streamList, session } = useOpenVidu(profileId);
   const sessionOver = () => {
     setOpen(true);
   };
@@ -75,19 +76,19 @@ const SessionPage = () => {
       setConnected(true);
       setStompClient(client);
 
-      client.subscribe('/sub/animon', (response) => {
+      client.subscribe(`/topic/${session.sessionId}/animon`, (response) => {
         console.log('메시지 수신:', response.body);
         const message = JSON.parse(response.body);
-        if (message.userName !== String(publisherId)) {
-          console.log(message.userName, message.status);
+        if (message.childId !== String(publisherId)) {
+          console.log(message.childId, message.isAnimonOn);
           console.log('상대방이 화면을 껐습니다.');
-          setSubscriberId(message.userName);
-          setSubscriberVideoStatus(message.status);
+          setSubscriberId(message.childId);
+          setSubscriberVideoStatus(message.isAnimonOn);
         }
-        client.subscribe('/sub/guide', (response) => {
-          const message = JSON.parse(response.body);
-          setGuidance(message);
-        });
+      });
+      client.subscribe(`/topic/${session.sessionId}/guide`, (response) => {
+        const message = JSON.parse(response.body);
+        setGuidance(message);
       });
     };
 
@@ -127,22 +128,24 @@ const SessionPage = () => {
         leaveSession();
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response.data.resultCode === 'INVALID_DATA') {
+          leaveSession();
+        } else console.log(error);
       });
   };
 
   const changeVideoStatus = () => {
     console.log(stompClient);
     if (connected && stompClient) {
-      const status = !publisherVideoStatus;
-      setPublisherVideoStatus(status);
+      const isAnimonOn = !publisherVideoStatus;
+      setPublisherVideoStatus(isAnimonOn);
       const jsonMessage = {
-        userName: String(publisherId),
-        status: status,
+        childId: String(publisherId),
+        isAnimonOn: isAnimonOn,
       };
       const message = JSON.stringify(jsonMessage);
       stompClient.publish({
-        destination: '/pub/animon',
+        destination: `/app/${session.sessionId}/animon`,
         body: message,
       });
       console.log('메시지 전송:', message);
@@ -152,12 +155,12 @@ const SessionPage = () => {
   const nextGuidance = () => {
     if (connected && stompClient) {
       const jsonMessage = {
-        userName: String(publisherId),
+        childId: String(publisherId),
         status: true,
       };
       const message = JSON.stringify(jsonMessage);
       stompClient.publish({
-        destination: '/pub/guide',
+        destination: `/app/${session.sessionId}/guide`,
         body: message,
       });
       console.log('가이드 전송:', message);
