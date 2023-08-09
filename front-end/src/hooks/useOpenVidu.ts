@@ -1,7 +1,6 @@
 import { OpenVidu } from 'openvidu-browser';
 import { getToken, destroySession } from '../apis/openViduApis';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useWebSocket } from './useWebSocket';
 
 export const useOpenVidu = (userId: any) => {
   const [session, setSession] = useState<any>(null);
@@ -51,17 +50,17 @@ export const useOpenVidu = (userId: any) => {
     mySession.on('exception', (exception) => console.warn(exception));
 
     getToken({
-      childId: 4,
-      name: '홍길동',
+      childId: String(userId),
+      name: '안경준',
       gender: 'M',
-      school: '곡란초',
-      grade: 3,
+      school: '치평',
+      grade: 1,
     }).then((token: any) => {
       console.log('가져온 토큰 :', token);
       console.log('가져온 토큰으로 세션에 연결');
       console.log(userId);
       mySession
-        .connect(token, { clientData: userId })
+        .connect(token, { childId: String(userId) })
         .then(async () => {
           await navigator.mediaDevices.getUserMedia({
             audio: true,
