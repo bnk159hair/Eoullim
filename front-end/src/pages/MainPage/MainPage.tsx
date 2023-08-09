@@ -4,8 +4,15 @@ import {
   ProfileImg,
   MarginContainer,
   MainCharacter,
+  BackIcon,
+  ChaterLocation,
+  MyFriend,
+  NewFriend,
+  NewFirendsignpost,
+  MyFirendsignpost,
+  HoberLeft,
+  HoberRight
 } from './MainPageStyles';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { Profilekey } from '../../atoms/Profile';
@@ -109,26 +116,27 @@ const MainPage: React.FC = () => {
   const IMGURL = `/${childProfile.animon.name}.png`;
   return (
     <MainPageContainer>
-      <ArrowLeftIcon
-        onClick={getBack}
-        sx={{ fontSize: '140px', position: 'absolute', top: '0', left: '0' }}
-      />
       <MarginContainer>
+        <BackIcon onClick={getBack}/>
         <ProfileImg
           style={{ backgroundImage: `url(${IMGURL})` }}
           onClick={openModal}
         />
       </MarginContainer>
-      <MainCharacter style={{ backgroundImage: `url(${IMGURL})` }} />
-      <div>{childProfile.animon.name}</div>
-      {isModalOpen && (
-        <AnimonModal onClose={closeModal} profile={getprofilelist} />
-      )}
-      메인페이지
-      <button onClick={getNewFriend}>새친구 만들기</button>
-      <button onClick={handleFriendsClick}>내친구 목록</button>
-      <div>로그인 한 사람 수 0명</div>
-      <button onClick={getBack}>뒤로가기</button>
+      <ChaterLocation>
+        {isModalOpen && (
+          <AnimonModal onClose={closeModal} profile={getprofilelist} />
+        )}
+        <HoberLeft onClick={getNewFriend}>
+          <NewFriend/>
+          <NewFirendsignpost/>
+        </HoberLeft>
+        <MainCharacter style={{ backgroundImage: `url(${IMGURL})` }} />
+        <HoberRight onClick={handleFriendsClick}>
+          <MyFirendsignpost/>
+          <MyFriend />
+        </HoberRight>
+      </ChaterLocation>
     </MainPageContainer>
   );
 };

@@ -4,6 +4,8 @@ import {
   RecordPageContainer,
   Passwordcofile,
   EmptyRecord,
+  Scroll,
+  BackIcon,
 } from './RecordPageStyles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -72,9 +74,11 @@ const RecordPage = () => {
 
   return (
     <RecordPageContainer>
+      <BackIcon onClick={getBack}/>
       {isPasswordCorrect ? (
         records.length > 0 ? (
-          records.map((record) => (
+          <Scroll>
+          {records.map((record) => (
             <RecordListItem
               key={record.record_id}
               name={record.name}
@@ -83,7 +87,8 @@ const RecordPage = () => {
               video_path={record.video_path}
               create_time={record.create_time}
             />
-          ))
+          ))}
+          </Scroll>
         ) : (
           <EmptyRecord />
         )
@@ -98,7 +103,6 @@ const RecordPage = () => {
           <button onClick={passwordClick}>확인</button>
         </Passwordcofile>
       )}
-      <button onClick={getBack}>뒤로가기</button>
     </RecordPageContainer>
   );
 };

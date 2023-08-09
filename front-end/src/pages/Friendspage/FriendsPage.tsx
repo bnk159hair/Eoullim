@@ -1,6 +1,6 @@
 import FriendsList from '../../components/friends/FriendsList';
 import { useNavigate } from 'react-router-dom';
-import { FriendsPageContainer } from './FriendsPageStyles';
+import { FriendsPageContainer,BackIcon } from './FriendsPageStyles';
 
 const FriendsPage = () => {
   const navigate = useNavigate();
@@ -11,8 +11,8 @@ const FriendsPage = () => {
 
   return (
     <FriendsPageContainer>
+      <BackIcon onClick={handleMainClick}/>
       <FriendsList />
-      <button onClick={handleMainClick}>뒤로 가기</button>
     </FriendsPageContainer>
   );
 };
