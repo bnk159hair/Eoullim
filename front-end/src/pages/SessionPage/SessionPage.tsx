@@ -15,6 +15,7 @@ import {
 import { Modal, Box, Typography, IconButton } from '@mui/material';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Profilekey } from '../../atoms/Profile';
+import { tokenState } from '../../atoms/Auth';
 import {
   PublisherId,
   SubscriberId,
@@ -24,6 +25,8 @@ import {
 import { Client, Message } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
 import { WebSocketApis } from '../../apis/webSocketApis';
+import axios from 'axios';
+import { API_BASE_URL } from '../../apis/urls';
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -36,6 +39,7 @@ const SessionPage = () => {
     SubscriberVideoStatus
   );
   const profileId = useRecoilValue(Profilekey);
+  const token = useRecoilValue(tokenState);
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
@@ -47,6 +51,14 @@ const SessionPage = () => {
 
   const [connected, setConnected] = useState<boolean>(false);
   const [stompClient, setStompClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    for (const user of streamList) {
+      if (user.userId !== publisherId) {
+        setSubscriberId(user.userId);
+      }
+    }
+  }, [streamList]);
 
   useEffect(() => {
     const client = new Client({
@@ -89,6 +101,27 @@ const SessionPage = () => {
   const leaveSession = () => {
     setOpen(false);
     navigate('/');
+  };
+
+  const addFriend = () => {
+    console.log(publisherId, subscriberId);
+    axios
+      .post(
+        `${API_BASE_URL}/friendship`,
+        { childId: String(publisherId), frinedId: String(subscriberId) },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        navigate('/');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const changeVideoStatus = () => {
@@ -147,6 +180,8 @@ const SessionPage = () => {
             </Buttons>
           </SideBar>
         </Container>
+      ) : streamList.length !== 2 ? (
+        navigate('/')
       ) : (
         <Container>
           <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
@@ -174,7 +209,7 @@ const SessionPage = () => {
                   alignItems: 'center',
                 }}
               >
-                <IconButton onClick={leaveSession}>O</IconButton>
+                <IconButton onClick={addFriend}>O</IconButton>
                 <IconButton onClick={leaveSession}>X</IconButton>
               </Box>
             </Box>
