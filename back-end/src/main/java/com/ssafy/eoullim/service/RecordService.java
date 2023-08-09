@@ -1,8 +1,8 @@
 package com.ssafy.eoullim.service;
 
 import com.ssafy.eoullim.model.Room;
-import com.ssafy.eoullim.model.entity.RoomEntity;
-import com.ssafy.eoullim.repository.RoomRepository;
+import com.ssafy.eoullim.model.entity.RecordEntity;
+import com.ssafy.eoullim.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ import org.json.simple.parser.ParseException;
 
 @Service
 @RequiredArgsConstructor
-public class MatchService {
+public class RecordService {
 
-    private final RoomRepository roomRepository;
+    private final RecordRepository roomRepository;
 
     public void writeVideoToDB(String recordingId, Room room) throws IOException, ParseException {
 
@@ -70,10 +70,10 @@ public class MatchService {
             JSONObject clientData = (JSONObject) parser.parse((String)element.get("clientData"));
             int userId = Integer.parseInt((String)clientData.get("childId"));
             if(room.getChildOne().intValue() == userId){ // 영상의 주인이 첫번째 사람
-                roomRepository.save(RoomEntity.of(downFolder+name, userId, room.getChildTwo()));
+                roomRepository.save(RecordEntity.of(downFolder+name, userId, room.getChildTwo()));
             }
             if(room.getChildTwo().intValue() == userId){ // 영상의 주인이 두번째 사람
-                roomRepository.save(RoomEntity.of(downFolder+name, userId, room.getChildOne()));
+                roomRepository.save(RecordEntity.of(downFolder+name, userId, room.getChildOne()));
             }
 
         }
