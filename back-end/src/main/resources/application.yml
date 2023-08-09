@@ -25,3 +25,6 @@ public-api:
 
 server:
   port: 8081
+
+OPENVIDU_URL: https://i9c207.p.ssafy.io
+OPENVIDU_SECRET: ssafy207

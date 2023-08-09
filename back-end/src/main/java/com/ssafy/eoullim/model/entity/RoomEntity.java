@@ -1,4 +1,5 @@
-package com.ssafy.backendopenvidu.model.entity;
+package com.ssafy.eoullim.model.entity;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
