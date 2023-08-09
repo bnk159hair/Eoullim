@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import recordBackground from '../../assets/background/record.gif';
 import passwordbox from '../../assets/box/passwordbox.png';
-import emptyrecord from '../../assets/ecc/emptyrecord.png'
+import emptyrecord from '../../assets/ecc/emptyrecord.png';
+import back from '../../assets/ecc/back.png';
 
 export const RecordPageContainer = styled.div`
   height: 100vh;
@@ -12,6 +13,17 @@ export const RecordPageContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const BackIcon = styled.div`
+  background-size: 100% 100%;
+  cursor:pointer;
+  width: 80px;
+  height: 80px;
+  background-image: url(${back});
+  position: absolute; 
+  top: 20px; 
+  left: 20px; 
+`
 
 export const Passwordcofile = styled.div`
   height: 500px;
@@ -29,4 +41,11 @@ export const EmptyRecord = styled.div`
   width : 800px;
   background-image: url(${emptyrecord});
   background-size: 100% 100%;
+`;
+
+export const Scroll = styled.div`
+  height: 600px;
+  width: 1200px;
+  overflow: auto; 
 `
+
