@@ -40,6 +40,8 @@ const SessionPage = () => {
   );
   const profileId = useRecoilValue(Profilekey);
   const token = useRecoilValue(tokenState);
+  const IMGURL = '/bear.png';
+  const [guidance, setGuidance] = useState('hi');
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
@@ -82,6 +84,10 @@ const SessionPage = () => {
           setSubscriberId(message.userName);
           setSubscriberVideoStatus(message.status);
         }
+        client.subscribe('/sub/guide', (response) => {
+          const message = JSON.parse(response.body);
+          setGuidance(message);
+        });
       });
     };
 
@@ -143,6 +149,21 @@ const SessionPage = () => {
     }
   };
 
+  const nextGuidance = () => {
+    if (connected && stompClient) {
+      const jsonMessage = {
+        userName: String(publisherId),
+        status: true,
+      };
+      const message = JSON.stringify(jsonMessage);
+      stompClient.publish({
+        destination: '/pub/guide',
+        body: message,
+      });
+      console.log('가이드 전송:', message);
+    }
+  };
+
   return (
     <>
       {!open ? (
@@ -162,7 +183,12 @@ const SessionPage = () => {
             </YourVideo>
           </MainWrapper>
           <SideBar>
-            <Character>Character</Character>
+            <Character
+              style={{ backgroundImage: `url(${IMGURL})` }}
+              onClick={nextGuidance}
+            >
+              {guidance}
+            </Character>
             <MyVideo>
               {streamList.length > 1 && streamList[0].streamManager ? (
                 <StreamCanvas
