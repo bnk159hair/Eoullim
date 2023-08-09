@@ -14,5 +14,4 @@ export const WS_BASE_URL = 'wss://i9c207.p.ssafy.io' + '/ws';
 // export const API_BASE_URL = (DEV ? URL_RELEASE : URL_RELEASE) + '/api/v1';
 export const API_BASE_URL = URL_RELEASE + '/api/v1';
 
-export const OPENVIDU_SERVER_URL =
-  (DEV ? 'https://localhost' : URL_RELEASE) + PORT_OPENVIDU;
+export const OPENVIDU_SERVER_URL = URL_RELEASE;
