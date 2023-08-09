@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="record_info")
 @NoArgsConstructor
-public class RoomEntity {
-    public RoomEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId) {
+public class RecordEntity {
+    public RecordEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId) {
         this.recordId = recordId;
         this.videoPath = videoPath;
         this.masterId = masterId;
@@ -39,8 +39,8 @@ public class RoomEntity {
     @Column(name="participant_id")
     private Integer participantId;
 
-    public static RoomEntity of(String videoPath, Integer masterId, Integer participantId){
-        return new RoomEntity(
+    public static RecordEntity of(String videoPath, Integer masterId, Integer participantId){
+        return new RecordEntity(
                 null,
                 videoPath,
                 masterId,
