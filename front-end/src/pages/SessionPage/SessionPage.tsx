@@ -105,10 +105,11 @@ const SessionPage = () => {
 
   const addFriend = () => {
     console.log(publisherId, subscriberId);
+    console.log(token);
     axios
       .post(
         `${API_BASE_URL}/friendship`,
-        { childId: String(publisherId), frinedId: String(subscriberId) },
+        { myId: Number(publisherId), friendId: Number(subscriberId) },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -117,7 +118,7 @@ const SessionPage = () => {
       )
       .then((response) => {
         console.log(response);
-        navigate('/');
+        leaveSession();
       })
       .catch((error) => {
         console.log(error);
