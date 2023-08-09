@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   ModalOverlay,
   ModalContent,
   FormContainer,
   ButtonContainer,
-} from './ModifyModalStyles';
-import { tokenState } from '../../atoms/Auth';
-import { Profilekey } from '../../atoms/Profile';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { API_BASE_URL } from '../../apis/urls';
+} from "./ModifyModalStyles";
+import { tokenState } from "../../atoms/Auth";
+import { Profilekey } from "../../atoms/Profile";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { API_BASE_URL } from "../../apis/urls";
 import {
   Button,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import dayjs, { Dayjs } from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 interface ChildProfile {
   id: number;
@@ -45,16 +43,16 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
 }) => {
   const [childProfile, setChildProfile] = useState<ChildProfile>({
     id: 0,
-    name: '',
+    name: "",
     birth: 0,
-    gender: '',
-    school: '',
+    gender: "",
+    school: "",
     grade: 0,
-    status: '',
+    status: "",
   });
 
   const token = useRecoilValue(tokenState);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
   const navigate = useNavigate();
@@ -75,7 +73,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
         setChildProfile(response.data.result);
       })
       .catch((error) => {
-        console.log('아이 프로필을 불러오는데 실패했습니다:', error);
+        console.log("아이 프로필을 불러오는데 실패했습니다:", error);
       });
   };
 
@@ -95,7 +93,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
         setIsPasswordCorrect(true);
       })
       .catch((error) => {
-        alert('비밀번호를 확인해주세요.');
+        alert("비밀번호를 확인해주세요.");
       });
   };
 
@@ -111,11 +109,11 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
         }
       );
 
-      console.log('프로필 수정 성공:', response);
+      console.log("프로필 수정 성공:", response);
       resetList();
       onClose();
     } catch (error) {
-      console.log('프로필 수정 실패:', error);
+      console.log("프로필 수정 실패:", error);
     }
   };
 
@@ -133,12 +131,13 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
       utcDate.getTime() + koreaTimezoneOffset * 60 * 1000
     );
     const koreanDateString = koreaDate.toISOString().slice(0, 10);
+    console.log(koreanDateString);
     return koreanDateString;
   };
 
   const handleRecordClick = () => {
     setProfileKey(childId);
-    navigate('/record');
+    navigate("/record");
   };
   const deleteProfile = () => {
     axios
@@ -149,9 +148,9 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
       })
       .then((response) => {
         resetList();
-        console.log('삭제완료');
+        console.log("삭제완료");
       })
-      .catch((error) => console.log('실패'));
+      .catch((error) => console.log("실패"));
   };
   return (
     <ModalOverlay>
@@ -160,10 +159,10 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
           <FormContainer onSubmit={passwordCheck}>
             <h2>비밀번호 확인</h2>
             <TextField
-              label="비밀번호 확인"
-              variant="outlined"
-              margin="dense"
-              type="password"
+              label='비밀번호 확인'
+              variant='outlined'
+              margin='dense'
+              type='password'
               value={password}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setPassword(event.target.value)
@@ -171,23 +170,21 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
             />
             <ButtonContainer>
               <Button
-                variant="contained"
-                size="small"
-                color="info"
-                sx={{ fontSize: '18px', margin: '0.5rem' }}
+                variant='contained'
+                size='small'
+                color='info'
+                sx={{ fontSize: "18px", margin: "0.5rem" }}
                 onClick={passwordCheck}
-                fullWidth
-              >
+                fullWidth>
                 확인
               </Button>
               <Button
-                variant="contained"
-                size="small"
-                color="info"
-                sx={{ fontSize: '18px', margin: '0.5rem' }}
+                variant='contained'
+                size='small'
+                color='info'
+                sx={{ fontSize: "18px", margin: "0.5rem" }}
                 onClick={onClose}
-                fullWidth
-              >
+                fullWidth>
                 닫기
               </Button>
             </ButtonContainer>
@@ -196,43 +193,59 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
           <FormContainer>
             <h2>프로필 수정</h2>
             <TextField
-              label="이름"
-              variant="outlined"
-              margin="dense"
-              name="name"
+              label='이름'
+              variant='outlined'
+              margin='dense'
+              name='name'
               value={childProfile.name}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 handleInputChange(event)
               }
             />
-            <LocalizationProvider
-              dateFormats={{ fullDate: 'YYYY-MM-DD' }}
-              dateAdapter={AdapterDayjs}
-            >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                label="생년월일"
+                label='생년월일'
                 // value={convertTimestampToKoreanDate(childProfile.birth)}
                 // onChange={handleInputChange}
               />
             </LocalizationProvider>
             <input
-              type="date"
-              placeholder="생년월일"
-              name="birth"
+              type='date'
+              placeholder='생년월일'
+              name='birth'
               value={convertTimestampToKoreanDate(childProfile.birth)}
               onChange={handleInputChange}
             />
             <ToggleButtonGroup
-              color="primary"
+              color='primary'
               // value={alignment}
               exclusive
               // onChange={handleChange}
             >
-              <ToggleButton value="web">1학년</ToggleButton>
-              <ToggleButton value="android">2학년</ToggleButton>
-              <ToggleButton value="ios">3학년</ToggleButton>
+              <ToggleButton value='M'>남성</ToggleButton>
+              <ToggleButton value='W'>여성</ToggleButton>
             </ToggleButtonGroup>
-            <div>
+            <TextField
+              label='학교'
+              variant='outlined'
+              margin='dense'
+              name='school'
+              value={childProfile.school}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange(event)
+              }
+            />
+            <ToggleButtonGroup
+              color='primary'
+              // value={alignment}
+              exclusive
+              // onChange={handleChange}
+            >
+              <ToggleButton value='1'>1학년</ToggleButton>
+              <ToggleButton value='2'>2학년</ToggleButton>
+              <ToggleButton value='3'>3학년</ToggleButton>
+            </ToggleButtonGroup>
+            {/* <div>
               <label>
                 <input
                   type="radio"
@@ -254,16 +267,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 여성
               </label>
             </div>
-            <TextField
-              label="학교"
-              variant="outlined"
-              margin="dense"
-              name="school"
-              value={childProfile.school}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                handleInputChange(event)
-              }
-            />
+            
             <div>
               <label>
                 <input
@@ -295,42 +299,38 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 />
                 3학년
               </label>
-            </div>
+            </div> */}
             <ButtonContainer>
               <Button
-                variant="contained"
-                size="small"
-                color="info"
-                sx={{ fontSize: '18px' }}
-                onClick={handleUpdateProfile}
-              >
+                variant='contained'
+                size='small'
+                color='info'
+                sx={{ fontSize: "18px" }}
+                onClick={handleUpdateProfile}>
                 수정
               </Button>
               <Button
-                variant="contained"
-                size="small"
-                color="info"
-                sx={{ fontSize: '18px' }}
-                onClick={deleteProfile}
-              >
+                variant='contained'
+                size='small'
+                color='info'
+                sx={{ fontSize: "18px" }}
+                onClick={deleteProfile}>
                 삭제
               </Button>
               <Button
-                variant="contained"
-                size="small"
-                color="info"
-                sx={{ fontSize: '18px' }}
-                onClick={handleRecordClick}
-              >
+                variant='contained'
+                size='small'
+                color='info'
+                sx={{ fontSize: "18px" }}
+                onClick={handleRecordClick}>
                 녹화영상
               </Button>
               <Button
-                variant="contained"
-                size="small"
-                color="info"
-                sx={{ fontSize: '18px' }}
-                onClick={onClose}
-              >
+                variant='contained'
+                size='small'
+                color='info'
+                sx={{ fontSize: "18px" }}
+                onClick={onClose}>
                 닫기
               </Button>
             </ButtonContainer>
