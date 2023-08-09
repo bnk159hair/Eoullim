@@ -1,6 +1,5 @@
 import axios, { formToJSON } from 'axios';
-
-const SERVER_URL = 'https://i9c207.p.ssafy.io/';
+import { OPENVIDU_SERVER_URL } from './urls';
 
 export const getToken: (userInfo: object) => Promise<any> = async (
   userInfo
@@ -8,7 +7,7 @@ export const getToken: (userInfo: object) => Promise<any> = async (
   console.log('토큰 가져오기');
   console.log(userInfo);
   return await axios
-    .post(`${SERVER_URL}api/openvidu/matchstart`, userInfo, {
+    .post(`${OPENVIDU_SERVER_URL}/api/openvidu/matchstart`, userInfo, {
       headers: { 'Content-Type': 'application/json' },
     })
     .then((response) => {
@@ -28,7 +27,7 @@ export const destroySession: (session: any) => Promise<void> = async (
   console.log('세션 파괴!!!!!!');
   console.log(session.sessionId);
   await axios
-    .post(`${SERVER_URL}api/openvidu/matchstop`, {
+    .post(`${OPENVIDU_SERVER_URL}/api/openvidu/matchstop`, {
       sessionId: session.sessionId,
     })
     .then((response) => console.log(response))
