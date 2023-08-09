@@ -37,10 +37,10 @@ export const useOpenVidu = (userId: any) => {
       const data = JSON.parse(event.stream.connection.data);
       setSubscribers((prev) => {
         return [
-          ...prev.filter((sub) => sub.userId !== data.clientData),
+          ...prev.filter((sub) => sub.userId !== data.childId),
           {
             streamManager: subscriber,
-            userId: data.clientData,
+            userId: data.childId,
           },
         ];
       });
