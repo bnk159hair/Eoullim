@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MatchFrinedRequest {
+public class MatchFriendRequest {
     Integer childId;
     String name;
     String sessionId;
