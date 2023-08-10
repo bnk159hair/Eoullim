@@ -223,7 +223,6 @@ public class MatchController {
 
                     Room newRoom = new Room();
                     newRoom.setSessionId(session.getSessionId());
-                    matchingQueue.add(newRoom);
 
                     Map<String, String> result = new HashMap<>(); // 리턴할 결과 객체
                     result.put("sessionId", session.getSessionId());
