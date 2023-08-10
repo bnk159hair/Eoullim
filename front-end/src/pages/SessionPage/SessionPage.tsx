@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
+import { getUserInfo } from '../../apis/openViduApis';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
 import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
@@ -14,13 +15,17 @@ import {
 } from './SessionPageStyles';
 import { Modal, Box, Typography, IconButton } from '@mui/material';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Profilekey } from '../../atoms/Profile';
+import { Profile, Profilekey } from '../../atoms/Profile';
 import { tokenState } from '../../atoms/Auth';
 import {
   PublisherId,
   SubscriberId,
   PublisherVideoStatus,
   SubscriberVideoStatus,
+  PublisherAnimonURL,
+  SubscriberAnimonURL,
+  PublisherGuideStatus,
+  SubscriberGuideStatus,
 } from '../../atoms/Session';
 import { Client, Message } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
@@ -38,14 +43,27 @@ const SessionPage = () => {
   const [subscriberVideoStatus, setSubscriberVideoStatus] = useRecoilState(
     SubscriberVideoStatus
   );
+  const [publisherAnimonURL, setPublisherAnimonURL] =
+    useRecoilState(PublisherAnimonURL);
+  const [subscriberAnimonURL, setSubscriberAnimonURL] =
+    useRecoilState(SubscriberAnimonURL);
+  const [publisherGuideStatus, setPublisherGuideStatus] =
+    useRecoilState(PublisherGuideStatus);
+  const [subscriberGuideStatus, setSubscriberGuideStatus] = useRecoilState(
+    SubscriberGuideStatus
+  );
 
   const profileId = useRecoilValue(Profilekey);
-  const token = useRecoilValue(tokenState);
+  const userToken = useRecoilValue(tokenState);
+  const profile = useRecoilValue(Profile);
   const IMGURL = '/bear.png';
-  const [guidance, setGuidance] = useState('hi');
+  const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
+  const [step, setStep] = useState(0);
+
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
+  setPublisherAnimonURL(profile.animon.name + 'mask');
 
   const { publisher, streamList, session, isOpen } = useOpenVidu(profileId);
   const sessionOver = () => {
@@ -56,6 +74,13 @@ const SessionPage = () => {
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
+    setPublisherVideoStatus(false);
+    setSubscriberVideoStatus(false);
+    setPublisherGuideStatus(false);
+    setSubscriberGuideStatus(false);
+  }, []);
+
+  useEffect(() => {
     setOpen(isOpen);
   }, [isOpen]);
 
@@ -64,8 +89,20 @@ const SessionPage = () => {
       if (user.userId !== publisherId) {
         setSubscriberId(user.userId);
       }
+      if (subscriberId) {
+        // setSubscriberAnimonURL(url+'mask');
+      }
     }
   }, [streamList]);
+
+  useEffect(() => {
+    if (publisherGuideStatus && subscriberGuideStatus) {
+      setStep(step + 1);
+      setPublisherGuideStatus(false);
+      setSubscriberGuideStatus(false);
+      console.log(step);
+    }
+  });
 
   useEffect(() => {
     if (session) {
@@ -93,7 +130,11 @@ const SessionPage = () => {
         });
         client.subscribe(`/topic/${session.sessionId}/guide`, (response) => {
           const message = JSON.parse(response.body);
-          setGuidance(message);
+          console.log(message);
+          if (message.childId !== String(publisherId)) {
+            setSubscriberId(message.childId);
+            setSubscriberGuideStatus(message.isNextGuideOn);
+          }
         });
       };
 
@@ -118,14 +159,14 @@ const SessionPage = () => {
 
   const addFriend = () => {
     console.log(publisherId, subscriberId);
-    console.log(token);
+    console.log(userToken);
     axios
       .post(
         `${API_BASE_URL}/friendship`,
         { myId: Number(publisherId), friendId: Number(subscriberId) },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${userToken}`,
           },
         }
       )
@@ -160,9 +201,11 @@ const SessionPage = () => {
 
   const nextGuidance = () => {
     if (connected && stompClient) {
+      const isNextGuideOn = !publisherGuideStatus;
+      setPublisherGuideStatus(isNextGuideOn);
       const jsonMessage = {
         childId: String(publisherId),
-        status: true,
+        isNextGuideOn: isNextGuideOn,
       };
       const message = JSON.stringify(jsonMessage);
       stompClient.publish({
@@ -183,7 +226,7 @@ const SessionPage = () => {
                 <StreamCanvas
                   streamManager={streamList[1].streamManager}
                   id={streamList[1].userId}
-                  avatarPath="http://localhost:3000/image.png"
+                  avatarPath="http://localhost:3000/14.png"
                   videoState={subscriberVideoStatus}
                 />
               ) : (
@@ -196,14 +239,14 @@ const SessionPage = () => {
               style={{ backgroundImage: `url(${IMGURL})` }}
               onClick={nextGuidance}
             >
-              {guidance}
+              {guidance[step]}
             </Character>
             <MyVideo>
               {streamList.length > 1 && streamList[0].streamManager ? (
                 <StreamCanvas
                   streamManager={streamList[0].streamManager}
                   id={streamList[0].userId}
-                  avatarPath="http://localhost:3000/14.png"
+                  avatarPath={publisherAnimonURL}
                   videoState={publisherVideoStatus}
                 />
               ) : (
