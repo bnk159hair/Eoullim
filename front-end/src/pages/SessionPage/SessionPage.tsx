@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
+import { getUserInfo } from '../../apis/openViduApis';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
 import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
@@ -21,6 +22,8 @@ import {
   SubscriberId,
   PublisherVideoStatus,
   SubscriberVideoStatus,
+  PublisherAnimonURL,
+  SubscriberAnimonURL,
 } from '../../atoms/Session';
 import { Client, Message } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
@@ -38,11 +41,17 @@ const SessionPage = () => {
   const [subscriberVideoStatus, setSubscriberVideoStatus] = useRecoilState(
     SubscriberVideoStatus
   );
+  const [publisherAnimonURL, setPublisherAnimonURL] =
+    useRecoilState(PublisherAnimonURL);
+  const [subscriberAnimonURL, setSubscriberAnimonURL] =
+    useRecoilState(SubscriberAnimonURL);
 
   const profileId = useRecoilValue(Profilekey);
-  const token = useRecoilValue(tokenState);
+  const userToken = useRecoilValue(tokenState);
   const IMGURL = '/bear.png';
   const [guidance, setGuidance] = useState('hi');
+  const [publisherInfo, setPublisherInfo] = useState<Object>();
+  const [subscriberInfo, setSubscriberInfo] = useState<Object>();
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
@@ -63,6 +72,10 @@ const SessionPage = () => {
     for (const user of streamList) {
       if (user.userId !== publisherId) {
         setSubscriberId(user.userId);
+      }
+      if (subscriberId) {
+        const url = getUserInfo(String(subscriberId), userToken);
+        // setSubscriberAnimonURL(url);
       }
     }
   }, [streamList]);
@@ -93,7 +106,7 @@ const SessionPage = () => {
         });
         client.subscribe(`/topic/${session.sessionId}/guide`, (response) => {
           const message = JSON.parse(response.body);
-          setGuidance(message);
+          console.log(message);
         });
       };
 
@@ -118,14 +131,14 @@ const SessionPage = () => {
 
   const addFriend = () => {
     console.log(publisherId, subscriberId);
-    console.log(token);
+    console.log(userToken);
     axios
       .post(
         `${API_BASE_URL}/friendship`,
         { myId: Number(publisherId), friendId: Number(subscriberId) },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${userToken}`,
           },
         }
       )
@@ -162,7 +175,7 @@ const SessionPage = () => {
     if (connected && stompClient) {
       const jsonMessage = {
         childId: String(publisherId),
-        status: true,
+        isNextGuideOn: true,
       };
       const message = JSON.stringify(jsonMessage);
       stompClient.publish({
