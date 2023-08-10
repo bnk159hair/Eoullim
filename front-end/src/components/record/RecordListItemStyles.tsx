@@ -10,7 +10,8 @@ export const RecordItemContainer= styled.div`
     border-radius: 25px;
     display: flex;
     align-items: center;
-    justify-content : space-around;        
+    justify-content : space-around;
+    margin: 10px;        
 `
 
 export const RecordProfileImg = styled.div`
