@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ModalOverlay, ModalContent } from './ChangePasswordModalStyles';
-import { tokenState } from '../../atoms/Auth';
+import {
+  ModalOverlay,
+  ModalContent,
+  FormContainer,
+  HeaderContainer,
+} from './ChangePasswordModalStyles';
 import { useRecoilValue, useRecoilState } from 'recoil';
+import { tokenState } from '../../atoms/Auth';
 import { API_BASE_URL } from '../../apis/urls';
 import { useNavigate } from 'react-router-dom';
+import { Button, IconButton, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ChagePasswordModalProps {
   onClose: () => void;
@@ -19,8 +26,13 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
   const [, setToken] = useRecoilState(tokenState);
   const navigate = useNavigate();
 
-  const handlePasswordConfirmation = () => {
-    setIsPasswordMatch(newPassword === passwordConfirmation);
+  const handlePasswordConfirmation = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    event.preventDefault();
+    const newValue = event.target.value;
+    setPasswordConfirmation(newValue);
+    setIsPasswordMatch(newPassword === newValue);
   };
 
   const logoutClick = () => {
@@ -42,7 +54,8 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
       });
   };
 
-  const handleChagePassword = async () => {
+  const handleChagePassword = async (event: any) => {
+    event?.preventDefault();
     if (!curPassword) {
       alert('모든 정보를 입력해주세요.');
       return;
@@ -65,37 +78,64 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
     } catch (error) {
       console.log(token);
       console.log('비밀번호 변경 실패', error);
+      alert('현재 비밀번호가 틀렸습니다.');
+      return;
     }
   };
 
   return (
     <ModalOverlay>
       <ModalContent>
-        <h2>비밀번호 변경</h2>
-        <input
-          type="password"
-          placeholder="현재 비밀번호"
-          value={curPassword}
-          onChange={(e) => setCurPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="새 비밀번호"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="새 비밀번호 확인"
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-          onBlur={handlePasswordConfirmation}
-        />
-        {!isPasswordMatch && (
-          <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>
-        )}
-        <button onClick={handleChagePassword}>변경</button>
-        <button onClick={onClose}>닫기</button>
+        <FormContainer onSubmit={handleChagePassword}>
+          <HeaderContainer>
+            <h2>비밀번호 변경</h2>
+            <IconButton onClick={onClose}>
+              <CloseIcon fontSize="large" />
+            </IconButton>
+          </HeaderContainer>
+
+          <TextField
+            label="현재 비밀번호"
+            variant="outlined"
+            margin="dense"
+            type="password"
+            value={curPassword}
+            onChange={(event: React.ChangeEvent<HTMLInputElement> | any) =>
+              setCurPassword(event.target.value)
+            }
+          />
+          <TextField
+            label="새 비밀번호"
+            variant="outlined"
+            margin="dense"
+            type="password"
+            value={newPassword}
+            onChange={(event: React.ChangeEvent<HTMLInputElement> | any) =>
+              setNewPassword(event.target.value)
+            }
+          />
+          <TextField
+            label="새 비밀번호 확인"
+            variant="outlined"
+            margin="dense"
+            type="password"
+            value={passwordConfirmation}
+            onChange={(event: React.ChangeEvent<HTMLInputElement> | any) =>
+              handlePasswordConfirmation(event)
+            }
+            error={!isPasswordMatch}
+            helperText={!isPasswordMatch && '비밀번호가 일치하지 않습니다.'}
+          />
+        </FormContainer>
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ padding: '0.6rem', marginTop: '1rem', fontSize: '18px' }}
+          onClick={handleChagePassword}
+          fullWidth
+        >
+          변경하기
+        </Button>
       </ModalContent>
     </ModalOverlay>
   );

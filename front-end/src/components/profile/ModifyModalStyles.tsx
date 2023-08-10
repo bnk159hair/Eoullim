@@ -10,6 +10,7 @@ export const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 `;
 
 export const ModalContent = styled.div`
@@ -66,4 +67,6 @@ export const FlexContainer = styled.div`
 export const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
+  // justify-content: st;
+  align-items: center;
 `;

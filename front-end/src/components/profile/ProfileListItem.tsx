@@ -33,10 +33,6 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const [userName, setUserName] = useRecoilState(userState);
   const IMGURL = `/${imgurl}.png`;
 
-  const eventSource = new EventSource(
-    `https://i9c207.p.ssafy.io/api/v1/alarms/subscribe/${profilekey}`
-  );
-
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -48,9 +44,6 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const handleMainClick = () => {
     setProfileKey(childId);
     setUserName(name);
-    eventSource.addEventListener('sse', (event) => {
-      console.log(event);
-    });
     profileLogin();
     navigate('/');
   };
@@ -75,22 +68,24 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   };
 
   return (
-    <ProfileContainer>
-      <ProfileUserContainer
-        style={{ backgroundImage: `url(${IMGURL})` }}
-        onClick={handleMainClick}
-      >
-        <NameTag>{name}</NameTag>
-      </ProfileUserContainer>
-      <Button
-        variant="contained"
-        color="success"
-        sx={{ fontSize: '18px' }}
-        onClick={handleModalOpen}
-        fullWidth
-      >
-        프로필 관리
-      </Button>
+    <>
+      <ProfileContainer>
+        <ProfileUserContainer
+          style={{ backgroundImage: `url(${IMGURL})` }}
+          onClick={handleMainClick}
+        >
+          <NameTag>{name}</NameTag>
+        </ProfileUserContainer>
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ fontSize: '18px' }}
+          onClick={handleModalOpen}
+          fullWidth
+        >
+          프로필 관리
+        </Button>
+      </ProfileContainer>
       {isModalOpen && (
         <ModifyModal
           onClose={handleModalClose}
@@ -98,7 +93,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
           resetList={resetList}
         />
       )}
-    </ProfileContainer>
+    </>
   );
 };
 
