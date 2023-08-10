@@ -3,7 +3,9 @@ package com.ssafy.eoullim.controller;
 import com.google.gson.JsonObject;
 import com.ssafy.eoullim.dto.request.MatchFrinedRequest;
 import com.ssafy.eoullim.dto.request.MatchRequest;
+import com.ssafy.eoullim.model.Alarm;
 import com.ssafy.eoullim.model.Room;
+import com.ssafy.eoullim.service.AlarmService;
 import com.ssafy.eoullim.service.RecordService;
 import io.openvidu.java.client.*;
 import io.openvidu.java.client.ConnectionProperties;
@@ -54,6 +56,7 @@ public class MatchController {
 
     private final RecordService recordService;
 
+    private final AlarmService alarmService;
 
     @PostConstruct
     public void init() {
@@ -232,6 +235,8 @@ public class MatchController {
                     /*
                     알림 서비스 코드 작성
                      */
+                    Alarm alarm = new Alarm(sessionId, matchFrinedRequest.getName());
+                    alarmService.send(matchFrinedRequest.getFriendId(), alarm);
                     
                     return new ResponseEntity<>(result, HttpStatus.OK);
 
