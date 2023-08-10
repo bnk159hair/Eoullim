@@ -64,6 +64,12 @@ public class ChildController {
         return Response.success(child);
     }
 
+    @GetMapping("/{participantId}")
+    public Response<Child> getParticipantAnimon(@PathVariable Integer participantId) {
+        Child child = childService.getChildInfo(participantId);
+        return Response.success(child);
+    }
+
     @PutMapping("/{childId}")
     public Response<Void> modify(@PathVariable Integer childId,
                               @RequestBody ChildRequest request) {
