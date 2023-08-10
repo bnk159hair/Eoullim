@@ -1,7 +1,7 @@
 package com.ssafy.eoullim.controller;
 
 import com.google.gson.JsonObject;
-import com.ssafy.eoullim.dto.request.MatchFrinedRequest;
+import com.ssafy.eoullim.dto.request.MatchFriendRequest;
 import com.ssafy.eoullim.dto.request.MatchRequest;
 import com.ssafy.eoullim.model.Alarm;
 import com.ssafy.eoullim.model.Room;
@@ -188,7 +188,7 @@ public class MatchController {
     /* 친구 만나기 */
     @PostMapping("/friend/start")
     public ResponseEntity<?> startFrined(
-            @RequestBody MatchFrinedRequest matchFrinedRequest
+            @RequestBody MatchFriendRequest matchFriendRequest
     ) throws OpenViduJavaClientException, OpenViduHttpException, IOException, ParseException, org.json.simple.parser.ParseException {
 
         Map<String, Object> params = new HashMap<>(); // 빈 파일
@@ -197,10 +197,10 @@ public class MatchController {
                 .fromJson(params)
                 .build();
 
-        if(matchFrinedRequest.getSessionId() == null){ // 존재하는 방이 없을 때
+        if(matchFriendRequest.getSessionId() == null){ // 존재하는 방이 없을 때
             LocalDateTime now = LocalDateTime.now();
             String formatNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-            String sessionId = matchFrinedRequest.getChildId().toString()+"_"+formatNow; // sessionId 결정
+            String sessionId = matchFriendRequest.getChildId().toString()+"_"+formatNow; // sessionId 결정
 
 
             if (this.mapSessions.get(sessionId) != null) { // 만드려는 세션 Id가 이미 존재하는지
@@ -229,14 +229,14 @@ public class MatchController {
 
                     mapSessions.put(sessionId, session);
 
-                    newRoom.setChildOne(matchFrinedRequest.getChildId()); // 첫 입장자 아이디 저장
+                    newRoom.setChildOne(matchFriendRequest.getChildId()); // 첫 입장자 아이디 저장
                     mapRooms.put(sessionId, newRoom);
 
                     /*
                     알림 서비스 코드 작성
                      */
-                    Alarm alarm = new Alarm(sessionId, matchFrinedRequest.getName());
-                    alarmService.send(matchFrinedRequest.getFriendId(), alarm);
+                    Alarm alarm = new Alarm(sessionId, matchFriendRequest.getName());
+                    alarmService.send(matchFriendRequest.getFriendId(), alarm);
                     
                     return new ResponseEntity<>(result, HttpStatus.OK);
 
@@ -245,8 +245,8 @@ public class MatchController {
                 }
             }
         }else{
-            if(mapSessions.get(matchFrinedRequest.getSessionId()) != null){ // 방이 실제로 존재할 때
-                String sessionId = matchFrinedRequest.getSessionId();
+            if(mapSessions.get(matchFriendRequest.getSessionId()) != null){ // 방이 실제로 존재할 때
+                String sessionId = matchFriendRequest.getSessionId();
                 if(mapSessions.get(sessionId) != null){ // 세션이 정상적으로 존재한다면
                     Room existingRoom = mapRooms.get(sessionId);
                     System.out.println("[ALREADY] Session created: " + sessionId);
@@ -267,7 +267,7 @@ public class MatchController {
 
                     sessionRecordings.put(sessionId, recording.getId());
                     existingRoom.setRecordingId(recording.getId());
-                    existingRoom.setChildTwo(matchFrinedRequest.getChildId()); // 두번째 입장자 아이디 저장
+                    existingRoom.setChildTwo(matchFriendRequest.getChildId()); // 두번째 입장자 아이디 저장
 
                     return new ResponseEntity<>(result, HttpStatus.OK);
                 }else{
