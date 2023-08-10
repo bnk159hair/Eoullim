@@ -66,23 +66,30 @@ public class ChildService {
 
     @Transactional
     public Child login(Integer childId) {
-        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
+                () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND,
+                        String.format("child %d is not found", childId)));
         childEntity.setStatus(Status.ON);
         return Child.fromEntity(childEntity);
     }
 
     @Transactional
     public void logout(Integer childId) {
-        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
+                () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND,
+                        String.format("child %d is not found", childId)));
         childEntity.setStatus(Status.OFF);
     }
 
-    public Child getChildInfo(Integer childId) {
-        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
-                new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
-        return Child.fromEntity(childEntity);
+    public Child getChildInfo(Integer childId, Integer userId) {
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
+                () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND,
+                        String.format("child %d is not found", childId)));              // ERROR: 찾으려는 아이가 없음             
+        if(!childEntity.getUser().getId().equals(userId))                               // ERROR: 사용자가 해당 child에 접근 권한 없음
+            throw new EoullimApplicationException(ErrorCode.FORBIDDEN_NO_PERMISSION,
+                    String.format("you have no permission with child %d", childId));
+        else
+            return Child.fromEntity(childEntity);
     }
 
     @Transactional
@@ -129,6 +136,21 @@ public class ChildService {
         return Animon.fromEntity(animonEntity);
     }
 
+    /**
+     * 화상 회의 중 상대방 Child의 가면 정보를 얻어오기 위함
+     * @param childId : 애니몬 정보를 알고자 하는 child의 ID (상대방 ID)
+     * @return Animon 객체 (ID, 얼굴 이미지 경로, 전신 이미지 경로)
+     */
+    public Animon getProfileAnimonByChild(Integer childId) {
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
+                () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
+        return Animon.fromEntity(childEntity.getAnimon());
+    }
+
+    /**
+     * Child (프로필) 생성 시 학교가 실제 존재하는 학교인지 검색하는 Open API
+     * @param keyword : 실제 초등학교 이름 (OO초등학교에서 OO)
+     */
     public void checkSchool(String keyword) {
         try {
             // API URL Build
