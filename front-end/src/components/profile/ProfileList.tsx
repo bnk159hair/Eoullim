@@ -6,6 +6,7 @@ import CreateModal from './CreateModal';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
 import { API_BASE_URL } from '../../apis/urls';
+import { useNavigate } from 'react-router-dom';
 
 interface Profile {
   id: number;
@@ -19,12 +20,18 @@ interface Profile {
 }
 
 const ProfileList = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const token = useRecoilValue(tokenState);
 
   useEffect(() => {
-    resetList();
+    if (!token) {
+      navigate('/login');
+    } else {
+      resetList();
+    }
+    
   }, []);
 
   const handleModalOpen = () => {
@@ -48,7 +55,12 @@ const ProfileList = () => {
         console.log(data);
       })
       .catch((error) => {
-        console.error('데이터 가져오기 오류:', error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.error('데이터 가져오기 오류:', error);
+        }
+        
       });
   };
 
