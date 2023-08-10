@@ -69,22 +69,24 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   };
 
   return (
-    <ProfileContainer>
-      <ProfileUserContainer
-        style={{ backgroundImage: `url(${IMGURL})` }}
-        onClick={handleMainClick}
-      >
-        <NameTag>{name}</NameTag>
-      </ProfileUserContainer>
-      <Button
-        variant="contained"
-        color="success"
-        sx={{ fontSize: '18px' }}
-        onClick={handleModalOpen}
-        fullWidth
-      >
-        프로필 관리
-      </Button>
+    <>
+      <ProfileContainer>
+        <ProfileUserContainer
+          style={{ backgroundImage: `url(${IMGURL})` }}
+          onClick={handleMainClick}
+        >
+          <NameTag>{name}</NameTag>
+        </ProfileUserContainer>
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ fontSize: '18px' }}
+          onClick={handleModalOpen}
+          fullWidth
+        >
+          프로필 관리
+        </Button>
+      </ProfileContainer>
       {isModalOpen && (
         <ModifyModal
           onClose={handleModalClose}
@@ -92,7 +94,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
           resetList={resetList}
         />
       )}
-    </ProfileContainer>
+    </>
   );
 };
 

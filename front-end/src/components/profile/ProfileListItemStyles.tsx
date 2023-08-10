@@ -2,7 +2,11 @@ import styled from 'styled-components';
 import nametag from '../../assets/ecc/nametag.png';
 
 export const ProfileContainer = styled.div`
-  border: 5px solid black;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.25);
+  }
 `;
 
 export const ProfileUserContainer = styled.div`
