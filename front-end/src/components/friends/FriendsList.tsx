@@ -6,6 +6,7 @@ import { tokenState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
 import { useRecoilValue } from 'recoil';
 import { EmptyFriend } from './FriendsListStyles';
+import { useNavigate } from 'react-router-dom';
 
 interface FriendsProfile {
   id: number;
@@ -19,6 +20,7 @@ interface FriendsProfile {
 }
 
 const FriendsList = () => {
+  const navigate = useNavigate();
   const profileId = useRecoilValue(Profilekey);
   const token = useRecoilValue(tokenState);
   const [friends, setFriends] = useState<FriendsProfile[]>([]);
@@ -38,12 +40,22 @@ const FriendsList = () => {
         console.log(data);
       })
       .catch((error) => {
-        console.log('친구목록불러오기오류', error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('친구목록불러오기오류', error);
+        }
+        
       });
   };
 
   useEffect(() => {
-    getFriends();
+    if (!token) {
+      navigate('/login');
+    } else {
+      getFriends();
+    }
+  
   }, [profileId, token]);
 
   const indexOfLastFriend = currentPage * friendsPerPage;
