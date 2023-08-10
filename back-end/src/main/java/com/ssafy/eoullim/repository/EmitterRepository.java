@@ -17,23 +17,27 @@ public class EmitterRepository {
 
     private final Map<String, SseEmitter> emitterMap = new ConcurrentHashMap<>();
 
-    public SseEmitter save(Integer userId, SseEmitter emitter) {
-        final String key = getKey(userId);
+    public SseEmitter save(Integer childId, SseEmitter emitter) {
+        final String key = getKey(childId);
+        log.info("emitter 생성 key: " + key);
         emitterMap.put(key, emitter);
         return emitter;
     }
 
-    public void delete(Integer userId) {
-        emitterMap.remove(getKey(userId));
+    public void delete(Integer childId) {
+        log.info("delete call");
+        emitterMap.remove(getKey(childId));
     }
-
-    public Optional<SseEmitter> get(Integer userId) {
-        SseEmitter result = emitterMap.get(getKey(userId));
+    public Optional<SseEmitter> get(Integer childId) {
+        final String key = getKey(childId);
+        log.info("emitter가져오기 호출");
+        log.info("key: " + key);
+        SseEmitter result = emitterMap.get(key);
         return Optional.ofNullable(result);
     }
 
-    private String getKey(Integer userId) {
-        return "userId:" + userId;
+    private String getKey(Integer childId) {
+        return "childId:" + childId;
     }
 
 }
