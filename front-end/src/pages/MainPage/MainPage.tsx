@@ -66,8 +66,12 @@ const MainPage: React.FC = () => {
     navigate('/profile');
   };
   useEffect(() => {
-    getprofilelist();
-  }, [profileId, token]);
+    if (!token) {
+      navigate('/login');
+    } else {
+      getprofilelist();
+    }
+  }, [profileId, token, navigate]);
 
   const getprofilelist = () => {
     axios
