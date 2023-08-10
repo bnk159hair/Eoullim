@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ProfileContainer,
   ProfileUserContainer,
@@ -33,10 +33,6 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const [userName, setUserName] = useRecoilState(userState);
   const IMGURL = `/${imgurl}.png`;
 
-  const eventSource = new EventSource(
-    `https://i9c207.p.ssafy.io/api/v1/alarms/subscribe/${profilekey}`
-  );
-
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -46,11 +42,9 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   };
 
   const handleMainClick = () => {
+    console.log(childId, name);
     setProfileKey(childId);
     setUserName(name);
-    eventSource.addEventListener('sse', (event) => {
-      console.log(event);
-    });
     profileLogin();
     navigate('/');
   };

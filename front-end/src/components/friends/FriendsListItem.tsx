@@ -3,6 +3,7 @@ import { FriendCard, FriendImg, FrinedInfo } from './FriendsListItemStyles';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { tokenState, userState } from '../../atoms/Auth';
+import { Profilekey } from '../../atoms/Profile';
 
 interface FriendsListItemProps {
   friendId: number;
@@ -19,6 +20,7 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
 
   const myName = useRecoilValue(userState);
   const token = useRecoilValue(tokenState);
+  const profileKey = useRecoilValue(Profilekey);
 
   const handleInvite = () => {
     console.log(friendId, myName);
@@ -26,7 +28,8 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
       .post(
         'https://i9c207.p.ssafy.io/api/v1/meetings/friend/start',
         {
-          friendId: String(friendId), // 친구 아이디
+          childId: profileKey,
+          friendId: friendId, // 친구 아이디
           name: myName, // 내 이름
         },
         {
