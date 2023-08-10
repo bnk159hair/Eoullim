@@ -64,7 +64,7 @@ public class ChildController {
         return Response.success(child);
     }
 
-    @GetMapping("/{participantId}")
+    @GetMapping("/participant/{participantId}")
     public Response<Child> getParticipantAnimon(@PathVariable Integer participantId) {
         Child child = childService.getChildInfo(participantId);
         return Response.success(child);
