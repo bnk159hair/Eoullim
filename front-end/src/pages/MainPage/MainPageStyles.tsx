@@ -24,6 +24,9 @@ export const ProfileImg = styled.div`
   border-radius: 25px;
   border: solid 2px;
   cursor:pointer;
+  &:hover {
+    transform: scale(1.1);
+}
 `;
 
 export const MarginContainer = styled.div`
@@ -35,8 +38,12 @@ export const MarginContainer = styled.div`
 export const MainCharacter = styled.div`
   width: 200px;
   height: 200px;
+  cursor:pointer;
   background-size: 100% 100%;
   margin-top: 380px; 
+  &:hover {
+    transform: scale(1.1);
+  }
 `
 
 export const BackIcon = styled.div`
@@ -46,6 +53,9 @@ export const BackIcon = styled.div`
   height: 80px;
   margin-right: auto;
   background-image: url(${back});
+  &:hover {
+      transform: scale(1.1);
+  }
 `
 export const ChaterLocation = styled.div`  
   display: flex;

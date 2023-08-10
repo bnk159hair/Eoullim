@@ -57,7 +57,7 @@ const ProfileList = () => {
       {profiles.map((profile) => (
         <ProfileListItem
           key={profile.id}
-          ChildId={profile.id}
+          childId={profile.id}
           name={profile.name}
           resetList={resetList}
           imgurl={profile.animon.name}

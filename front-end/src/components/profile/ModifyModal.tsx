@@ -1,9 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import axios from 'axios';
-import { ModalOverlay, ModalContent } from './ModifyModalStyles';
 import { tokenState } from '../../atoms/Auth';
-import { useRecoilValue } from 'recoil';
+import { Profilekey } from '../../atoms/Profile';
 import { API_BASE_URL } from '../../apis/urls';
+import {
+  ModalOverlay,
+  ModalContent,
+  FormContainer,
+  ButtonContainer,
+  HeaderContainer,
+  FlexContainer,
+} from './ModifyModalStyles';
+import {
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import CloseIcon from '@mui/icons-material/Close';
+import dayjs from 'dayjs';
 
 interface ChildProfile {
   id: number;
@@ -17,13 +38,13 @@ interface ChildProfile {
 
 interface ModifyModalProps {
   onClose: () => void;
-  ChildId: number;
+  childId: number;
   resetList: () => void;
 }
 
 const ModifyModal: React.FC<ModifyModalProps> = ({
   onClose,
-  ChildId,
+  childId,
   resetList,
 }) => {
   const [childProfile, setChildProfile] = useState<ChildProfile>({
@@ -39,14 +60,17 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
   const token = useRecoilValue(tokenState);
   const [password, setPassword] = useState('');
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+  const [isSchoolCorrect, setIsSchoolCorrect] = useState(false);
+  const [profilekey, setProfileKey] = useRecoilState(Profilekey);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchChildProfile();
-  }, [ChildId, token]);
+  }, [childId, token]);
 
   const fetchChildProfile = () => {
     axios
-      .get(`${API_BASE_URL}/children/${ChildId}`, {
+      .get(`${API_BASE_URL}/children/${childId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +84,8 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
       });
   };
 
-  const passwordClick = () => {
+  const passwordCheck = (event: any) => {
+    event.preventDefault();
     axios
       .post(
         `${API_BASE_URL}/users/pw-check`,
@@ -99,13 +124,40 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleSchoolCheck = async () => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/children/school`,
+        {
+          keyword: childProfile.school,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsSchoolCorrect(response.data.resultCode);
+
+      alert(
+        response.data.resultCode ? '올바른 학교정보입니다' : '다시 입력해주세요'
+      );
+    } catch (error) {
+      console.error(error);
+      alert('잘못된 입력입니다.');
+    }
+  };
+
+  const handleInputChange = (
+    name: string,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setChildProfile((prevProfile) => ({
       ...prevProfile,
-      [name]: value,
+      [name]: event.target.value,
     }));
   };
+
   const convertTimestampToKoreanDate = (timestamp: number) => {
     const utcDate = new Date(timestamp);
     const koreaTimezoneOffset = 9 * 60;
@@ -116,101 +168,190 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
     return koreanDateString;
   };
 
+  const handleRecordClick = () => {
+    setProfileKey(childId);
+    navigate('/record');
+  };
+
+  const deleteProfile = () => {
+    axios
+      .delete(`${API_BASE_URL}/children/${childId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        resetList();
+        console.log('삭제완료');
+      })
+      .catch((error) => console.log('실패'));
+  };
+
   return (
     <ModalOverlay>
       <ModalContent>
-        <h2>프로필 수정</h2>
         {!isPasswordCorrect ? (
-          <>
-            <input
+          <FormContainer onSubmit={passwordCheck}>
+            <h2>비밀번호 확인</h2>
+            <TextField
+              label="비밀번호 확인"
+              variant="outlined"
+              margin="dense"
               type="password"
-              placeholder="비밀번호"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement> | any) =>
+                setPassword(event.target.value)
+              }
             />
-            <button onClick={passwordClick}>확인</button>
-            <button onClick={onClose}>닫기</button>
-          </>
+            <ButtonContainer>
+              <Button
+                variant="contained"
+                size="small"
+                color="info"
+                sx={{ fontSize: '18px', margin: '0.5rem' }}
+                onClick={passwordCheck}
+                fullWidth
+              >
+                확인
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                color="info"
+                sx={{ fontSize: '18px', margin: '0.5rem' }}
+                onClick={onClose}
+                fullWidth
+              >
+                닫기
+              </Button>
+            </ButtonContainer>
+          </FormContainer>
         ) : (
-          <>
-            <input
-              type="text"
-              placeholder="이름"
-              name="name"
-              value={childProfile.name}
-              onChange={handleInputChange}
-            />
-            <input
-              type="date"
-              placeholder="생년월일"
-              name="birth"
-              value={convertTimestampToKoreanDate(childProfile.birth)}
-              onChange={handleInputChange}
-            />
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="M"
-                  checked={childProfile.gender === 'M'}
-                  onChange={handleInputChange}
-                />
-                남성
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="W"
-                  checked={childProfile.gender === 'W'}
-                  onChange={handleInputChange}
-                />
-                여성
-              </label>
-            </div>
-            <input
-              type="text"
-              placeholder="학교"
-              name="school"
-              value={childProfile.school}
-              onChange={handleInputChange}
-            />
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  name="grade"
-                  value="1"
-                  checked={childProfile.grade == 1}
-                  onChange={handleInputChange}
-                />
-                1학년
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="grade"
-                  value="2"
-                  checked={childProfile.grade == 2}
-                  onChange={handleInputChange}
-                />
-                2학년
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="grade"
-                  value="3"
-                  checked={childProfile.grade == 3}
-                  onChange={handleInputChange}
-                />
-                3학년
-              </label>
-            </div>
-            <button onClick={handleUpdateProfile}>수정</button>
-            <button onClick={onClose}>닫기</button>
-          </>
+          <FormContainer>
+            <HeaderContainer>
+              <h2>프로필 수정</h2>
+              <IconButton onClick={onClose}>
+                <CloseIcon fontSize="large" />
+              </IconButton>
+            </HeaderContainer>
+            <FlexContainer>
+              <TextField
+                label="이름"
+                variant="outlined"
+                placeholder="홍길동"
+                value={childProfile.name}
+                onChange={(event) => {
+                  setChildProfile((prevProfile) => ({
+                    ...prevProfile,
+                    name: event.target.value,
+                  }));
+                  console.log(childProfile);
+                }}
+                sx={{ width: '60%', marginBottom: '1rem' }}
+              />
+              <ToggleButtonGroup
+                color="primary"
+                value={childProfile.gender}
+                exclusive
+                sx={{ marginLeft: 'auto' }}
+                size="large"
+                onChange={(_, newGender) => {
+                  setChildProfile((prevProfile) => ({
+                    ...prevProfile,
+                    gender: newGender,
+                  }));
+                  console.log(childProfile);
+                }}
+              >
+                <ToggleButton value="M">남성</ToggleButton>
+                <ToggleButton value="W">여성</ToggleButton>
+              </ToggleButtonGroup>
+            </FlexContainer>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="생년월일"
+                // value={convertTimestampToKoreanDate(childProfile.birth)}
+                // onChange={(newDate: dayjs.Dayjs | null) => {
+                //   if (newDate) {
+                //     const birth = newDate.format('YYYY-MM-DD')
+                //     setChildProfile((prevProfile) => ({
+                //       ...prevProfile,
+                //       'birth': birth,
+                //     }));
+                //   }
+                // }}
+                format="YYYY-MM-DD"
+                sx={{ marginBottom: '1rem' }}
+              />
+            </LocalizationProvider>
+            <FlexContainer>
+              <TextField
+                label="학교 이름"
+                variant="outlined"
+                value={childProfile.school}
+                // onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                //   setChildSchool(event.target.value)
+                // }
+                sx={{ width: '75%', marginBottom: '1rem' }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">초등학교</InputAdornment>
+                  ),
+                }}
+                helperText={isSchoolCorrect && '학교 등록이 완료되었습니다.'}
+                disabled={isSchoolCorrect}
+              />
+              <Button
+                variant="contained"
+                size="large"
+                sx={{ padding: '0.8rem', marginLeft: 'auto', fontSize: '16px' }}
+                onClick={handleSchoolCheck}
+              >
+                학교확인
+              </Button>
+            </FlexContainer>
+            <ToggleButtonGroup
+              color="primary"
+              value={childProfile.grade}
+              exclusive
+              fullWidth
+              onChange={(_, newGrade) => {
+                console.log(_);
+                console.log(newGrade);
+                // setChildGrade(newGrade)
+              }}
+            >
+              <ToggleButton value="1">1학년</ToggleButton>
+              <ToggleButton value="2">2학년</ToggleButton>
+              <ToggleButton value="3">3학년</ToggleButton>
+            </ToggleButtonGroup>
+            <ButtonContainer>
+              <Button
+                variant="contained"
+                size="small"
+                sx={{ padding: '0.4rem', marginTop: '1rem', fontSize: '18px' }}
+                onClick={handleUpdateProfile}
+              >
+                수정
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                sx={{ padding: '0.4rem', marginTop: '1rem', fontSize: '18px' }}
+                onClick={deleteProfile}
+              >
+                삭제
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                sx={{ padding: '0.4rem', marginTop: '1rem', fontSize: '18px' }}
+                onClick={handleRecordClick}
+              >
+                녹화영상
+              </Button>
+            </ButtonContainer>
+          </FormContainer>
         )}
       </ModalContent>
     </ModalOverlay>
