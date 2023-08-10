@@ -59,15 +59,16 @@ public class ChildController {
     }
 
     @GetMapping("/{childId}")
-    public Response<Child> info(@PathVariable Integer childId) {
-        Child child = childService.getChildInfo(childId);
+    public Response<Child> getChildInfo(@PathVariable Integer childId, Authentication authentication) {
+        User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);  // 현재 api를 요청한 사용자(Client)
+        Child child = childService.getChildInfo(childId, user.getId());
         return Response.success(child);
     }
 
-    @GetMapping("/participant/{participantId}")
-    public Response<Child> getParticipantAnimon(@PathVariable Integer participantId) {
-        Child child = childService.getChildInfo(participantId);
-        return Response.success(child);
+    @GetMapping("/participant/{participantId}")     // 화상 회의 중 상대방의 애니몬을 가져오기 위한 api
+    public Response<Animon> getParticipantAnimon(@PathVariable Integer participantId) {
+        Animon animon = childService.getProfileAnimonByChild(participantId);
+        return Response.success(animon);
     }
 
     @PutMapping("/{childId}")
