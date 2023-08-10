@@ -60,9 +60,11 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
   const token = useRecoilValue(tokenState);
   const [password, setPassword] = useState('');
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+  const [schoolChange, setSchoolChange] = useState(false);
   const [isSchoolCorrect, setIsSchoolCorrect] = useState(false);
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
   const navigate = useNavigate();
+  // dayjs.locale('ko');
 
   useEffect(() => {
     fetchChildProfile();
@@ -148,26 +150,6 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
     }
   };
 
-  const handleInputChange = (
-    name: string,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setChildProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: event.target.value,
-    }));
-  };
-
-  const convertTimestampToKoreanDate = (timestamp: number) => {
-    const utcDate = new Date(timestamp);
-    const koreaTimezoneOffset = 9 * 60;
-    const koreaDate = new Date(
-      utcDate.getTime() + koreaTimezoneOffset * 60 * 1000
-    );
-    const koreanDateString = koreaDate.toISOString().slice(0, 10);
-    return koreanDateString;
-  };
-
   const handleRecordClick = () => {
     setProfileKey(childId);
     navigate('/record');
@@ -245,9 +227,8 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                     ...prevProfile,
                     name: event.target.value,
                   }));
-                  console.log(childProfile);
                 }}
-                sx={{ width: '60%', marginBottom: '1rem' }}
+                sx={{ width: '65%', marginBottom: '1rem' }}
               />
               <ToggleButtonGroup
                 color="primary"
@@ -260,7 +241,6 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                     ...prevProfile,
                     gender: newGender,
                   }));
-                  console.log(childProfile);
                 }}
               >
                 <ToggleButton value="M">남성</ToggleButton>
@@ -270,16 +250,15 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="생년월일"
-                // value={convertTimestampToKoreanDate(childProfile.birth)}
-                // onChange={(newDate: dayjs.Dayjs | null) => {
-                //   if (newDate) {
-                //     const birth = newDate.format('YYYY-MM-DD')
-                //     setChildProfile((prevProfile) => ({
-                //       ...prevProfile,
-                //       'birth': birth,
-                //     }));
-                //   }
-                // }}
+                value={dayjs(childProfile.birth)}
+                onChange={(newDate: dayjs.Dayjs | null) => {
+                  if (newDate) {
+                    setChildProfile((prevProfile: any) => ({
+                      ...prevProfile,
+                      birth: newDate.format('YYYY-MM-DD'),
+                    }));
+                  }
+                }}
                 format="YYYY-MM-DD"
                 sx={{ marginBottom: '1rem' }}
               />
@@ -289,22 +268,31 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 label="학교 이름"
                 variant="outlined"
                 value={childProfile.school}
-                // onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                //   setChildSchool(event.target.value)
-                // }
-                sx={{ width: '75%', marginBottom: '1rem' }}
+                onChange={(event) => {
+                  setChildProfile((prevProfile) => ({
+                    ...prevProfile,
+                    school: event.target.value,
+                  }));
+                  setSchoolChange(true);
+                }}
+                sx={{ width: '65%', marginBottom: '1rem' }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">초등학교</InputAdornment>
                   ),
                 }}
                 helperText={isSchoolCorrect && '학교 등록이 완료되었습니다.'}
-                disabled={isSchoolCorrect}
+                disabled={isSchoolCorrect && true}
               />
               <Button
                 variant="contained"
                 size="large"
-                sx={{ padding: '0.8rem', marginLeft: 'auto', fontSize: '16px' }}
+                sx={{
+                  width: '25%',
+                  padding: '0.7rem',
+                  marginLeft: 'auto',
+                  fontSize: '18px',
+                }}
                 onClick={handleSchoolCheck}
               >
                 학교확인
@@ -312,43 +300,60 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
             </FlexContainer>
             <ToggleButtonGroup
               color="primary"
-              value={childProfile.grade}
+              value={String(childProfile.grade)}
               exclusive
               fullWidth
               onChange={(_, newGrade) => {
-                console.log(_);
-                console.log(newGrade);
-                // setChildGrade(newGrade)
+                setChildProfile((prevProfile) => ({
+                  ...prevProfile,
+                  grade: newGrade,
+                }));
               }}
             >
               <ToggleButton value="1">1학년</ToggleButton>
               <ToggleButton value="2">2학년</ToggleButton>
               <ToggleButton value="3">3학년</ToggleButton>
             </ToggleButtonGroup>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                padding: '0.6rem',
+                marginTop: '1rem',
+                fontSize: '18px',
+              }}
+              fullWidth
+              onClick={handleRecordClick}
+            >
+              녹화영상
+            </Button>
             <ButtonContainer>
               <Button
-                variant="contained"
+                variant="outlined"
                 size="small"
-                sx={{ padding: '0.4rem', marginTop: '1rem', fontSize: '18px' }}
+                sx={{
+                  width: '50%',
+                  padding: '0.6rem',
+                  marginTop: '1rem',
+                  fontSize: '18px',
+                }}
                 onClick={handleUpdateProfile}
               >
                 수정
               </Button>
               <Button
-                variant="contained"
+                variant="outlined"
+                color="error"
                 size="small"
-                sx={{ padding: '0.4rem', marginTop: '1rem', fontSize: '18px' }}
+                sx={{
+                  width: '50%',
+                  padding: '0.6rem',
+                  marginTop: '1rem',
+                  fontSize: '18px',
+                }}
                 onClick={deleteProfile}
               >
                 삭제
-              </Button>
-              <Button
-                variant="contained"
-                size="small"
-                sx={{ padding: '0.4rem', marginTop: '1rem', fontSize: '18px' }}
-                onClick={handleRecordClick}
-              >
-                녹화영상
               </Button>
             </ButtonContainer>
           </FormContainer>
