@@ -24,7 +24,7 @@ public class AlarmService {
         emitterRepository.get(receiverId).ifPresentOrElse(it -> {
                     try {
                         it.send(SseEmitter.event()
-                                .name(ALARM_NAME)
+                                .name("sse")
                                 .data(alarm));
                         log.info("성공적으로 보냈어요");
                     } catch (IOException exception) {
@@ -45,7 +45,7 @@ public class AlarmService {
             log.info("connect: " + childId);
             emitter.send(SseEmitter.event()
                     .id("id")
-                    .name("connect")
+                    .name("sse")
                     .data("connect completed"));
         } catch (IOException exception) {
             throw new EoullimApplicationException(ErrorCode.NOTIFICATION_CONNECT_ERROR);
