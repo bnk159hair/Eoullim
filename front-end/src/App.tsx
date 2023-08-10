@@ -8,6 +8,7 @@ import SessionPage from './pages/SessionPage/SessionPage';
 import Session2 from './pages/SessionPage/Session2';
 import FriendsPage from './pages/Friendspage/FriendsPage';
 import RecordPage from './pages/RecordPage/RecordPage';
+import BackgroundMusic from './components/main/BackgroundMusic';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <header>
         <RecoilRoot>
           <Router>
+            <BackgroundMusic />
             <Routes>
               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<LoginPage />} />
