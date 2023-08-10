@@ -16,6 +16,7 @@ export const useOpenVidu = (userId: any) => {
   const [session, setSession] = useState<any>(null);
   const [publisher, setPublisher] = useState<any>(null);
   const [subscribers, setSubscribers] = useState<any[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const userToken = useRecoilValue(tokenState);
 
   console.log('session, publisher, subscribers 생성');
@@ -57,9 +58,23 @@ export const useOpenVidu = (userId: any) => {
         ];
       });
     });
-
-    mySession.on('streamDestroyed', () => leaveSession());
-    mySession.on('exception', (exception) => console.warn(exception));
+    // mySession.on('streamDestroyed', () => leaveSession());
+    mySession.on('streamDestroyed', () => {
+      if (session) {
+        leaveSession();
+      } else {
+        setIsOpen(true);
+        return {
+          publisher,
+          streamList,
+          session,
+          isOpen,
+          onChangeCameraStatus,
+          onChangeMicStatus,
+        };
+      }
+    });
+    // mySession.on('exception', (exception) => console.warn(exception));
 
     getUserInfo(userId, userToken).then((userInfo: User) => {
       getToken(
@@ -162,6 +177,8 @@ export const useOpenVidu = (userId: any) => {
   return {
     publisher,
     streamList,
+    session,
+    isOpen,
     onChangeCameraStatus,
     onChangeMicStatus,
   };

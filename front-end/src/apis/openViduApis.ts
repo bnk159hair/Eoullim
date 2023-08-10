@@ -33,12 +33,16 @@ export const getToken = async (userInfo: User, userToken: String) => {
   console.log(userInfo);
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/match/start`, userInfo, {
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await axios.post(
+      `${API_BASE_URL}/meetings/random/start`,
+      userInfo,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     console.log('토큰 가져오기 성공!');
     console.log(response);
@@ -56,7 +60,7 @@ export const destroySession = async (session: Session, userToken: any) => {
 
   try {
     const response = await axios.post(
-      `${API_BASE_URL}/match/stop`,
+      `${API_BASE_URL}/meetings/random/stop`,
       {
         sessionId: session.sessionId,
       },
@@ -70,6 +74,5 @@ export const destroySession = async (session: Session, userToken: any) => {
     console.log(response);
   } catch (error) {
     console.log(error);
-    throw error;
   }
 };
