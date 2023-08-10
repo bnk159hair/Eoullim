@@ -6,6 +6,7 @@ import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.model.Animon;
 import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.User;
+import com.ssafy.eoullim.service.AlarmService;
 import com.ssafy.eoullim.service.ChildService;
 import com.ssafy.eoullim.utils.ClassUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ChildController {
 
     private final ChildService childService;
+    private final AlarmService alarmService;
 
     @GetMapping
     public Response<List<Child>> list(Authentication authentication) {
