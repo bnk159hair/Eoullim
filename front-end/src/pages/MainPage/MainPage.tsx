@@ -11,47 +11,52 @@ import {
   NewFirendsignpost,
   MyFirendsignpost,
   HoberLeft,
-  HoberRight
+  HoberRight,
 } from './MainPageStyles';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { Profilekey } from '../../atoms/Profile';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { Profile, Profilekey } from '../../atoms/Profile';
 import { tokenState } from '../../atoms/Auth';
 import AnimonModal from '../../components/main/AnimonModal';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
-
-interface Animon {
-  id: number;
-  imagePath: string;
-  name: string;
-}
-
-interface ChildProfile {
-  animon: Animon;
-  id: number;
-  name: string;
-  birth: number;
-  gender: string;
-  school: string;
-  grade: number;
-  status: string;
-}
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
   const profileId = useRecoilValue(Profilekey);
   const token = useRecoilValue(tokenState);
 
-  const [childProfile, setChildProfile] = useState<ChildProfile>({
-    id: 0,
-    name: '',
-    birth: 0,
-    gender: '',
-    school: '',
-    grade: 0,
-    status: '',
-    animon: { id: 0, imagePath: '', name: '' },
+  const [profile, setProfile] = useRecoilState(Profile);
+
+  const [eventSource, setEventSource] = useState<EventSource | null>(null);
+
+  useEffect(() => {
+    const source = new EventSource(
+      `https://i9c207.p.ssafy.io/api/v1/alarms/subscribe/${profileId}`
+    );
+    setEventSource(source);
+    console.log(source, eventSource);
+    return () => {
+      if (source) {
+        source.close();
+        setEventSource(null);
+        console.log('이벤트 종료');
+      }
+    };
+  }, [navigate]);
+
+  useEffect(() => {
+    if (eventSource) {
+      const eventListener = (event: any) => {
+        console.log('이벤트가 실행중인가?');
+        console.log(event);
+      };
+      eventSource.addEventListener('sse', eventListener);
+
+      return () => {
+        eventSource.removeEventListener('sse', eventListener);
+      };
+    }
   });
 
   const getNewFriend = () => {
@@ -82,7 +87,7 @@ const MainPage: React.FC = () => {
       })
       .then((response) => {
         console.log(response);
-        setChildProfile(response.data.result);
+        setProfile(response.data.result);
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
@@ -121,7 +126,7 @@ const MainPage: React.FC = () => {
   };
 
   const [isModalOpen, setModalOpen] = useState(false);
-  const IMGURL = `/${childProfile.animon.name}.png`;
+  const IMGURL = `/${profile.animon.name}.png`;
 
   const [audioObj, setAudioObj] = useState(new Audio('/mainguide.mp3'));
 
@@ -130,11 +135,10 @@ const MainPage: React.FC = () => {
     audioObj.play();
   };
 
-
   return (
     <MainPageContainer>
       <MarginContainer>
-        <BackIcon onClick={getBack}/>
+        <BackIcon onClick={getBack} />
         <ProfileImg
           style={{ backgroundImage: `url(${IMGURL})` }}
           onClick={openModal}
@@ -145,12 +149,15 @@ const MainPage: React.FC = () => {
           <AnimonModal onClose={closeModal} profile={getprofilelist} />
         )}
         <HoberLeft onClick={getNewFriend}>
-          <NewFriend/>
-          <NewFirendsignpost/>
+          <NewFriend />
+          <NewFirendsignpost />
         </HoberLeft>
-        <MainCharacter style={{ backgroundImage: `url(${IMGURL})` }} onClick={playAudio} />
+        <MainCharacter
+          style={{ backgroundImage: `url(${IMGURL})` }}
+          onClick={playAudio}
+        />
         <HoberRight onClick={handleFriendsClick}>
-          <MyFirendsignpost/>
+          <MyFirendsignpost />
           <MyFriend />
         </HoberRight>
       </ChaterLocation>

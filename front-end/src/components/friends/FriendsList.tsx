@@ -48,7 +48,7 @@ const FriendsList = () => {
         
       });
   };
-  
+
   useEffect(() => {
     if (!token) {
       navigate('/login');
@@ -73,16 +73,17 @@ const FriendsList = () => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       {friends.length > friendsPerPage && (
-        <div>
-          {currentPage > 1 && <button onClick={prevPage}>이전</button>}
-        </div>
+        <div>{currentPage > 1 && <button onClick={prevPage}>이전</button>}</div>
       )}
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div
+        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
+      >
         {currentFriends.length > 0 ? (
           currentFriends.map((friend) => (
             <FriendsListItem
               key={friend.id}
-              name={friend.name}
+              friendId={friend.id}
+              friendName={friend.name}
               animon={friend.animon.name}
             />
           ))
@@ -90,13 +91,13 @@ const FriendsList = () => {
           <EmptyFriend />
         )}
       </div>
-        {friends.length > friendsPerPage && (
-          <div>
-            {currentPage < Math.ceil(friends.length / friendsPerPage) && (
-              <button onClick={nextPage}>다음</button>
-            )}
-          </div>
-        )}
+      {friends.length > friendsPerPage && (
+        <div>
+          {currentPage < Math.ceil(friends.length / friendsPerPage) && (
+            <button onClick={nextPage}>다음</button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
