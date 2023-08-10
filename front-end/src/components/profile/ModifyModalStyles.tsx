@@ -52,6 +52,17 @@ export const FormContainer = styled.form`
   flex-direction: column;
 `;
 
+export const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const FlexContainer = styled.div`
+  display: flex;
+  align-items: start;
+`;
+
 export const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
