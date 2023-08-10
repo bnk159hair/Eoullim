@@ -105,8 +105,8 @@ public class MatchController {
                     result.put("token", token);
 
                     mapSessions.put(sessionId, session);
-                    mapSessionNamesTokens.put(sessionId, new ConcurrentHashMap<>());
-                    mapSessionNamesTokens.get(sessionId).put(token, token);
+//                    mapSessionNamesTokens.put(sessionId, new ConcurrentHashMap<>());
+//                    mapSessionNamesTokens.get(sessionId).put(token, token);
 
                     newRoom.setChildOne(matchRequest.getChildId()); // 첫 입장자 아이디 저장
                     mapRooms.put(sessionId, newRoom);
@@ -123,11 +123,11 @@ public class MatchController {
             if(mapSessions.get(sessionId) != null){ // 세션이 정상적으로 존재한다면
                 System.out.println("[ALREADY] Session created: " + sessionId);
                 String token = mapSessions.get(sessionId).createConnection(connectionProperties).getToken();
-                mapSessionNamesTokens.get(sessionId).put(token, token);
+//                mapSessionNamesTokens.get(sessionId).put(token, token);
                 Map<String, String> result = new HashMap<>();
                 result.put("sessionId", sessionId);
                 result.put("token", token);
-                mapSessionNamesTokens.get(sessionId).put(token, token);
+//                mapSessionNamesTokens.get(sessionId).put(token, token);
 
                 RecordingProperties recordingProperties = new RecordingProperties.Builder() // 녹화 설정
                         .outputMode(Recording.OutputMode.INDIVIDUAL)
@@ -155,13 +155,15 @@ public class MatchController {
         String sessionId = (String) params.get("sessionId");
         System.out.println("[STOP] Session created: " + sessionId);
 
-        if(mapSessions.get(sessionId) != null && mapSessionNamesTokens.get(sessionId) != null && mapRooms.get(sessionId)!= null){
+//        if(mapSessions.get(sessionId) != null && mapSessionNamesTokens.get(sessionId) != null && mapRooms.get(sessionId)!= null){
+        if(mapSessions.get(sessionId) != null && mapRooms.get(sessionId)!= null){
+
             Session session = mapSessions.get(sessionId);
             if(matchingQueue.contains(mapRooms.get(sessionId))){ // 매치가 안되었는데 나갔을 경우
 
                 matchingQueue.remove(mapRooms.get(sessionId));
                 mapSessions.remove(sessionId);
-                mapSessionNamesTokens.remove(sessionId);
+//                mapSessionNamesTokens.remove(sessionId);
                 mapRooms.remove(sessionId);
 
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -172,7 +174,7 @@ public class MatchController {
 
                 sessionRecordings.remove(sessionId);
                 mapSessions.remove(sessionId);
-                mapSessionNamesTokens.remove(sessionId);
+//                mapSessionNamesTokens.remove(sessionId);
 
                 recordService.writeVideoToDB(recordId, mapRooms.get(sessionId));
 
