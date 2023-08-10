@@ -85,7 +85,11 @@ const MainPage: React.FC = () => {
         setChildProfile(response.data.result);
       })
       .catch((error) => {
-        console.log('데이터 불러오기 오류', error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('데이터 불러오기 오류', error);
+        }
       });
   };
 

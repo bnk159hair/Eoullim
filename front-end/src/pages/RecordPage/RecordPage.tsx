@@ -51,7 +51,11 @@ const RecordPage = () => {
   };
 
   useEffect(() => {
-    getRecord();
+    if (!token) {
+      navigate('/login');
+    } else {
+      getRecord();
+    }
   }, [profileId, token]);
 
   const getRecord = () => {
@@ -64,7 +68,11 @@ const RecordPage = () => {
         console.log('녹화영상 불러오기');
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('녹화영상불러오기오류', error);
+        }
       });
   };
 

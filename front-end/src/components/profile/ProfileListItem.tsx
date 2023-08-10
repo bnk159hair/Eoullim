@@ -31,9 +31,9 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const token = useRecoilValue(tokenState);
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
   const IMGURL = `/${imgurl}.png`;
-  const eventSource = new EventSource(
-    `https://i9c207.p.ssafy.io/api/v1/alarms/subscribe/${profilekey}`
-  );
+  // const eventSource = new EventSource(
+  //   `https://i9c207.p.ssafy.io/api/v1/alarms/subscribe/${profilekey}`
+  // );
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -61,9 +61,9 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
         }
       )
       .then((response) => {
-        eventSource.addEventListener('sse', (event) => {
-          console.log(event);
-        });
+        // eventSource.addEventListener('sse', (event) => {
+        //   console.log(event);
+        // });
         console.log('프로필로그인');
       })
       .catch((error) => {
