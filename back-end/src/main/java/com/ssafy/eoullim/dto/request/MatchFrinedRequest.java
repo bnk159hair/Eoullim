@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MatchFrinedRequest {
     Integer childId;
-    String name;
+    String name;  
     String sessionId;
     Integer friendId;
 

@@ -3,9 +3,7 @@ package com.ssafy.eoullim.service;
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.Alarm;
-import com.ssafy.eoullim.model.entity.UserEntity;
 import com.ssafy.eoullim.repository.EmitterRepository;
-import com.ssafy.eoullim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +18,6 @@ public class AlarmService {
 
     private final static String ALARM_NAME = "alarm";
     private final EmitterRepository emitterRepository;
-    private final UserRepository userRepository;
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 
     public void send(Integer receiverId, Alarm alarm) {
@@ -38,13 +35,13 @@ public class AlarmService {
         );
     }
 
-    public SseEmitter subscribe(Integer userId) {
+    public SseEmitter subscribe(Integer childId) {
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
-        emitterRepository.save(userId, emitter);
-        emitter.onCompletion(() -> emitterRepository.delete(userId));
-        emitter.onTimeout(() -> emitterRepository.delete(userId));
+        emitterRepository.save(childId, emitter);
+        emitter.onCompletion(() -> emitterRepository.delete(childId));
+        emitter.onTimeout(() -> emitterRepository.delete(childId));
         try {
-            log.info("connect");
+            log.info("connect: " + childId);
             emitter.send(SseEmitter.event()
                     .id("id")
                     .name("connect")
