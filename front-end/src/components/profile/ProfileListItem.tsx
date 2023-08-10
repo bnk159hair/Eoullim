@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ProfileContainer,
   ProfileUserContainer,
@@ -8,7 +8,7 @@ import ModifyModal from './ModifyModal';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/urls';
 import axios from 'axios';
-import { tokenState } from '../../atoms/Auth';
+import { tokenState, userState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { Button } from '@mui/material';
@@ -30,10 +30,8 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   const navigate = useNavigate();
   const token = useRecoilValue(tokenState);
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
+  const [userName, setUserName] = useRecoilState(userState);
   const IMGURL = `/${imgurl}.png`;
-  // const eventSource = new EventSource(
-  //   `https://i9c207.p.ssafy.io/api/v1/alarms/subscribe/${profilekey}`
-  // );
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -44,7 +42,9 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   };
 
   const handleMainClick = () => {
+    console.log(childId, name);
     setProfileKey(childId);
+    setUserName(name);
     profileLogin();
     navigate('/');
   };
@@ -61,9 +61,6 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
         }
       )
       .then((response) => {
-        // eventSource.addEventListener('sse', (event) => {
-        //   console.log(event);
-        // });
         console.log('프로필로그인');
       })
       .catch((error) => {
@@ -72,22 +69,24 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   };
 
   return (
-    <ProfileContainer>
-      <ProfileUserContainer
-        style={{ backgroundImage: `url(${IMGURL})` }}
-        onClick={handleMainClick}
-      >
-        <NameTag>{name}</NameTag>
-      </ProfileUserContainer>
-      <Button
-        variant="contained"
-        color="success"
-        sx={{ fontSize: '18px' }}
-        onClick={handleModalOpen}
-        fullWidth
-      >
-        프로필 관리
-      </Button>
+    <>
+      <ProfileContainer>
+        <ProfileUserContainer
+          style={{ backgroundImage: `url(${IMGURL})` }}
+          onClick={handleMainClick}
+        >
+          <NameTag>{name}</NameTag>
+        </ProfileUserContainer>
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ fontSize: '18px' }}
+          onClick={handleModalOpen}
+          fullWidth
+        >
+          프로필 관리
+        </Button>
+      </ProfileContainer>
       {isModalOpen && (
         <ModifyModal
           onClose={handleModalClose}
@@ -95,7 +94,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
           resetList={resetList}
         />
       )}
-    </ProfileContainer>
+    </>
   );
 };
 
