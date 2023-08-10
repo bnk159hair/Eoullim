@@ -49,7 +49,6 @@ public class ChildController {
     @PostMapping("/login/{childId}")
     public Response<Child> login(@PathVariable Integer childId) {
         Child child = childService.login(childId);
-        alarmService.subscribe(childId);
         return Response.success(child);
     }
 
