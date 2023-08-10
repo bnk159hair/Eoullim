@@ -10,9 +10,14 @@ export const PublisherVideoStatus = atom<boolean>({
   default: false,
 });
 
-export const PublisherAnimonURL = atom<String>({
+export const PublisherAnimonURL = atom<string>({
   key: 'publisherAnimonURL',
   default: '',
+});
+
+export const PublisherGuideStatus = atom<boolean>({
+  key: 'publisherGuideStatus',
+  default: false,
 });
 
 export const SubscriberId = atom<number>({
@@ -25,7 +30,12 @@ export const SubscriberVideoStatus = atom<boolean>({
   default: false,
 });
 
-export const SubscriberAnimonURL = atom<String>({
+export const SubscriberAnimonURL = atom<string>({
   key: 'subscriberAnimonURL',
   default: '',
+});
+
+export const SubscriberGuideStatus = atom<boolean>({
+  key: 'subscriberGuideStatus',
+  default: false,
 });

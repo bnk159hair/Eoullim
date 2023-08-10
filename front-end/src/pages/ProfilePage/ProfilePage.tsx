@@ -8,7 +8,7 @@ import {
 } from './ProfilePageStyles';
 import ChagePasswordModal from '../../components/profile/ChangePasswordModal';
 import { API_BASE_URL } from '../../apis/urls';
-import { tokenState } from '../../atoms/Auth';
+import { tokenState, userState } from '../../atoms/Auth';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ const ProfilePage = () => {
   const token = useRecoilValue(tokenState);
   const navigate = useNavigate();
   const [, setToken] = useRecoilState(tokenState);
+  const [, setUserName] = useRecoilState(userState);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -41,6 +42,7 @@ const ProfilePage = () => {
         console.log(token);
         console.log('로그아웃 오류:', error);
         setToken('');
+        setUserName('');
         navigate('/login');
       });
   };
