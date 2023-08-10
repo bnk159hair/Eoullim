@@ -22,7 +22,10 @@ export const BackIcon = styled.div`
   background-image: url(${back});
   position: absolute; 
   top: 20px; 
-  left: 20px; 
+  left: 20px;
+  &:hover {
+    transform: scale(1.1);
+  } 
 `
 
 export const Passwordcofile = styled.div`
@@ -45,7 +48,7 @@ export const EmptyRecord = styled.div`
 
 export const Scroll = styled.div`
   height: 600px;
-  width: 1200px;
+  width: 900px;
   overflow: auto; 
 `
 

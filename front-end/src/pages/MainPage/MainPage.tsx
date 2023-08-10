@@ -66,8 +66,12 @@ const MainPage: React.FC = () => {
     navigate('/profile');
   };
   useEffect(() => {
-    getprofilelist();
-  }, [profileId, token]);
+    if (!token) {
+      navigate('/login');
+    } else {
+      getprofilelist();
+    }
+  }, [profileId, token, navigate]);
 
   const getprofilelist = () => {
     axios
@@ -114,6 +118,15 @@ const MainPage: React.FC = () => {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const IMGURL = `/${childProfile.animon.name}.png`;
+
+  const [audioObj, setAudioObj] = useState(new Audio('/mainguide.mp3'));
+
+  const playAudio = () => {
+    audioObj.currentTime = 0;
+    audioObj.play();
+  };
+
+
   return (
     <MainPageContainer>
       <MarginContainer>
@@ -131,7 +144,7 @@ const MainPage: React.FC = () => {
           <NewFriend/>
           <NewFirendsignpost/>
         </HoberLeft>
-        <MainCharacter style={{ backgroundImage: `url(${IMGURL})` }} />
+        <MainCharacter style={{ backgroundImage: `url(${IMGURL})` }} onClick={playAudio} />
         <HoberRight onClick={handleFriendsClick}>
           <MyFirendsignpost/>
           <MyFriend />
