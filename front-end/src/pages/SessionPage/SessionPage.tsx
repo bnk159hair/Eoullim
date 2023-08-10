@@ -47,13 +47,17 @@ const SessionPage = () => {
 
   setPublisherId(profileId);
 
-  const { publisher, streamList, session } = useOpenVidu(profileId);
+  const { publisher, streamList, session, isOpen } = useOpenVidu(profileId);
   const sessionOver = () => {
     setOpen(true);
   };
 
   const [connected, setConnected] = useState<boolean>(false);
   const [stompClient, setStompClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    setOpen(isOpen);
+  }, [isOpen]);
 
   useEffect(() => {
     for (const user of streamList) {
@@ -64,46 +68,48 @@ const SessionPage = () => {
   }, [streamList]);
 
   useEffect(() => {
-    const client = new Client({
-      connectHeaders: WebSocketApis.getInstance().header,
-      brokerURL: WS_BASE_URL,
-      reconnectDelay: 5000,
-      debug: (str) => console.log(str),
-    });
-
-    client.onConnect = () => {
-      console.log('WebSocket 연결됨');
-      setConnected(true);
-      setStompClient(client);
-
-      client.subscribe(`/topic/${session.sessionId}/animon`, (response) => {
-        console.log('메시지 수신:', response.body);
-        const message = JSON.parse(response.body);
-        if (message.childId !== String(publisherId)) {
-          console.log(message.childId, message.isAnimonOn);
-          console.log('상대방이 화면을 껐습니다.');
-          setSubscriberId(message.childId);
-          setSubscriberVideoStatus(message.isAnimonOn);
-        }
+    if (session) {
+      const client = new Client({
+        connectHeaders: WebSocketApis.getInstance().header,
+        brokerURL: WS_BASE_URL,
+        reconnectDelay: 5000,
+        debug: (str) => console.log(str),
       });
-      client.subscribe(`/topic/${session.sessionId}/guide`, (response) => {
-        const message = JSON.parse(response.body);
-        setGuidance(message);
-      });
-    };
 
-    client.onDisconnect = () => {
-      console.log('WebSocket 연결 닫힘');
-      setConnected(false);
-      setStompClient(null);
-    };
+      client.onConnect = () => {
+        console.log('WebSocket 연결됨');
+        setConnected(true);
+        setStompClient(client);
 
-    client.activate();
+        client.subscribe(`/topic/${session.sessionId}/animon`, (response) => {
+          console.log('메시지 수신:', response.body);
+          const message = JSON.parse(response.body);
+          if (message.childId !== String(publisherId)) {
+            console.log(message.childId, message.isAnimonOn);
+            console.log('상대방이 화면을 껐습니다.');
+            setSubscriberId(message.childId);
+            setSubscriberVideoStatus(message.isAnimonOn);
+          }
+        });
+        client.subscribe(`/topic/${session.sessionId}/guide`, (response) => {
+          const message = JSON.parse(response.body);
+          setGuidance(message);
+        });
+      };
 
-    return () => {
-      client.deactivate();
-    };
-  }, [publisherId]);
+      client.onDisconnect = () => {
+        console.log('WebSocket 연결 닫힘');
+        setConnected(false);
+        setStompClient(null);
+      };
+
+      client.activate();
+
+      return () => {
+        client.deactivate();
+      };
+    }
+  }, [streamList]);
 
   const leaveSession = () => {
     setOpen(false);
