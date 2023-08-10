@@ -13,3 +13,8 @@ export const userState = atom<string>({
   key: 'userState',
   default: '',
 });
+
+export const sessionTokenState = atom<string>({
+  key: 'sessionTokenState',
+  default: '',
+})

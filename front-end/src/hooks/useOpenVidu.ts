@@ -1,5 +1,5 @@
 import { OpenVidu } from 'openvidu-browser';
-import { getUserInfo, getToken, destroySession } from '../apis/openViduApis';
+import { getUserInfo, getToken, destroySession, getFriendSessionToken } from '../apis/openViduApis';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { tokenState } from '../atoms/Auth';
@@ -12,7 +12,7 @@ interface User {
   grade: Number;
 }
 
-export const useOpenVidu = (userId: any) => {
+export const useOpenVidu = (userId?: any, sessionId?: String) => {
   const [session, setSession] = useState<any>(null);
   const [publisher, setPublisher] = useState<any>(null);
   const [subscribers, setSubscribers] = useState<any[]>([]);
@@ -20,6 +20,7 @@ export const useOpenVidu = (userId: any) => {
   const userToken = useRecoilValue(tokenState);
 
   console.log('session, publisher, subscribers 생성');
+  console.log(sessionId)
 
   const leaveSession = useCallback(() => {
     console.log('나가기 실행');
@@ -76,7 +77,7 @@ export const useOpenVidu = (userId: any) => {
     });
     // mySession.on('exception', (exception) => console.warn(exception));
 
-    getUserInfo(userId, userToken).then((userInfo: User) => {
+    if (sessionId === undefined) {getUserInfo(userId, userToken).then((userInfo: User) => {
       getToken(
         {
           childId: String(userId),
@@ -125,7 +126,49 @@ export const useOpenVidu = (userId: any) => {
             );
           });
       });
-    });
+    });}
+
+    else if (userId && sessionId) {
+      getUserInfo(userId, userToken).then((userInfo: User) => {getFriendSessionToken(userInfo, sessionId, userToken).then((token: any) => {
+        console.log('가져온 토큰 :', token);
+        console.log('가져온 토큰으로 초대 세션에 연결');
+        mySession
+          .connect(token, { childId: String(userId) })
+          .then(async () => {
+            await navigator.mediaDevices.getUserMedia({
+              audio: true,
+              video: true,
+            });
+            const devices = await OV.getDevices();
+            const videoDevices = devices.filter(
+              (device) => device.kind === 'videoinput'
+            );
+
+            console.log('나를 publisher라고 하자!');
+            const publisher = OV.initPublisher('', {
+              audioSource: undefined,
+              videoSource: videoDevices[0].deviceId,
+              publishAudio: true,
+              publishVideo: true,
+              resolution: '640x480',
+              frameRate: 30,
+              insertMode: 'APPEND',
+              mirror: false,
+            });
+            console.log('publisher의 옵션을 설정했고 초대 세션 연결을 성공했다!');
+            setPublisher(publisher);
+            mySession.publish(publisher);
+          })
+          .catch((error) => {
+            console.log('초대 세션 연결을 실패했다!');
+            console.log(
+              'There was an error connecting to the session:',
+              error.code,
+              error.message
+            );
+          });
+      });})
+    }
 
     setSession(mySession);
     console.log(mySession);
@@ -142,7 +185,7 @@ export const useOpenVidu = (userId: any) => {
       setPublisher(null);
       setSubscribers([]);
     };
-  }, [userId]);
+  }, [sessionId]);
 
   useEffect(() => {
     console.log('탭 종료!!');

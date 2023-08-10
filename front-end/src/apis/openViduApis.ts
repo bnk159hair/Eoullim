@@ -54,6 +54,33 @@ export const getToken = async (userInfo: User, userToken: String) => {
   }
 };
 
+export const getFriendSessionToken = async (userInfo: User, userToken: String, sessionId: String) => {
+  console.log('초대 토큰 가져오기');
+
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/meetings/friend/start`,
+      {
+        userInfo,
+      sessionId},
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    console.log('초대 토큰 가져오기 성공!');
+    console.log(response);
+    return response.data.token;
+  } catch (error) {
+    console.log('초대 토큰 가져오기 실패ㅠ');
+    console.log(error);
+    throw error;
+  }
+}
+
 export const destroySession = async (session: Session, userToken: any) => {
   console.log('세션 파괴!!!!!!');
   console.log(session.sessionId);

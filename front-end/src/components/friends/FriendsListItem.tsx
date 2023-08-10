@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { tokenState, userState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
+import { API_BASE_URL } from '../../apis/urls';
+import { useNavigate } from 'react-router-dom';
 
 interface FriendsListItemProps {
   friendId: number;
@@ -17,6 +19,7 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
   animon,
 }) => {
   const IMGURL = `/${animon}.png`;
+  const navigate = useNavigate();
 
   const myName = useRecoilValue(userState);
   const token = useRecoilValue(tokenState);
@@ -26,7 +29,7 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
     console.log(friendId, myName);
     axios
       .post(
-        'https://i9c207.p.ssafy.io/api/v1/meetings/friend/start',
+        `${API_BASE_URL}/meetings/friend/start`,
         {
           childId: profileKey,
           friendId: friendId, // 친구 아이디
@@ -38,7 +41,10 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
           },
         }
       )
-      .then((response) => console.log(response))
+      .then((response) => {
+        const {sessionId, token} = response.data
+        navigate(`/friendsession/${sessionId}`)
+      })
       .catch((error) => console.log(error));
   };
 

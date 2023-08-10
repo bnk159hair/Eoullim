@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
 import { getUserInfo } from '../../apis/openViduApis';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
@@ -35,6 +35,7 @@ import { API_BASE_URL } from '../../apis/urls';
 
 const SessionPage = () => {
   const navigate = useNavigate();
+  const {sessionId} = useParams();
   const [open, setOpen] = useState(false);
   const [publisherId, setPublisherId] = useRecoilState(PublisherId);
   const [subscriberId, setSubscriberId] = useRecoilState(SubscriberId);
@@ -65,7 +66,7 @@ const SessionPage = () => {
   setPublisherId(profileId);
   setPublisherAnimonURL(profile.animon.name + 'mask');
 
-  const { publisher, streamList, session, isOpen } = useOpenVidu(profileId);
+  const { publisher, streamList, session, isOpen } = useOpenVidu(profileId, sessionId);
   const sessionOver = () => {
     setOpen(true);
   };
