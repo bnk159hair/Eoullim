@@ -26,6 +26,7 @@ public class AlarmService {
                         it.send(SseEmitter.event()
                                 .name(ALARM_NAME)
                                 .data(alarm));
+                        log.info("성공적으로 보냈어요");
                     } catch (IOException exception) {
                         emitterRepository.delete(receiverId);
                         throw new EoullimApplicationException(ErrorCode.NOTIFICATION_CONNECT_ERROR);
