@@ -29,7 +29,8 @@ public class AlarmService {
                         log.info("성공적으로 보냈어요");
                     } catch (IOException exception) {
                         emitterRepository.delete(receiverId);
-                        throw new EoullimApplicationException(ErrorCode.NOTIFICATION_CONNECT_ERROR);
+                        throw new EoullimApplicationException(ErrorCode.NOTIFICATION_CONNECT_ERROR,
+                                String.format("%d 에게 초대장 전송을 실패했어요.", receiverId));
                     }
                 },
                 () -> log.info("No emitter found")
@@ -48,7 +49,8 @@ public class AlarmService {
                     .name("sse")
                     .data("connect completed"));
         } catch (IOException exception) {
-            throw new EoullimApplicationException(ErrorCode.NOTIFICATION_CONNECT_ERROR);
+            throw new EoullimApplicationException(ErrorCode.NOTIFICATION_CONNECT_ERROR,
+                    String.format("%d 가 초대 구독을 실패 했어요.", childId));
         }
         return emitter;
     }
