@@ -4,9 +4,11 @@ import {
   getToken,
   destroySession,
   getFriendSessionToken,
+  destroyFriendSession,
 } from '../apis/openViduApis';
+import { invitationSessionId, invitationToken } from '../atoms/Ivitation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { tokenState } from '../atoms/Auth';
 
 interface User {
@@ -28,13 +30,25 @@ export const useOpenVidu = (
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const userToken = useRecoilValue(tokenState);
 
+  const [, setSessionId] = useRecoilState(invitationSessionId);
+  const [, setSessionToken] = useRecoilState(invitationToken);
+
   console.log('session, publisher, subscribers 생성');
   console.log(sessionId);
 
   const leaveSession = useCallback(() => {
     console.log("나가기 실행");
     console.log(session);
-    if (session) {
+    console.log(sessionId)
+    if (sessionId) {
+      console.log('초대 세션이랑 연결 끊기')
+      session.disconnect();
+      destroyFriendSession(sessionId, userToken);
+      setSessionId('')
+      setSessionToken('')
+    }
+
+    else if (session) {
       console.log('나랑 세션이랑 연결 끊기');
       session.disconnect();
       console.log(session);
@@ -222,7 +236,15 @@ export const useOpenVidu = (
     console.log(mySession);
     return () => {
       console.log("useEffect가 return했다!!");
-      if (mySession) {
+
+      if (sessionId) {
+        console.log('초대 세션이랑 연결 끊기')
+        destroyFriendSession(sessionId, userToken);
+        setSessionId('')
+        setSessionToken('')
+      }
+
+      else if (mySession) {
         console.log("서버에 세션 끊어달라고 보내기");
         console.log(mySession);
         destroySession(mySession, userToken);
