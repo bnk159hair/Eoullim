@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
+import { getUserInfo } from '../../apis/openViduApis';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
 import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
@@ -15,6 +16,7 @@ import {
 import { Modal, Box, Typography, IconButton } from '@mui/material';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Profile, Profilekey } from '../../atoms/Profile';
+import { invitationToken, invitationSessionId } from '../../atoms/Ivitation';
 import { tokenState } from '../../atoms/Auth';
 import {
   PublisherId,
@@ -51,10 +53,13 @@ const SessionPage = () => {
   const [subscriberGuideStatus, setSubscriberGuideStatus] = useRecoilState(
     SubscriberGuideStatus
   );
+  const [sessionId, setSessionId] = useRecoilState(invitationSessionId);
+  const [sessionToken, setSessionToken] = useRecoilState(invitationToken);
 
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
+
   const IMGURL = '/bear.png';
   const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
   const [step, setStep] = useState(0);
@@ -63,8 +68,12 @@ const SessionPage = () => {
 
   setPublisherId(profileId);
   setPublisherAnimonURL(profile.animon.name + 'mask');
-
-  const { publisher, streamList, session, isOpen } = useOpenVidu(profileId);
+  console.log(profileId, sessionId, sessionToken);
+  const { publisher, streamList, session, isOpen } = useOpenVidu(
+    profileId,
+    sessionId,
+    sessionToken
+  );
   const sessionOver = () => {
     setOpen(true);
   };
@@ -153,6 +162,8 @@ const SessionPage = () => {
 
   const leaveSession = () => {
     setOpen(false);
+    setSessionToken('');
+    setSessionId('');
     navigate('/');
   };
 
