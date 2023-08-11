@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChildService {
+
     private final ChildRepository childRepository;
     private final ChildAnimonRepository childAnimonRepository;
     private final AnimonRepository animonRepository;
@@ -45,10 +46,6 @@ public class ChildService {
 
     @Transactional
     public void create(User user, String name, Date birth, char gender, String school, Integer grade) {
-        // 자녀 이름 중복 검사
-//        childRepository.findByNameAndUser_Id(name, user.getId()).orElseThrow(
-//                () -> new EoullimApplicationException(ErrorCode.DUPLICATED_CHILD_NAME, String.format("%s is Duplicated Name", name)));
-        // Child Insert and Get PK
         ChildEntity childEntity = ChildEntity.of(UserEntity.of(user), name, birth, gender, school, grade);
         childRepository.save(childEntity);
         // 기본 애니몬 4종을 해당 Child에 부여
@@ -57,7 +54,6 @@ public class ChildService {
             if (animonEntity.getId() == 1) childEntity.setAnimon(animonEntity);    // 4종 중 1번 애니몬을 선택
             childAnimonRepository.save(ChildAnimonEntity.of(childEntity, animonEntity));
         }
-        return;
     }
 
 
@@ -79,14 +75,15 @@ public class ChildService {
     }
 
     public Child getChildInfo(Integer childId, Integer userId) {
+        // ERROR: 찾으려는 아이가 없음
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND,
-                        String.format("child %d is not found", childId)));              // ERROR: 찾으려는 아이가 없음             
-        if(!childEntity.getUser().getId().equals(userId))                               // ERROR: 사용자가 해당 child에 접근 권한 없음
+                        String.format("child %d is not found", childId)));
+        // ERROR: 사용자가 해당 child에 접근 권한 없음
+        if(!childEntity.getUser().getId().equals(userId))
             throw new EoullimApplicationException(ErrorCode.FORBIDDEN_NO_PERMISSION,
                     String.format("you have no permission with child %d", childId));
-        else
-            return Child.fromEntity(childEntity);
+        return Child.fromEntity(childEntity);
     }
 
     @Transactional
@@ -101,22 +98,15 @@ public class ChildService {
     }
 
     @Transactional
-    public void delete(Integer childId, String userName) {
+    public void delete(Integer childId, Integer userId) {
         // ERROR : 자녀 ID 잘못 접근 시
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(() ->
                 new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         // ERROR : 현재 User가 지우려는 자녀 ID 권한이 없는 경우 (다른 사용자의 user를 제거하려 할 경우)
-        if (!Objects.equals(childEntity.getUser().getUserName(), userName)) {
+        if(!childEntity.getUser().getId().equals(userId))
             throw new EoullimApplicationException(ErrorCode.FORBIDDEN_NO_PERMISSION,
-                    String.format("user %s has no permission with child %d", userName, childId));
-        }
+                    String.format("you have no permission with child %d", childId));
         childRepository.delete(childEntity);
-
-        // DB 한 번 접근으로도 가능
-//        if (childRepository.deleteByIdAndUser_UserName(childId, userName) != 1) {
-//            throw new EoullimApplicationException(ErrorCode.DELETE_FAILED,
-//                    String.format("userId %s or profileId %d was Bad Request", userName, childId));
-//        }
     }
 
     public List<Animon> getAnimonList(Integer childId) {
