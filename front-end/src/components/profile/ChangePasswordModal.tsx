@@ -64,6 +64,11 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
       alert('비밀번호 확인이 일치하지 않습니다.');
       return;
     }
+    if (passwordConfirmation!=newPassword){
+      setIsPasswordMatch(false);
+      alert('비밀번호 확인이 일치하지 않습니다.');
+      return;
+    }
 
     try {
       const usersData = { curPassword, newPassword };
