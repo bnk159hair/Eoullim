@@ -10,10 +10,14 @@ import {
   Container,
   MainWrapper,
   MyVideo,
+  NavContainer,
+  SessionPageContainer,
   SideBar,
   YourVideo,
 } from './SessionPageStyles';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Profile, Profilekey } from '../../atoms/Profile';
 import { invitationToken, invitationSessionId } from '../../atoms/Ivitation';
@@ -70,7 +74,7 @@ const FriendSessionPage = () => {
   setPublisherId(profileId);
   setPublisherAnimonURL('https://i9c207.p.ssafy.io/' + profile.animon.name + 'mask');
   console.log(profileId, sessionId, sessionToken);
-  const { publisher, streamList, session, isOpen } = useOpenVidu(
+  const { publisher, streamList, session, isOpen, onChangeMicStatus } = useOpenVidu(
     profileId,
     sessionId,
     sessionToken
@@ -78,6 +82,11 @@ const FriendSessionPage = () => {
   const sessionOver = () => {
     setOpen(true);
   };
+
+  const [micStatus, setMicStatus] = useState(true);
+  useEffect(() => {
+    onChangeMicStatus(micStatus);
+  }, [micStatus]);
 
   const [connected, setConnected] = useState<boolean>(false);
   const [stompClient, setStompClient] = useState<Client | null>(null);
@@ -255,6 +264,10 @@ const FriendSessionPage = () => {
     }
   };
 
+  const changeAudioStatus = () => {
+    setMicStatus((prev) => !prev);
+  };
+
   const nextGuidance = () => {
     if (connected && stompClient) {
       const isNextGuideOn = !publisherGuideStatus;
@@ -275,46 +288,69 @@ const FriendSessionPage = () => {
   return (
     <>
       {!open ? (
-        <Container>
-          <MainWrapper>
-            <YourVideo>
-              {streamList.length > 1 && streamList[1].streamManager ? (
-                <StreamCanvas
-                  streamManager={streamList[1].streamManager}
-                  name={streamList[1].userId}
-                  avatarPath="http://localhost:3000/14.png"
-                  videoState={subscriberVideoStatus}
-                />
-              ) : (
-                <Loading />
-              )}
-            </YourVideo>
-          </MainWrapper>
-          <SideBar>
-            <Character
-              style={{ backgroundImage: `url(${IMGURL})` }}
-              onClick={nextGuidance}
-            >
-              {guidance[step]}
-            </Character>
-            <MyVideo>
-              {streamList.length > 1 && streamList[0].streamManager ? (
-                <StreamCanvas
-                  streamManager={streamList[0].streamManager}
-                  name={streamList[0].userId}
-                  avatarPath={publisherAnimonURL}
-                  videoState={publisherVideoStatus}
-                />
-              ) : (
-                <Loading />
-              )}
-            </MyVideo>
+        <SessionPageContainer>
+          <Container>
+            <MainWrapper>
+              <YourVideo>
+                {streamList.length > 1 && streamList[1].streamManager ? (
+                  <StreamCanvas
+                    streamManager={streamList[1].streamManager}
+                    name={subscriberName}
+                    avatarPath={subscriberAnimonURL}
+                    videoState={subscriberVideoStatus}
+                  />
+                ) : (
+                  <Loading />
+                )}
+              </YourVideo>
+            </MainWrapper>
+            <SideBar>
+              <Character onClick={nextGuidance}>{guidance[step]}</Character>
+              <MyVideo>
+                {streamList.length > 1 && streamList[0].streamManager ? (
+                  <StreamCanvas
+                    streamManager={streamList[0].streamManager}
+                    name={profile.name}
+                    avatarPath={`${publisherAnimonURL}`}
+                    videoState={publisherVideoStatus}
+                  />
+                ) : (
+                  <Loading />
+                )}
+              </MyVideo>
+            </SideBar>
+          </Container>
+          <NavContainer>
             <Buttons>
-              <button onClick={changeVideoStatus}>애니몬</button>
-              <button onClick={sessionOver}>나가기</button>
+              <Button
+                variant="contained"
+                onClick={changeVideoStatus}
+                sx={{ fontSize: '30px' }}
+              >
+                {publisherVideoStatus
+                  ? profile.gender === 'W'
+                    ? '👩'
+                    : '🧑'
+                  : '🙈'}
+              </Button>
+              <Button variant="contained" onClick={changeAudioStatus}>
+                {micStatus ? (
+                  <MicIcon fontSize="large"></MicIcon>
+                ) : (
+                  <MicOffIcon fontSize="large"></MicOffIcon>
+                )}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={sessionOver}
+                sx={{ fontSize: '30px' }}
+              >
+                나가기
+              </Button>
             </Buttons>
-          </SideBar>
-        </Container>
+          </NavContainer>
+        </SessionPageContainer>
       ) : streamList.length !== 2 ? (
         navigate('/')
       ) : (

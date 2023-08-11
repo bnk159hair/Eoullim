@@ -17,7 +17,6 @@ export const StreamCanvas: FC<IProps> = ({
   avatarPath,
   videoState,
 }) => {
-  console.log(avatarPath);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { videoRef, speaking, micStatus } = useStream(streamManager);
   useFaceMask(videoRef.current, canvasRef.current, avatarPath);
