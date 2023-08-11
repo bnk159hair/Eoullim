@@ -27,20 +27,5 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
     }
-
-    @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        String payload = message.getPayload();
-        // JSON 문자열을 객체로 역직렬화
-        WSAnimonOnOffRequest animonOnOff = objectMapper.readValue(payload, WSAnimonOnOffRequest.class);
-
-        // 객체를 JSON 문자열로 직렬화
-        String serializedMessage = objectMapper.writeValueAsString(animonOnOff);
-
-        // 모든 클라이언트에게 다시 전달
-        for (WebSocketSession s : sessions) {
-            s.sendMessage(new TextMessage(serializedMessage));
-        }
-    }
 }
 

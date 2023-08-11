@@ -5,6 +5,7 @@ import com.ssafy.eoullim.dto.request.ChildRequest;
 import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.model.Animon;
 import com.ssafy.eoullim.model.Child;
+import com.ssafy.eoullim.model.Friend;
 import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.service.ChildService;
 import com.ssafy.eoullim.utils.ClassUtils;
@@ -64,9 +65,9 @@ public class ChildController {
     }
 
     @GetMapping("/participant/{participantId}")     // 화상 회의 중 상대방의 애니몬을 가져오기 위한 api
-    public Response<Animon> getParticipantAnimon(@PathVariable Integer participantId) {
-        Animon animon = childService.getProfileAnimonByChild(participantId);
-        return Response.success(animon);
+    public Response<Friend> getParticipantAnimon(@PathVariable Integer participantId) {
+        Friend friend = childService.getProfileAnimonByChild(participantId);
+        return Response.success(friend);
     }
 
     @PutMapping("/{childId}")
