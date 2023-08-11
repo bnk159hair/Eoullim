@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import FriendsListItem from './FriendsListItem';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
@@ -45,7 +45,6 @@ const FriendsList = () => {
         } else {
           console.log('친구목록불러오기오류', error);
         }
-        
       });
   };
 
@@ -55,7 +54,6 @@ const FriendsList = () => {
     } else {
       getFriends();
     }
-  
   }, [profileId, token]);
 
   const indexOfLastFriend = currentPage * friendsPerPage;

@@ -1,9 +1,8 @@
-import React, { FC } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { FC } from 'react';
+import { useRef } from 'react';
 import { useFaceMask } from '../../hooks/useFaceMesh';
 import { StreamManager } from 'openvidu-browser';
 import { useStream } from '../../hooks/useStream';
-import { useRecoilValue } from 'recoil';
 
 interface IProps {
   streamManager: StreamManager;
