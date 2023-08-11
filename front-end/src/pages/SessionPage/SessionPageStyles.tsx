@@ -1,13 +1,21 @@
-import { styled, css } from 'styled-components';
+import { styled } from 'styled-components';
+import loginBackground from '../../assets/background/login.gif';
+const IMGURL = '/bear.png';
 
-const Border = css`
-  border: 1px solid black;
+export const SessionPageContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-size: 100% 100%;
+  background-image: url(${loginBackground});
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 export const Container = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
-  width: 99vw;
-  height: 99vh;
 `;
 
 export const MainWrapper = styled.div`
@@ -16,6 +24,7 @@ export const MainWrapper = styled.div`
 
 export const SideBar = styled.div`
   width: 35%;
+  margin: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,10 +32,9 @@ export const SideBar = styled.div`
 
 export const YourVideo = styled.div`
   width: 90%;
-  height: 80%;
-  margin: 30px;
+  height: 85%;
+  margin: 1rem;
   background-color: grey;
-  ${Border}
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,9 +42,11 @@ export const YourVideo = styled.div`
 `;
 
 export const Character = styled.div`
-  width: 70%;
+  background-image: url(${IMGURL});
+  width: 55%;
   height: 40%;
-  margin-top: 30px;
+  margin: 3% 9% 3% 0;
+  // margin-right: 40px;
   background-size: 100% 100%;
   display: flex;
   justify-content: center;
@@ -45,17 +55,23 @@ export const Character = styled.div`
 
 export const MyVideo = styled.div`
   width: 100%;
-  height: 40%;
+  height: 45%;
   background-color: grey;
-  ${Border}
+`;
+
+export const NavContainer = styled.div`
+  width: 100%;
+  padding: 0.5rem 0;
+  position: absolute;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Buttons = styled.div`
-  width: 80%;
-  height: 10%;
-  background-color: grey;
+  width: 30%;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  ${Border}
+  justify-content: space-evenly;
 `;
