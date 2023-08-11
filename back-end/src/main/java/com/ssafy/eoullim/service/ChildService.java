@@ -3,10 +3,7 @@ package com.ssafy.eoullim.service;
 import com.ssafy.eoullim.dto.request.ChildRequest;
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
-import com.ssafy.eoullim.model.Animon;
-import com.ssafy.eoullim.model.Child;
-import com.ssafy.eoullim.model.Status;
-import com.ssafy.eoullim.model.User;
+import com.ssafy.eoullim.model.*;
 import com.ssafy.eoullim.model.entity.AnimonEntity;
 import com.ssafy.eoullim.model.entity.ChildAnimonEntity;
 import com.ssafy.eoullim.model.entity.ChildEntity;
@@ -131,10 +128,10 @@ public class ChildService {
      * @param childId : 애니몬 정보를 알고자 하는 child의 ID (상대방 ID)
      * @return Animon 객체 (ID, 얼굴 이미지 경로, 전신 이미지 경로)
      */
-    public Animon getProfileAnimonByChild(Integer childId) {
+    public Friend getProfileAnimonByChild(Integer childId) {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
-        return Animon.fromEntity(childEntity.getAnimon());
+        return Friend.fromEntity(childEntity);
     }
 
     /**
