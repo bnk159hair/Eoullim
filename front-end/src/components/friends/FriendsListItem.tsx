@@ -1,8 +1,9 @@
 import React from 'react';
 import { FriendCard, FriendImg, FrinedInfo } from './FriendsListItemStyles';
 import axios from 'axios';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { tokenState, userState } from '../../atoms/Auth';
+import { invitationToken, invitationSessionId } from '../../atoms/Ivitation';
 import { Profilekey } from '../../atoms/Profile';
 import { API_BASE_URL } from '../../apis/urls';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +19,9 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
   friendName,
   animon,
 }) => {
+  const [sessionToken, setSessionToken] = useRecoilState(invitationToken);
+  const [invitationId, setInvitationId] = useRecoilState(invitationSessionId);
+
   const IMGURL = `/${animon}.png`;
   const navigate = useNavigate();
 
@@ -42,8 +46,12 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
         }
       )
       .then((response) => {
-        const {sessionId, token} = response.data
-        navigate(`/friendsession/${sessionId}`)
+        const { sessionId, token } = response.data;
+        setInvitationId(sessionId);
+        setSessionToken(token);
+        console.log(sessionId, token);
+
+        navigate(`/friendsession`);
       })
       .catch((error) => console.log(error));
   };

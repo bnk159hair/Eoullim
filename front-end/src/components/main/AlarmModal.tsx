@@ -1,29 +1,22 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  ModalOverlay,
-  ModalContent,
-} from './AnimonModalStyles';
-import { useRecoilValue } from 'recoil';
-import { Profilekey } from '../../atoms/Profile';
-import { tokenState } from '../../atoms/Auth';
-import axios from 'axios';
-import { API_BASE_URL } from '../../apis/urls';
-import { getFriendSessionToken } from '../../apis/openViduApis';
+import { ModalOverlay, ModalContent } from './AnimonModalStyles';
+import { useRecoilState } from 'recoil';
+import { invitationSessionId } from '../../atoms/Ivitation';
 
 interface AlarmModalProps {
-    sessionId: string;
-    onClose: () => void;
-  }
+  sessionId: string;
+  onClose: () => void;
+}
 
-  const AlarmModal: React.FC<AlarmModalProps> = ({ sessionId, onClose }) => {
+const AlarmModal: React.FC<AlarmModalProps> = ({ sessionId, onClose }) => {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-  const profileId = useRecoilValue(Profilekey);
-  const userToken = useRecoilValue(tokenState);
+  const [invitationId, setInvitationId] = useRecoilState(invitationSessionId);
 
   const acceptInvitation = () => {
-    navigate(`/friendsession/${sessionId}`)
+    setInvitationId(sessionId);
+    navigate(`/friendsession`);
   };
 
   return (
