@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     // 400 Bad Request
     DUPLICATED_NAME(HttpStatus.BAD_REQUEST, "Duplicated user name"),
+    DUPLICATED_FRIEND(HttpStatus.BAD_REQUEST, "이미 등록된 친구입니다."),
     INVALID_DATA(HttpStatus.BAD_REQUEST, "Invalid data"),
     // 401 Unauthorized
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),

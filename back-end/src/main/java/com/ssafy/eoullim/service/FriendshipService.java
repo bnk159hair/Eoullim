@@ -31,7 +31,8 @@ public class FriendshipService {
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         // ERROR : 이미 좋아요 누른 친구인 경우
         friendshipRepository.findByMyIdAndFriendId(myId, friendId)
-            .ifPresent(it -> { throw new EoullimApplicationException(ErrorCode.INVALID_DATA); });
+            .ifPresent(it -> { throw new EoullimApplicationException(ErrorCode.DUPLICATED_FRIEND
+                    , String.format("friendId 친구는 이미 등록되었습니다 !", friendId)); });
         friendshipRepository.save(FriendshipEntity.of(child, friend));
     }
 
