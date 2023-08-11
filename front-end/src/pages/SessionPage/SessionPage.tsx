@@ -9,11 +9,12 @@ import {
   Container,
   MainWrapper,
   MyVideo,
+  NavContainer,
   SessionPageContainer,
   SideBar,
   YourVideo,
 } from './SessionPageStyles';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Profile, Profilekey } from '../../atoms/Profile';
 import { tokenState } from '../../atoms/Auth';
@@ -32,6 +33,8 @@ import { WS_BASE_URL } from '../../apis/urls';
 import { WebSocketApis } from '../../apis/webSocketApis';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -56,7 +59,7 @@ const SessionPage = () => {
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
-  const IMGURL = '/bear.png';
+
   const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
   const [step, setStep] = useState(0);
 
@@ -65,7 +68,13 @@ const SessionPage = () => {
   setPublisherId(profileId);
   setPublisherAnimonURL(profile.animon.name + 'mask');
 
-  const { publisher, streamList, session, isOpen } = useOpenVidu(profileId);
+  const { publisher, streamList, session, isOpen, onChangeMicStatus } =
+    useOpenVidu(profileId);
+  const [micStatus, setMicStatus] = useState(true);
+  useEffect(() => {
+    onChangeMicStatus(micStatus);
+  }, [micStatus]);
+
   const sessionOver = () => {
     setOpen(true);
   };
@@ -199,6 +208,10 @@ const SessionPage = () => {
     }
   };
 
+  const changeAudioStatus = () => {
+    setMicStatus((prev) => !prev);
+  };
+
   const nextGuidance = () => {
     if (connected && stompClient) {
       const isNextGuideOn = !publisherGuideStatus;
@@ -236,12 +249,7 @@ const SessionPage = () => {
               </YourVideo>
             </MainWrapper>
             <SideBar>
-              <Character
-                style={{ backgroundImage: `url(${IMGURL})` }}
-                onClick={nextGuidance}
-              >
-                {guidance[step]}
-              </Character>
+              <Character onClick={nextGuidance}>{guidance[step]}</Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
                   <StreamCanvas
@@ -254,12 +262,38 @@ const SessionPage = () => {
                   <Loading />
                 )}
               </MyVideo>
-              <Buttons>
-                <button onClick={changeVideoStatus}>애니몬</button>
-                <button onClick={sessionOver}>나가기</button>
-              </Buttons>
             </SideBar>
           </Container>
+          <NavContainer>
+            <Buttons>
+              <Button
+                variant="contained"
+                onClick={changeVideoStatus}
+                sx={{ fontSize: '30px' }}
+              >
+                {publisherVideoStatus
+                  ? profile.gender === 'W'
+                    ? '👩'
+                    : '🧑'
+                  : '🙈'}
+              </Button>
+              <Button variant="contained" onClick={changeAudioStatus}>
+                {micStatus ? (
+                  <MicIcon fontSize="large"></MicIcon>
+                ) : (
+                  <MicOffIcon fontSize="large"></MicOffIcon>
+                )}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={sessionOver}
+                sx={{ fontSize: '30px' }}
+              >
+                나가기
+              </Button>
+            </Buttons>
+          </NavContainer>
         </SessionPageContainer>
       ) : streamList.length !== 2 ? (
         navigate('/')
