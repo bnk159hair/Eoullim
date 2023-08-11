@@ -2,6 +2,7 @@ package com.ssafy.eoullim.controller;
 
 import com.ssafy.eoullim.dto.request.WSAnimonOnOffRequest;
 import com.ssafy.eoullim.dto.request.WSGuideOnOffRequest;
+import com.ssafy.eoullim.dto.request.WSLeaveRequest;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -21,6 +22,13 @@ public class WebSocketController {
     @SendTo("/topic/{room_id}/guide")
     public WSGuideOnOffRequest handleGuideAgreement(@DestinationVariable("room_id") String roomId,
                                                     WSGuideOnOffRequest request) {
+        return request;
+    }
+
+    @MessageMapping("/{room_id}/leave-session")
+    @SendTo("/topic/{room_id}/leave-session")
+    public WSLeaveRequest handleGuideAgreement(@DestinationVariable("room_id") String roomId,
+                                               WSLeaveRequest request) {
         return request;
     }
 
