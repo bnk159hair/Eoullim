@@ -25,7 +25,7 @@ const RecordListItem: React.FC<RecordListItemProps> =({name,animonName,school,vi
                     친구 이름 : {name}
                 </div>
                 <div>
-                    친구 학교 : {school}
+                    친구 학교 : {school}초등학교
                 </div>
                 <div>
                     녹화 날짜 : {formatTime(create_time)}

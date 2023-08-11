@@ -1,10 +1,10 @@
-import Login from '../../components/login/Login';
+import Login from "../../components/login/Login";
 import {
   LoginPageContainer,
   LoginContainer,
   Logo,
   ImageContainer,
-} from './LoginPageStyles';
+} from "./LoginPageStyles";
 
 const LoginPage = () => {
   return (
@@ -13,7 +13,7 @@ const LoginPage = () => {
         <Login />
       </LoginContainer>
       <ImageContainer>
-        <Logo />
+        <Logo onClick={() => window.location.reload()} />
       </ImageContainer>
     </LoginPageContainer>
   );

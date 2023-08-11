@@ -75,7 +75,7 @@ export const SignupContainer = styled.div`
 export const SignupAnchor = styled.button`
   margin-left: 10px;
   font-weight: bold;
-  color: rgba(255, 255, 255, 0.8);
+  color: #f5ebc9;
   text-decoration: underline;
   border: none;
   background: none;

@@ -34,15 +34,13 @@ export const YourVideo = styled.div`
 `;
 
 export const Character = styled.div`
-  width: 50%;
+  width: 70%;
   height: 40%;
   margin-top: 30px;
-  background-color: grey;
+  background-size: 100% 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 40px;
-  ${Border}
 `;
 
 export const MyVideo = styled.div`
