@@ -41,13 +41,14 @@ const AnimonModal: React.FC<AnimonModalProps> = ({ onClose, profile }) => {
 
   return (
     <>
-      <ModalOverlay onClick={onClose} />
-      <ModalContent>
-        <Panda onClick={() => changeAnimon(1)}></Panda>
-        <Dog onClick={() => changeAnimon(2)}></Dog>
-        <Cat onClick={() => changeAnimon(3)}></Cat>
-        <Tiger onClick={() => changeAnimon(4)}></Tiger>
-      </ModalContent>
+      <ModalOverlay onClick={onClose} >
+        <ModalContent>
+          <Panda onClick={() => changeAnimon(1)}></Panda>
+          <Dog onClick={() => changeAnimon(2)}></Dog>
+          <Cat onClick={() => changeAnimon(3)}></Cat>
+          <Tiger onClick={() => changeAnimon(4)}></Tiger>
+        </ModalContent>
+      </ModalOverlay>
     </>
   );
 };
