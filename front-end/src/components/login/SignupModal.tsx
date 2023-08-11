@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../apis/urls";
 import {
-  ModalContent,
   ModalOverlay,
+  ModalContent,
+  ModalHeaderContainer,
   ModalFormContainer,
   IdContainer,
 } from "./SignupModalStyles";
-import { TextField } from "@mui/material";
+import { TextField, IconButton, Button } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface SignupModalProps {
   onClose: () => void;
@@ -24,7 +26,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
-    if (!isIdUnique) {
+    if (isIdUnique === false) {
       alert("아이디 중복 확인을 해주세요.");
       return;
     }
@@ -35,7 +37,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
     }
 
     if (!isPasswordMatch) {
-      alert("비밀번호 확인이 일치하지 않습니다.");
+      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -54,7 +56,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
 
   const handleIdCheck = async (event: any) => {
     event.preventDefault();
-    if (!userName) {
+    if (userName.trim() === "") {
       alert("아이디를 입력해주세요!");
       return;
     }
@@ -88,9 +90,12 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
   return (
     <ModalOverlay>
       <ModalContent>
-        <h2>
-          회원가입<button onClick={onClose}>X</button>
-        </h2>
+        <ModalHeaderContainer>
+          <h2>회원가입</h2>
+          <IconButton onClick={onClose}>
+            <CloseIcon fontSize='large' />
+          </IconButton>
+        </ModalHeaderContainer>
         <ModalFormContainer>
           <IdContainer>
             <TextField
@@ -101,14 +106,16 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setUserName(event.target.value)
               }
-              error={!isIdUnique}
-              helperText={
-                isIdUnique
-                  ? "사용 가능한 아이디입니다."
-                  : "이미 사용 중인 아이디입니다."
-              }
+              sx={{ width: "75%" }}
             />
-            <button onClick={handleIdCheck}>중복확인</button>
+            <Button
+              variant='contained'
+              size='large'
+              color='warning'
+              sx={{ padding: "0.8rem", marginLeft: "auto", fontSize: "16px" }}
+              onClick={handleIdCheck}>
+              중복확인
+            </Button>
           </IdContainer>
           <TextField
             label='비밀번호'
@@ -153,7 +160,14 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
             }
             helperText="'-'없이 입력해주세요."
           />
-          <button onClick={handleSignUp}>회원가입</button>
+          <Button
+            variant='contained'
+            size='large'
+            color='warning'
+            sx={{ padding: "0.6rem", marginTop: "1rem", fontSize: "20px" }}
+            onClick={handleSignUp}>
+            가입완료
+          </Button>
         </ModalFormContainer>
       </ModalContent>
     </ModalOverlay>

@@ -6,11 +6,20 @@ export const ProfileCreateBox = styled.div`
   width: 300px;
   background-image: url(${CreateBox});
   background-size: cover;
-  border-radius: 30%;
-  border: solid 2px;
+  border-radius: 5%;
+  border: 1px solid black;
+  cursor: pointer;
+
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.25);
+    z-index: 99;
+  }
 `;
+
 export const ProfileListBox = styled.div`
   display: flex;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: start;
 `;
