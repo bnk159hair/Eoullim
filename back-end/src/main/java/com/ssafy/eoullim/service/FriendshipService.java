@@ -10,7 +10,6 @@ import com.ssafy.eoullim.repository.FriendshipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,18 +24,26 @@ public class FriendshipService {
         if (myId.equals(friendId))
             throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("childIds are same"));
         // ERROR : childId가 없는 경우
-        ChildEntity child = childRepository.findById(myId).orElseThrow(
+        ChildEntity childEntity = childRepository.findById(myId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
-        ChildEntity friend = childRepository.findById(friendId).orElseThrow(
+        ChildEntity friendEntity = childRepository.findById(friendId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         // ERROR : 이미 좋아요 누른 친구인 경우
         friendshipRepository.findByMyIdAndFriendId(myId, friendId)
             .ifPresent(it -> { throw new EoullimApplicationException(ErrorCode.INVALID_DATA); });
-        friendshipRepository.save(FriendshipEntity.of(child, friend));
+        friendshipRepository.save(FriendshipEntity.of(childEntity, friendEntity));
     }
 
-    public List<Child> friendList(Integer myId) {
-        return friendshipRepository.findFriendsByMyId(myId)
+    public List<Child> friendList(Integer childId, Integer userId) {
+        // ERROR: 찾으려는 아이가 없음
+        ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
+                () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND,
+                        String.format("child %d is not found", childId)));
+        // ERROR: 사용자가 해당 child에 접근 권한 없음
+        if(!childEntity.getUser().getId().equals(userId))
+            throw new EoullimApplicationException(ErrorCode.FORBIDDEN_NO_PERMISSION,
+                    String.format("you have no permission with child %d", childId));
+        return friendshipRepository.findFriendsByMyId(childId)
                 .stream()
                 .map(Child::fromEntity)
                 .collect(Collectors.toList());
