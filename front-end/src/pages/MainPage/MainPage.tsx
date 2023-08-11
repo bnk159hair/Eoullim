@@ -20,6 +20,7 @@ import { tokenState } from '../../atoms/Auth';
 import AnimonModal from '../../components/main/AnimonModal';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
+import AlarmModal from '../../components/main/AlarmModal';
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,12 +28,13 @@ const MainPage: React.FC = () => {
   const token = useRecoilValue(tokenState);
 
   const [profile, setProfile] = useRecoilState(Profile);
-
+  
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
+  const [sessionId, setSessionId] = useState<string>('');
 
   useEffect(() => {
     const source = new EventSource(
-      `https://i9c207.p.ssafy.io/api/v1/alarms/subscribe/${profileId}`
+      `${API_BASE_URL}/alarms/subscribe/${profileId}`
     );
     setEventSource(source);
     console.log(source, eventSource);
@@ -48,8 +50,15 @@ const MainPage: React.FC = () => {
   useEffect(() => {
     if (eventSource) {
       const eventListener = (event: any) => {
-        console.log('이벤트가 실행중인가?');
-        console.log(event);
+        if (event.data === 'connect completed') {
+          console.log('SSE와 연결')
+        } else if (event) {
+          console.log(event)
+          const message = JSON.parse(event.data)
+          console.log(message.sessionId)
+          setSessionId(message.sessionId)
+          setAlarmOpen(true)
+        }
       };
       eventSource.addEventListener('sse', eventListener);
 
@@ -90,7 +99,11 @@ const MainPage: React.FC = () => {
         setProfile(response.data.result);
       })
       .catch((error) => {
-        console.log('데이터 불러오기 오류', error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('데이터 불러오기 오류', error);
+        }
       });
   };
 
@@ -121,7 +134,12 @@ const MainPage: React.FC = () => {
     setModalOpen(false);
   };
 
+  const closeAlarm = () => {
+    setAlarmOpen(false);
+  }
+
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isAlarmOpen, setAlarmOpen] = useState(false);
   const IMGURL = `/${profile.animon.name}.png`;
 
   const [audioObj, setAudioObj] = useState(new Audio('/mainguide.mp3'));
@@ -143,6 +161,9 @@ const MainPage: React.FC = () => {
       <ChaterLocation>
         {isModalOpen && (
           <AnimonModal onClose={closeModal} profile={getprofilelist} />
+        )}
+        {isAlarmOpen && (
+          <AlarmModal onClose={closeAlarm} sessionId={sessionId} />
         )}
         <HoberLeft onClick={getNewFriend}>
           <NewFriend />

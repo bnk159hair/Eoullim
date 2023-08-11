@@ -1,5 +1,10 @@
 import { OpenVidu } from 'openvidu-browser';
-import { getUserInfo, getToken, destroySession } from '../apis/openViduApis';
+import {
+  getUserInfo,
+  getToken,
+  destroySession,
+  getFriendSessionToken,
+} from '../apis/openViduApis';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { tokenState } from '../atoms/Auth';
@@ -12,7 +17,11 @@ interface User {
   grade: Number;
 }
 
-export const useOpenVidu = (userId: any) => {
+export const useOpenVidu = (
+  userId?: any,
+  sessionId?: string,
+  sessionToken?: string
+) => {
   const [session, setSession] = useState<any>(null);
   const [publisher, setPublisher] = useState<any>(null);
   const [subscribers, setSubscribers] = useState<any[]>([]);
@@ -20,9 +29,11 @@ export const useOpenVidu = (userId: any) => {
   const userToken = useRecoilValue(tokenState);
 
   console.log('session, publisher, subscribers 생성');
+  console.log(sessionId);
 
   const leaveSession = useCallback(() => {
-    console.log('나가기 실행');
+    console.log("나가기 실행");
+    console.log(session);
     if (session) {
       console.log('나랑 세션이랑 연결 끊기');
       session.disconnect();
@@ -38,15 +49,15 @@ export const useOpenVidu = (userId: any) => {
   console.log(userId);
 
   useEffect(() => {
-    console.log('새로운 OV 객체 생성');
+    console.log("새로운 OV 객체 생성");
     const OV = new OpenVidu();
     //   OV.enableProdMode(); // 배포 시 사용 production 모드로 전환
-    console.log('세션 시작');
+    console.log("세션 시작");
     let mySession = OV.initSession();
 
-    mySession.on('streamCreated', (event) => {
-      console.log('스트림 생성');
-      const subscriber = mySession.subscribe(event.stream, '');
+    mySession.on("streamCreated", (event) => {
+      console.log("스트림 생성");
+      const subscriber = mySession.subscribe(event.stream, "");
       const data = JSON.parse(event.stream.connection.data);
       setSubscribers((prev) => {
         return [
@@ -76,19 +87,97 @@ export const useOpenVidu = (userId: any) => {
     });
     // mySession.on('exception', (exception) => console.warn(exception));
 
-    getUserInfo(userId, userToken).then((userInfo: User) => {
-      getToken(
-        {
-          childId: String(userId),
-          name: userInfo.name,
-          gender: userInfo.gender,
-          school: userInfo.school,
-          grade: userInfo.grade,
-        },
-        userToken
-      ).then((token: any) => {
+    if (sessionId === undefined) {
+      getUserInfo(userId, userToken).then((userInfo: User) => {
+        getToken(
+          {
+            childId: String(userId),
+            name: userInfo.name,
+            gender: userInfo.gender,
+            school: userInfo.school,
+            grade: userInfo.grade,
+          },
+          userToken
+        ).then((token: any) => {
+          console.log('가져온 토큰 :', token);
+          console.log('가져온 토큰으로 세션에 연결');
+          mySession
+            .connect(token, { childId: String(userId) })
+            .then(async () => {
+              await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: true,
+              });
+              const devices = await OV.getDevices();
+              const videoDevices = devices.filter(
+                (device) => device.kind === 'videoinput'
+              );
+
+              console.log('나를 publisher라고 하자!');
+              const publisher = OV.initPublisher('', {
+                audioSource: undefined,
+                videoSource: videoDevices[0].deviceId,
+                publishAudio: true,
+                publishVideo: true,
+                resolution: '640x480',
+                frameRate: 30,
+                insertMode: 'APPEND',
+                mirror: false,
+              });
+              console.log('publisher의 옵션을 설정했고 세션 연결을 성공했다!');
+              setPublisher(publisher);
+              mySession.publish(publisher);
+            })
+            .catch((error) => {
+              console.log('세션 연결을 실패했다!');
+              console.log(
+                'There was an error connecting to the session:',
+                error.code,
+                error.message
+              );
+            });
+        });
+      });
+    } else if (userId && sessionId && sessionToken) {
+      mySession
+        .connect(sessionToken, { childId: String(userId) })
+        .then(async () => {
+          await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true,
+          });
+          const devices = await OV.getDevices();
+          const videoDevices = devices.filter(
+            (device) => device.kind === "videoinput"
+          );
+
+          console.log("나를 publisher라고 하자!");
+          const publisher = OV.initPublisher("", {
+            audioSource: undefined,
+            videoSource: videoDevices[0].deviceId,
+            publishAudio: true,
+            publishVideo: true,
+            resolution: "640x480",
+            frameRate: 30,
+            insertMode: "APPEND",
+            mirror: false,
+          });
+          console.log('publisher의 옵션을 설정했고 초대 세션 연결을 성공했다!');
+          setPublisher(publisher);
+          mySession.publish(publisher);
+        })
+        .catch((error) => {
+          console.log('초대 세션 연결을 실패했다!');
+          console.log(
+            "There was an error connecting to the session:",
+            error.code,
+            error.message
+          );
+        });
+    } else if (userId && sessionId && sessionToken === '') {
+      getFriendSessionToken(userId, userToken, sessionId).then((token: any) => {
         console.log('가져온 토큰 :', token);
-        console.log('가져온 토큰으로 세션에 연결');
+        console.log('가져온 토큰으로 초대 세션에 연결');
         mySession
           .connect(token, { childId: String(userId) })
           .then(async () => {
@@ -112,12 +201,14 @@ export const useOpenVidu = (userId: any) => {
               insertMode: 'APPEND',
               mirror: false,
             });
-            console.log('publisher의 옵션을 설정했고 세션 연결을 성공했다!');
+            console.log(
+              'publisher의 옵션을 설정했고 초대 세션 연결을 성공했다!'
+            );
             setPublisher(publisher);
             mySession.publish(publisher);
           })
           .catch((error) => {
-            console.log('세션 연결을 실패했다!');
+            console.log('초대 세션 연결을 실패했다!');
             console.log(
               'There was an error connecting to the session:',
               error.code,
@@ -125,16 +216,14 @@ export const useOpenVidu = (userId: any) => {
             );
           });
       });
-    });
+    }
 
     setSession(mySession);
     console.log(mySession);
     return () => {
-      console.log('useEffect가 return했다!!');
+      console.log("useEffect가 return했다!!");
       if (mySession) {
-        console.log('나랑 세션이랑 연결 끊기');
-        mySession.disconnect();
-        console.log('서버에 세션 끊어달라고 보내기');
+        console.log("서버에 세션 끊어달라고 보내기");
         console.log(mySession);
         destroySession(mySession, userToken);
       }
@@ -142,18 +231,18 @@ export const useOpenVidu = (userId: any) => {
       setPublisher(null);
       setSubscribers([]);
     };
-  }, [userId]);
+  }, [sessionId]);
 
   useEffect(() => {
-    console.log('탭 종료!!');
+    console.log("탭 종료 시에 leaveSession 함수 실행할 것이다.");
     const beforeUnloadHandler = () => leaveSession();
-
-    window.addEventListener('beforeunload', beforeUnloadHandler);
+    window.addEventListener("beforeunload", beforeUnloadHandler);
 
     return () => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      console.log("탭이 종료되었다.");
+      window.removeEventListener("beforeunload", beforeUnloadHandler);
     };
-  }, [leaveSession]);
+  }, []);
 
   const onChangeCameraStatus = useCallback(
     (status: boolean) => {

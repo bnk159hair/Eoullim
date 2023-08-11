@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWebSocket } from '../../hooks/useWebSocket';
 
 interface IProps {
   onChangeMicStatus: (status: boolean) => void;
