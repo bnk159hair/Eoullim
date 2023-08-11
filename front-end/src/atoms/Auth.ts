@@ -12,4 +12,5 @@ export const tokenState = atom<string>({
 export const userState = atom<string>({
   key: 'userState',
   default: '',
+  effects_UNSTABLE: [persistAtom],
 });
