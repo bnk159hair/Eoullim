@@ -210,8 +210,6 @@ const FriendSessionPage = () => {
       });
       console.log('메시지 전송:', message);
     }
-    setSessionToken('');
-    setSessionId('');
     navigate('/');
   };
 
