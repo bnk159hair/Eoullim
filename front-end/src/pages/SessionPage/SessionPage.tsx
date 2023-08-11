@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
-import { getUserInfo } from '../../apis/openViduApis';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
 import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
@@ -27,7 +26,7 @@ import {
   PublisherGuideStatus,
   SubscriberGuideStatus,
 } from '../../atoms/Session';
-import { Client, Message } from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
 import { WebSocketApis } from '../../apis/webSocketApis';
 import axios from 'axios';
@@ -102,7 +101,7 @@ const SessionPage = () => {
       setSubscriberGuideStatus(false);
       console.log(step);
     }
-  });
+  }, [publisherGuideStatus, subscriberGuideStatus]);
 
   useEffect(() => {
     if (session) {
