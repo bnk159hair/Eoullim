@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import axios from 'axios';
-import { tokenState } from '../../atoms/Auth';
-import { Profilekey } from '../../atoms/Profile';
-import { API_BASE_URL } from '../../apis/urls';
+import React, { useState, useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import axios from "axios";
+import { tokenState } from "../../atoms/Auth";
+import { API_BASE_URL } from "../../apis/urls";
 import {
   ModalOverlay,
   ModalContent,
@@ -12,7 +10,7 @@ import {
   ButtonContainer,
   HeaderContainer,
   FlexContainer,
-} from './ModifyModalStyles';
+} from "./ModifyModalStyles";
 import {
   Button,
   IconButton,
@@ -20,11 +18,11 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-} from '@mui/material';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import CloseIcon from '@mui/icons-material/Close';
-import dayjs from 'dayjs';
+} from "@mui/material";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import CloseIcon from "@mui/icons-material/Close";
+import dayjs from "dayjs";
 
 interface ChildProfile {
   id: number;
@@ -49,22 +47,19 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
 }) => {
   const [childProfile, setChildProfile] = useState<ChildProfile>({
     id: 0,
-    name: '',
+    name: "",
     birth: 0,
-    gender: '',
-    school: '',
+    gender: "",
+    school: "",
     grade: 0,
-    status: '',
+    status: "",
   });
 
   const token = useRecoilValue(tokenState);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [schoolChange, setSchoolChange] = useState(false);
   const [isSchoolCorrect, setIsSchoolCorrect] = useState(false);
-  const [profilekey, setProfileKey] = useRecoilState(Profilekey);
-  const navigate = useNavigate();
-  // dayjs.locale('ko');
 
   useEffect(() => {
     fetchChildProfile();
@@ -82,7 +77,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
         setChildProfile(response.data.result);
       })
       .catch((error) => {
-        console.log('아이 프로필을 불러오는데 실패했습니다:', error);
+        console.log("아이 프로필을 불러오는데 실패했습니다:", error);
       });
   };
 
@@ -102,7 +97,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
         setIsPasswordCorrect(true);
       })
       .catch((error) => {
-        alert('비밀번호를 확인해주세요.');
+        alert("비밀번호를 확인해주세요.");
       });
   };
 
@@ -118,11 +113,11 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
         }
       );
 
-      console.log('프로필 수정 성공:', response);
+      console.log("프로필 수정 성공:", response);
       resetList();
       onClose();
     } catch (error) {
-      console.log('프로필 수정 실패:', error);
+      console.log("프로필 수정 실패:", error);
     }
   };
 
@@ -142,17 +137,12 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
       setIsSchoolCorrect(response.data.resultCode);
 
       alert(
-        response.data.resultCode ? '올바른 학교정보입니다' : '다시 입력해주세요'
+        response.data.resultCode ? "올바른 학교정보입니다" : "다시 입력해주세요"
       );
     } catch (error) {
       console.error(error);
-      alert('잘못된 입력입니다.');
+      alert("잘못된 입력입니다.");
     }
-  };
-
-  const handleRecordClick = () => {
-    setProfileKey(childId);
-    navigate('/record');
   };
 
   const deleteProfile = () => {
@@ -164,9 +154,9 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
       })
       .then((response) => {
         resetList();
-        console.log('삭제완료');
+        console.log("삭제완료");
       })
-      .catch((error) => console.log('실패'));
+      .catch((error) => console.log("실패"));
   };
 
   return (
@@ -181,7 +171,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
               margin="dense"
               type="password"
               value={password}
-              onChange={(event: React.ChangeEvent<HTMLInputElement> | any) =>
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setPassword(event.target.value)
               }
             />
@@ -190,7 +180,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 variant="contained"
                 size="small"
                 color="info"
-                sx={{ fontSize: '18px', margin: '0.5rem' }}
+                sx={{ fontSize: "18px", margin: "0.5rem" }}
                 onClick={passwordCheck}
                 fullWidth
               >
@@ -200,7 +190,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 variant="contained"
                 size="small"
                 color="info"
-                sx={{ fontSize: '18px', margin: '0.5rem' }}
+                sx={{ fontSize: "18px", margin: "0.5rem" }}
                 onClick={onClose}
                 fullWidth
               >
@@ -228,13 +218,13 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                     name: event.target.value,
                   }));
                 }}
-                sx={{ width: '65%', marginBottom: '1rem' }}
+                sx={{ width: "65%", marginBottom: "1rem" }}
               />
               <ToggleButtonGroup
                 color="primary"
                 value={childProfile.gender}
                 exclusive
-                sx={{ marginLeft: 'auto' }}
+                sx={{ marginLeft: "auto" }}
                 size="large"
                 onChange={(_, newGender) => {
                   setChildProfile((prevProfile) => ({
@@ -255,12 +245,12 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                   if (newDate) {
                     setChildProfile((prevProfile: any) => ({
                       ...prevProfile,
-                      birth: newDate.format('YYYY-MM-DD'),
+                      birth: newDate.format("YYYY-MM-DD"),
                     }));
                   }
                 }}
                 format="YYYY-MM-DD"
-                sx={{ marginBottom: '1rem' }}
+                sx={{ marginBottom: "1rem" }}
               />
             </LocalizationProvider>
             <FlexContainer>
@@ -275,23 +265,23 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                   }));
                   setSchoolChange(true);
                 }}
-                sx={{ width: '65%', marginBottom: '1rem' }}
+                sx={{ width: "65%", marginBottom: "1rem" }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">초등학교</InputAdornment>
                   ),
                 }}
-                helperText={isSchoolCorrect && '학교 등록이 완료되었습니다.'}
+                helperText={isSchoolCorrect && "학교 등록이 완료되었습니다."}
                 disabled={isSchoolCorrect && true}
               />
               <Button
                 variant="contained"
                 size="large"
                 sx={{
-                  width: '25%',
-                  padding: '0.7rem',
-                  marginLeft: 'auto',
-                  fontSize: '18px',
+                  width: "25%",
+                  padding: "0.7rem",
+                  marginLeft: "auto",
+                  fontSize: "18px",
                 }}
                 onClick={handleSchoolCheck}
               >
@@ -314,28 +304,15 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
               <ToggleButton value="2">2학년</ToggleButton>
               <ToggleButton value="3">3학년</ToggleButton>
             </ToggleButtonGroup>
-            <Button
-              variant="contained"
-              size="small"
-              sx={{
-                padding: '0.6rem',
-                marginTop: '1rem',
-                fontSize: '18px',
-              }}
-              fullWidth
-              onClick={handleRecordClick}
-            >
-              녹화영상
-            </Button>
             <ButtonContainer>
               <Button
                 variant="outlined"
                 size="small"
                 sx={{
-                  width: '50%',
-                  padding: '0.6rem',
-                  marginTop: '1rem',
-                  fontSize: '18px',
+                  width: "50%",
+                  padding: "0.6rem",
+                  marginTop: "1rem",
+                  fontSize: "18px",
                 }}
                 onClick={handleUpdateProfile}
               >
@@ -346,10 +323,10 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 color="error"
                 size="small"
                 sx={{
-                  width: '50%',
-                  padding: '0.6rem',
-                  marginTop: '1rem',
-                  fontSize: '18px',
+                  width: "50%",
+                  padding: "0.6rem",
+                  marginTop: "1rem",
+                  fontSize: "18px",
                 }}
                 onClick={deleteProfile}
               >
