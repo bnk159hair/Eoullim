@@ -34,7 +34,7 @@ import { WebSocketApis } from '../../apis/webSocketApis';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
 
-const SessionPage = () => {
+const FriendSessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [publisherId, setPublisherId] = useRecoilState(PublisherId);
@@ -59,9 +59,6 @@ const SessionPage = () => {
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
-  setPublisherAnimonURL(
-    'https://i9c207.p.ssafy.io/' + profile.animon.name + 'mask'
-  );
 
   const IMGURL = '/bear.png';
   const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
@@ -71,7 +68,7 @@ const SessionPage = () => {
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
-  setPublisherAnimonURL(profile.animon.name + 'mask');
+  setPublisherAnimonURL('https://i9c207.p.ssafy.io/' + profile.animon.name + 'mask');
   console.log(profileId, sessionId, sessionToken);
   const { publisher, streamList, session, isOpen } = useOpenVidu(
     profileId,
@@ -360,4 +357,4 @@ const SessionPage = () => {
   );
 };
 
-export default SessionPage;
+export default FriendSessionPage;
