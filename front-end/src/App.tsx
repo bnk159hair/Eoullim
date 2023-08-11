@@ -9,8 +9,24 @@ import Session2 from './pages/SessionPage/Session2';
 import FriendsPage from './pages/Friendspage/FriendsPage';
 import RecordPage from './pages/RecordPage/RecordPage';
 import BackgroundMusic from './components/main/BackgroundMusic';
+import { useEffect } from 'react';
 
 function App() {
+  useEffect(() => {
+    console.log('이벤트 추가');
+
+    window.addEventListener('beforeunload', (event) => {
+      document.body.innerHTML = '브라우저 종료 전 이벤트 발생!';
+      console.log(event);
+    });
+
+    return () => {
+      console.log('이벤트 제거');
+      window.removeEventListener('beforeunload', (event) => {
+        console.log(event);
+      });
+    };
+  }, []);
   return (
     <div>
       <header>

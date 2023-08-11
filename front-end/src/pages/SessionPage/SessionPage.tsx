@@ -10,6 +10,7 @@ import {
   Container,
   MainWrapper,
   MyVideo,
+  SessionPageContainer,
   SideBar,
   YourVideo,
 } from './SessionPageStyles';
@@ -219,46 +220,48 @@ const SessionPage = () => {
   return (
     <>
       {!open ? (
-        <Container>
-          <MainWrapper>
-            <YourVideo>
-              {streamList.length > 1 && streamList[1].streamManager ? (
-                <StreamCanvas
-                  streamManager={streamList[1].streamManager}
-                  id={streamList[1].userId}
-                  avatarPath="http://localhost:3000/14.png"
-                  videoState={subscriberVideoStatus}
-                />
-              ) : (
-                <Loading />
-              )}
-            </YourVideo>
-          </MainWrapper>
-          <SideBar>
-            <Character
-              style={{ backgroundImage: `url(${IMGURL})` }}
-              onClick={nextGuidance}
-            >
-              {guidance[step]}
-            </Character>
-            <MyVideo>
-              {streamList.length > 1 && streamList[0].streamManager ? (
-                <StreamCanvas
-                  streamManager={streamList[0].streamManager}
-                  id={streamList[0].userId}
-                  avatarPath={publisherAnimonURL}
-                  videoState={publisherVideoStatus}
-                />
-              ) : (
-                <Loading />
-              )}
-            </MyVideo>
-            <Buttons>
-              <button onClick={changeVideoStatus}>애니몬</button>
-              <button onClick={sessionOver}>나가기</button>
-            </Buttons>
-          </SideBar>
-        </Container>
+        <SessionPageContainer>
+          <Container>
+            <MainWrapper>
+              <YourVideo>
+                {streamList.length > 1 && streamList[1].streamManager ? (
+                  <StreamCanvas
+                    streamManager={streamList[1].streamManager}
+                    id={streamList[1].userId}
+                    avatarPath="http://localhost:3000/14.png"
+                    videoState={subscriberVideoStatus}
+                  />
+                ) : (
+                  <Loading />
+                )}
+              </YourVideo>
+            </MainWrapper>
+            <SideBar>
+              <Character
+                style={{ backgroundImage: `url(${IMGURL})` }}
+                onClick={nextGuidance}
+              >
+                {guidance[step]}
+              </Character>
+              <MyVideo>
+                {streamList.length > 1 && streamList[0].streamManager ? (
+                  <StreamCanvas
+                    streamManager={streamList[0].streamManager}
+                    id={streamList[0].userId}
+                    avatarPath={publisherAnimonURL}
+                    videoState={publisherVideoStatus}
+                  />
+                ) : (
+                  <Loading />
+                )}
+              </MyVideo>
+              <Buttons>
+                <button onClick={changeVideoStatus}>애니몬</button>
+                <button onClick={sessionOver}>나가기</button>
+              </Buttons>
+            </SideBar>
+          </Container>
+        </SessionPageContainer>
       ) : streamList.length !== 2 ? (
         navigate('/')
       ) : (
