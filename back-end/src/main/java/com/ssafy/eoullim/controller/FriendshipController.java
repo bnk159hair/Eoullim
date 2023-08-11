@@ -3,9 +3,12 @@ package com.ssafy.eoullim.controller;
 import com.ssafy.eoullim.dto.request.FriendshipRequest;
 import com.ssafy.eoullim.dto.response.Response;
 import com.ssafy.eoullim.model.Child;
+import com.ssafy.eoullim.model.User;
 import com.ssafy.eoullim.service.FriendshipService;
+import com.ssafy.eoullim.utils.ClassUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +27,9 @@ public class FriendshipController {
     }
 
     @GetMapping("/{childId}")
-    public Response<List<Child>> friendList(@PathVariable Integer childId) {
-        List<Child> friendList = friendshipService.friendList(childId);
+    public Response<List<Child>> friendList(@PathVariable Integer childId, Authentication authentication) {
+        User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
+        List<Child> friendList = friendshipService.friendList(childId, user.getId());
         return Response.success(friendList);
     }
 
