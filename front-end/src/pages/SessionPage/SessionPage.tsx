@@ -59,6 +59,7 @@ const SessionPage = () => {
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
+  const [subscriberName, setSubscriberName] = useState('');
 
   const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
   const [step, setStep] = useState(0);
@@ -66,7 +67,9 @@ const SessionPage = () => {
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
-  setPublisherAnimonURL(profile.animon.name + 'mask');
+  setPublisherAnimonURL(
+    'https://i9c207.p.ssafy.io/' + profile.animon.name + 'mask'
+  );
 
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
     useOpenVidu(profileId);
@@ -99,7 +102,8 @@ const SessionPage = () => {
         setSubscriberId(user.userId);
       }
       if (subscriberId) {
-        // setSubscriberAnimonURL(url+'mask');
+        getAnimon();
+        console.log(subscriberAnimonURL, subscriberName);
       }
     }
   }, [streamList]);
@@ -170,6 +174,31 @@ const SessionPage = () => {
       };
     }
   }, [streamList]);
+
+  const getAnimon = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/children/participant/${subscriberId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+
+      console.log('유저 정보 가져오기 성공!');
+      console.log(response);
+      setSubscriberAnimonURL(
+        'https://i9c207.p.ssafy.io/' + response.data.result.animon.name + 'mask'
+      );
+      setSubscriberName(response.data.result.name);
+      return response.data.result;
+    } catch (error) {
+      console.log('유저 정보 가져오기 실패ㅠ');
+      console.log(error);
+      throw error;
+    }
+  };
 
   const leaveSession = () => {
     setOpen(false);
@@ -261,8 +290,8 @@ const SessionPage = () => {
                 {streamList.length > 1 && streamList[1].streamManager ? (
                   <StreamCanvas
                     streamManager={streamList[1].streamManager}
-                    id={streamList[1].userId}
-                    avatarPath="http://localhost:3000/14.png"
+                    name={subscriberName}
+                    avatarPath={subscriberAnimonURL}
                     videoState={subscriberVideoStatus}
                   />
                 ) : (
@@ -276,8 +305,8 @@ const SessionPage = () => {
                 {streamList.length > 1 && streamList[0].streamManager ? (
                   <StreamCanvas
                     streamManager={streamList[0].streamManager}
-                    id={streamList[0].userId}
-                    avatarPath={publisherAnimonURL}
+                    name={profile.name}
+                    avatarPath={`${publisherAnimonURL}`}
                     videoState={publisherVideoStatus}
                   />
                 ) : (

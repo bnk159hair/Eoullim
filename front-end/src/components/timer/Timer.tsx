@@ -1,43 +1,30 @@
-import React, { FC, useRef } from 'react';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import './style.css';
+import React, { useEffect, useState } from 'react';
+import styles from '../Auction/Timer.module.css';
 
-interface IProps {
-  duration: number;
-  remainingTime: number;
-}
+const Timer = () => {
+  // 시간을 담을 변수
+  const [count, setCount] = useState(1);
 
-export const Timer: FC<IProps> = ({ duration, remainingTime }) => {
-  const currentTime = useRef(remainingTime);
-  const isNewTimeFirstTick = useRef(false);
+  useEffect(() => {
+    // 설정된 시간 간격마다 setInterval 콜백이 실행된다.
+    const id = setInterval(() => {
+      // 타이머 숫자가 하나씩 줄어들도록
+      setCount((count) => count - 1);
+    }, 60000);
 
-  if (currentTime.current !== remainingTime) {
-    isNewTimeFirstTick.current = true;
-    currentTime.current = remainingTime;
-  } else {
-    isNewTimeFirstTick.current = false;
-  }
-
-  const renderTime = () => (
-    <div className="time-wrapper">
-      <div key={remainingTime} className="up">
-        {remainingTime}
-      </div>
-    </div>
-  );
+    // 0이 되면 카운트가 멈춤
+    if (count === 0) {
+      clearInterval(id);
+    }
+    return () => clearInterval(id);
+    // 카운트 변수가 바뀔때마다 useEffecct 실행
+  }, [count]);
 
   return (
-    <div className="timer-wrapper">
-      <CountdownCircleTimer
-        isPlaying
-        duration={duration}
-        colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-        colorsTime={[10, 6, 3, 0]}
-        initialRemainingTime={remainingTime}
-        size={70}
-      >
-        {renderTime}
-      </CountdownCircleTimer>
+    <div className={styles.timer}>
+      <span className={styles.count}>{count}</span>
     </div>
   );
 };
+
+export default Timer;

@@ -6,17 +6,18 @@ import { useStream } from '../../hooks/useStream';
 
 interface IProps {
   streamManager: StreamManager;
-  id: number;
+  name: string;
   avatarPath: string;
   videoState: boolean;
 }
 
 export const StreamCanvas: FC<IProps> = ({
   streamManager,
-  id,
+  name,
   avatarPath,
   videoState,
 }) => {
+  console.log(avatarPath);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { videoRef, speaking, micStatus } = useStream(streamManager);
   useFaceMask(videoRef.current, canvasRef.current, avatarPath);
@@ -48,7 +49,7 @@ export const StreamCanvas: FC<IProps> = ({
           visibility: videoState ? 'visible' : 'hidden',
         }}
       />
-      <p>{id}</p>
+      <p>{name}</p>
     </div>
   );
 };
