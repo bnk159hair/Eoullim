@@ -15,7 +15,7 @@ export const Spinner = styled.div`
 export const AnimalEmoji = styled.span`
   font-size: 80px;
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: 50%;
   transform: translate(-50%, -50%);
 `;
