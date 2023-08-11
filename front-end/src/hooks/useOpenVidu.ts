@@ -35,6 +35,8 @@ export const useOpenVidu = (
     console.log("나가기 실행");
     console.log(session);
     if (session) {
+      console.log('나랑 세션이랑 연결 끊기');
+      session.disconnect();
       console.log(session);
       console.log('서버에 세션 끊어달라고 보내기');
       destroySession(session, userToken);
