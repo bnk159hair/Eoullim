@@ -21,7 +21,6 @@ import AnimonModal from '../../components/main/AnimonModal';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
 import AlarmModal from '../../components/main/AlarmModal';
-import { hover } from '@testing-library/user-event/dist/hover';
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
@@ -33,6 +32,7 @@ const MainPage: React.FC = () => {
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
   const [userName,setUserName] = useState<string>('');
+
 
   useEffect(() => {
     const source = new EventSource(
@@ -65,12 +65,9 @@ const MainPage: React.FC = () => {
         } else if (event) {
           console.log(event)
           const message = JSON.parse(event.data)
-          console.log(message)
-          console.log('성준아')
           console.log(message.sessionId)
           setSessionId(message.sessionId)
           setUserName(message.userName)
-          // setUserName()
           setAlarmOpen(true)
         }
       };
@@ -150,39 +147,38 @@ const MainPage: React.FC = () => {
   const [isAlarmOpen, setAlarmOpen] = useState(false);
   const IMGURL = `/${profile.animon.name}.png`;
 
-  const [foxaudioObj, setAudioObj] = useState(new Audio('/fox.mp3'));
-  const [bearaudioObj,setBearAudioObj] = useState(new Audio('/bear.mp3'));
+  const [audioObj, setAudioObj] = useState(new Audio('/mainguide.mp3'));
 
-  const playFox = () => {
-    foxaudioObj.currentTime = 0;
-    foxaudioObj.play();
-  };
-  const playBear = () => {
-    bearaudioObj.currentTime = 0;
-    bearaudioObj.play();
+  const playAudio = () => {
+    audioObj.currentTime = 0;
+    audioObj.play();
   };
 
   return (
     <MainPageContainer>
       <MarginContainer>
         <BackIcon onClick={getBack} />
+        <ProfileImg
+          style={{ backgroundImage: `url(${IMGURL})` }}
+          onClick={openModal}
+        />
       </MarginContainer>
       <ChaterLocation>
         {isModalOpen && (
           <AnimonModal onClose={closeModal} profile={getprofilelist} />
         )}
         {isAlarmOpen && (
-          <AlarmModal onClose={closeAlarm} sessionId={sessionId} userName={userName} />
+          <AlarmModal onClose={closeAlarm} sessionId={sessionId} userName={userName}/>
         )}
-        <HoberLeft onClick={getNewFriend} onMouseEnter={playBear} onMouseLeave={() => bearaudioObj.pause()}>
+        <HoberLeft onClick={getNewFriend}>
           <NewFriend />
           <NewFirendsignpost />
         </HoberLeft>
         <MainCharacter
           style={{ backgroundImage: `url(${IMGURL})` }}
-          onClick={openModal}
+          onClick={playAudio}
         />
-        <HoberRight onClick={handleFriendsClick} onMouseEnter={playFox} onMouseLeave={() => foxaudioObj.pause()}>
+        <HoberRight onClick={handleFriendsClick}>
           <MyFirendsignpost />
           <MyFriend />
         </HoberRight>
