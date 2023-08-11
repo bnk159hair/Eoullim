@@ -46,6 +46,14 @@ const MainPage: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    } else {
+      getprofilelist();
+    }
+  }, [profileId, token, navigate]);
+
+  useEffect(() => {
     if (eventSource) {
       const eventListener = (event: any) => {
         console.log('이벤트가 실행중인가?');
@@ -70,13 +78,7 @@ const MainPage: React.FC = () => {
     profileLogout();
     navigate('/profile');
   };
-  useEffect(() => {
-    if (!token) {
-      navigate('/login');
-    } else {
-      getprofilelist();
-    }
-  }, [profileId, token, navigate]);
+  
 
   const getprofilelist = () => {
     axios
