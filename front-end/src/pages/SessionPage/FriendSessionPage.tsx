@@ -144,6 +144,16 @@ const SessionPage = () => {
             setSubscriberGuideStatus(message.isNextGuideOn);
           }
         });
+        client.subscribe(
+          `/topic/${session.sessionId}/leave-session`,
+          (response) => {
+            const message = JSON.parse(response.body);
+            console.log(message);
+            if (message.childId !== String(publisherId)) {
+              setOpen(true);
+            }
+          }
+        );
       };
 
       client.onDisconnect = () => {
@@ -162,6 +172,18 @@ const SessionPage = () => {
 
   const leaveSession = () => {
     setOpen(false);
+    if (connected && stompClient) {
+      const jsonMessage = {
+        childId: String(publisherId),
+        isLeft: true,
+      };
+      const message = JSON.stringify(jsonMessage);
+      stompClient.publish({
+        destination: `/app/${session.sessionId}/leave-session`,
+        body: message,
+      });
+      console.log('메시지 전송:', message);
+    }
     setSessionToken('');
     setSessionId('');
     navigate('/');
