@@ -14,16 +14,23 @@ import {
 } from './SessionPageStyles';
 import { Modal, Box, Typography, IconButton } from '@mui/material';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Profilekey } from '../../atoms/Profile';
+import { Profile, Profilekey } from '../../atoms/Profile';
+import { tokenState } from '../../atoms/Auth';
 import {
   PublisherId,
   SubscriberId,
   PublisherVideoStatus,
   SubscriberVideoStatus,
+  PublisherAnimonURL,
+  SubscriberAnimonURL,
+  PublisherGuideStatus,
+  SubscriberGuideStatus,
 } from '../../atoms/Session';
-import { Client, Message } from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
 import { WebSocketApis } from '../../apis/webSocketApis';
+import axios from 'axios';
+import { API_BASE_URL } from '../../apis/urls';
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -35,12 +42,29 @@ const SessionPage = () => {
   const [subscriberVideoStatus, setSubscriberVideoStatus] = useRecoilState(
     SubscriberVideoStatus
   );
+  const [publisherAnimonURL, setPublisherAnimonURL] =
+    useRecoilState(PublisherAnimonURL);
+  const [subscriberAnimonURL, setSubscriberAnimonURL] =
+    useRecoilState(SubscriberAnimonURL);
+  const [publisherGuideStatus, setPublisherGuideStatus] =
+    useRecoilState(PublisherGuideStatus);
+  const [subscriberGuideStatus, setSubscriberGuideStatus] = useRecoilState(
+    SubscriberGuideStatus
+  );
+
   const profileId = useRecoilValue(Profilekey);
+  const userToken = useRecoilValue(tokenState);
+  const profile = useRecoilValue(Profile);
+  const IMGURL = '/bear.png';
+  const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
+  const [step, setStep] = useState(0);
+
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
+  setPublisherAnimonURL(profile.animon.name + 'mask');
 
-  const { streamList } = useOpenVidu(profileId);
+  const { publisher, streamList, session, isOpen } = useOpenVidu(profileId);
   const sessionOver = () => {
     setOpen(true);
   };
@@ -49,63 +73,145 @@ const SessionPage = () => {
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    const client = new Client({
-      connectHeaders: WebSocketApis.getInstance().header,
-      brokerURL: WS_BASE_URL,
-      reconnectDelay: 5000,
-      debug: (str) => console.log(str),
-    });
+    setPublisherVideoStatus(false);
+    setSubscriberVideoStatus(false);
+    setPublisherGuideStatus(false);
+    setSubscriberGuideStatus(false);
+  }, []);
 
-    client.onConnect = () => {
-      console.log('WebSocket 연결됨');
-      setConnected(true);
-      setStompClient(client);
+  useEffect(() => {
+    setOpen(isOpen);
+  }, [isOpen]);
 
-      client.subscribe('/sub/animon', (response) => {
-        console.log('메시지 수신:', response.body);
-        const message = JSON.parse(response.body);
-        if (message.userName !== String(publisherId)) {
-          console.log(message.userName, message.status);
-          console.log('상대방이 화면을 껐습니다.');
-          setSubscriberId(message.userName);
-          setSubscriberVideoStatus(message.status);
-        }
+  useEffect(() => {
+    for (const user of streamList) {
+      if (user.userId !== publisherId) {
+        setSubscriberId(user.userId);
+      }
+      if (subscriberId) {
+        // setSubscriberAnimonURL(url+'mask');
+      }
+    }
+  }, [streamList]);
+
+  useEffect(() => {
+    if (publisherGuideStatus && subscriberGuideStatus) {
+      setStep(step + 1);
+      setPublisherGuideStatus(false);
+      setSubscriberGuideStatus(false);
+      console.log(step);
+    }
+  }, [publisherGuideStatus, subscriberGuideStatus]);
+
+  useEffect(() => {
+    if (session) {
+      const client = new Client({
+        connectHeaders: WebSocketApis.getInstance().header,
+        brokerURL: WS_BASE_URL,
+        reconnectDelay: 5000,
+        debug: (str) => console.log(str),
       });
-    };
 
-    client.onDisconnect = () => {
-      console.log('WebSocket 연결 닫힘');
-      setConnected(false);
-      setStompClient(null);
-    };
+      client.onConnect = () => {
+        console.log('WebSocket 연결됨');
+        setConnected(true);
+        setStompClient(client);
 
-    client.activate();
+        client.subscribe(`/topic/${session.sessionId}/animon`, (response) => {
+          console.log('메시지 수신:', response.body);
+          const message = JSON.parse(response.body);
+          if (message.childId !== String(publisherId)) {
+            console.log(message.childId, message.isAnimonOn);
+            console.log('상대방이 화면을 껐습니다.');
+            setSubscriberId(message.childId);
+            setSubscriberVideoStatus(message.isAnimonOn);
+          }
+        });
+        client.subscribe(`/topic/${session.sessionId}/guide`, (response) => {
+          const message = JSON.parse(response.body);
+          console.log(message);
+          if (message.childId !== String(publisherId)) {
+            setSubscriberId(message.childId);
+            setSubscriberGuideStatus(message.isNextGuideOn);
+          }
+        });
+      };
 
-    return () => {
-      client.deactivate();
-    };
-  }, [publisherId]);
+      client.onDisconnect = () => {
+        console.log('WebSocket 연결 닫힘');
+        setConnected(false);
+        setStompClient(null);
+      };
+
+      client.activate();
+
+      return () => {
+        client.deactivate();
+      };
+    }
+  }, [streamList]);
 
   const leaveSession = () => {
     setOpen(false);
     navigate('/');
   };
 
+  const addFriend = () => {
+    console.log(publisherId, subscriberId);
+    console.log(userToken);
+    axios
+      .post(
+        `${API_BASE_URL}/friendship`,
+        { myId: Number(publisherId), friendId: Number(subscriberId) },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        leaveSession();
+      })
+      .catch((error) => {
+        if (error.response.data.resultCode === 'INVALID_DATA') {
+          leaveSession();
+        } else console.log(error);
+      });
+  };
+
   const changeVideoStatus = () => {
     console.log(stompClient);
     if (connected && stompClient) {
-      const status = !publisherVideoStatus;
-      setPublisherVideoStatus(status);
+      const isAnimonOn = !publisherVideoStatus;
+      setPublisherVideoStatus(isAnimonOn);
       const jsonMessage = {
-        userName: String(publisherId),
-        status: status,
+        childId: String(publisherId),
+        isAnimonOn: isAnimonOn,
       };
       const message = JSON.stringify(jsonMessage);
       stompClient.publish({
-        destination: '/pub/animon',
+        destination: `/app/${session.sessionId}/animon`,
         body: message,
       });
       console.log('메시지 전송:', message);
+    }
+  };
+
+  const nextGuidance = () => {
+    if (connected && stompClient) {
+      const isNextGuideOn = !publisherGuideStatus;
+      setPublisherGuideStatus(isNextGuideOn);
+      const jsonMessage = {
+        childId: String(publisherId),
+        isNextGuideOn: isNextGuideOn,
+      };
+      const message = JSON.stringify(jsonMessage);
+      stompClient.publish({
+        destination: `/app/${session.sessionId}/guide`,
+        body: message,
+      });
+      console.log('가이드 전송:', message);
     }
   };
 
@@ -119,7 +225,7 @@ const SessionPage = () => {
                 <StreamCanvas
                   streamManager={streamList[1].streamManager}
                   id={streamList[1].userId}
-                  avatarPath="http://localhost:3000/image.png"
+                  avatarPath="http://localhost:3000/14.png"
                   videoState={subscriberVideoStatus}
                 />
               ) : (
@@ -128,13 +234,18 @@ const SessionPage = () => {
             </YourVideo>
           </MainWrapper>
           <SideBar>
-            <Character>Character</Character>
+            <Character
+              style={{ backgroundImage: `url(${IMGURL})` }}
+              onClick={nextGuidance}
+            >
+              {guidance[step]}
+            </Character>
             <MyVideo>
               {streamList.length > 1 && streamList[0].streamManager ? (
                 <StreamCanvas
                   streamManager={streamList[0].streamManager}
                   id={streamList[0].userId}
-                  avatarPath="http://localhost:3000/14.png"
+                  avatarPath={publisherAnimonURL}
                   videoState={publisherVideoStatus}
                 />
               ) : (
@@ -147,6 +258,8 @@ const SessionPage = () => {
             </Buttons>
           </SideBar>
         </Container>
+      ) : streamList.length !== 2 ? (
+        navigate('/')
       ) : (
         <Container>
           <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
@@ -174,7 +287,7 @@ const SessionPage = () => {
                   alignItems: 'center',
                 }}
               >
-                <IconButton onClick={leaveSession}>O</IconButton>
+                <IconButton onClick={addFriend}>O</IconButton>
                 <IconButton onClick={leaveSession}>X</IconButton>
               </Box>
             </Box>

@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import loginBackground from '../../assets/background/login.gif';
-import logo from '../../assets/logo.png';
+import styled from "styled-components";
+import loginBackground from "../../assets/background/login.gif";
+import logo from "../../assets/logo.png";
 
 export const LoginPageContainer = styled.div`
   width: 100vw;
@@ -26,4 +26,5 @@ export const Logo = styled.div`
   height: 130px;
   background-size: 100% 100%;
   background-image: url(${logo});
+  cursor: pointer;
 `;

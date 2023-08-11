@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import FriendsListItem from './FriendsListItem';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
@@ -6,6 +6,7 @@ import { tokenState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
 import { useRecoilValue } from 'recoil';
 import { EmptyFriend } from './FriendsListStyles';
+import { useNavigate } from 'react-router-dom';
 
 interface FriendsProfile {
   id: number;
@@ -19,6 +20,7 @@ interface FriendsProfile {
 }
 
 const FriendsList = () => {
+  const navigate = useNavigate();
   const profileId = useRecoilValue(Profilekey);
   const token = useRecoilValue(tokenState);
   const [friends, setFriends] = useState<FriendsProfile[]>([]);
@@ -38,12 +40,20 @@ const FriendsList = () => {
         console.log(data);
       })
       .catch((error) => {
-        console.log('친구목록불러오기오류', error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('친구목록불러오기오류', error);
+        }
       });
   };
-  
+
   useEffect(() => {
-    getFriends();
+    if (!token) {
+      navigate('/login');
+    } else {
+      getFriends();
+    }
   }, [profileId, token]);
 
   const indexOfLastFriend = currentPage * friendsPerPage;
@@ -61,16 +71,17 @@ const FriendsList = () => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       {friends.length > friendsPerPage && (
-        <div>
-          {currentPage > 1 && <button onClick={prevPage}>이전</button>}
-        </div>
+        <div>{currentPage > 1 && <button onClick={prevPage}>이전</button>}</div>
       )}
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div
+        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
+      >
         {currentFriends.length > 0 ? (
           currentFriends.map((friend) => (
             <FriendsListItem
               key={friend.id}
-              name={friend.name}
+              friendId={friend.id}
+              friendName={friend.name}
               animon={friend.animon.name}
             />
           ))
@@ -78,13 +89,13 @@ const FriendsList = () => {
           <EmptyFriend />
         )}
       </div>
-        {friends.length > friendsPerPage && (
-          <div>
-            {currentPage < Math.ceil(friends.length / friendsPerPage) && (
-              <button onClick={nextPage}>다음</button>
-            )}
-          </div>
-        )}
+      {friends.length > friendsPerPage && (
+        <div>
+          {currentPage < Math.ceil(friends.length / friendsPerPage) && (
+            <button onClick={nextPage}>다음</button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

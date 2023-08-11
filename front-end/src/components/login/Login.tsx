@@ -53,7 +53,7 @@ const Login = () => {
           margin="dense"
           value={userName}
           sx={{
-            bgcolor: 'white',
+            bgcolor: '#F5EBC9',
             borderRadius: '5px',
             width: '80%',
           }}
@@ -76,7 +76,7 @@ const Login = () => {
           type="password"
           value={password}
           sx={{
-            bgcolor: 'white',
+            bgcolor: '#F5EBC9',
             borderRadius: '5px',
             width: '80%',
           }}

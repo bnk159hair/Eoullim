@@ -1,42 +1,110 @@
-import axios, { formToJSON } from 'axios';
+import axios from 'axios';
+import { API_BASE_URL } from './urls';
+import { Session } from 'openvidu-browser';
 
-const SERVER_URL = 'https://i9c207.p.ssafy.io/';
+interface User {
+  childId: String;
+  name: String;
+  gender: String;
+  school: String;
+  grade: Number;
+}
 
-export const getToken: (userInfo: object) => Promise<any> = async (
-  userInfo
-) => {
-  console.log('토큰 가져오기');
-  console.log(userInfo);
-  return await axios
-    .post(`${SERVER_URL}api/openvidu/matchstart`, userInfo, {
-      headers: { 'Content-Type': 'application/json' },
-    })
-    .then((response) => {
-      console.log('토큰 가져오기 성공!');
-      console.log(response);
-      return response.data.token;
-    })
-    .catch((error) => {
-      console.log('토큰 가져오기 실패ㅠ');
-      console.log(error);
+export const getUserInfo = async (userId: String, userToken: String) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/children/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
     });
+
+    console.log('유저 정보 가져오기 성공!');
+    console.log(response);
+    return response.data.result;
+  } catch (error) {
+    console.log('유저 정보 가져오기 실패ㅠ');
+    console.log(error);
+    throw error;
+  }
 };
 
-export const destroySession: (session: any) => Promise<void> = async (
-  session
+export const getToken = async (userInfo: User, userToken: String) => {
+  console.log('토큰 가져오기');
+  console.log(userInfo);
+
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/meetings/random/start`,
+      userInfo,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    console.log('토큰 가져오기 성공!');
+    console.log(response);
+    return response.data.token;
+  } catch (error) {
+    console.log('토큰 가져오기 실패ㅠ');
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getFriendSessionToken = async (
+  childId: any,
+  userToken: String,
+  sessionId: String
 ) => {
+  console.log('초대 토큰 가져오기');
+
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/meetings/friend/start`,
+      {
+        childId,
+        sessionId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    console.log('초대 토큰 가져오기 성공!');
+    console.log(response);
+    return response.data.token;
+  } catch (error) {
+    console.log('초대 토큰 가져오기 실패ㅠ');
+    console.log(error);
+    throw error;
+  }
+};
+
+export const destroySession = async (session: Session, userToken: any) => {
   console.log('세션 파괴!!!!!!');
   console.log(session.sessionId);
-  await axios
-    .post(
-      `${SERVER_URL}api/openvidu/matchstop`,
+
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/meetings/random/stop`,
       {
         sessionId: session.sessionId,
       },
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
       }
-    )
-    .then((response) => console.log(response))
-    .catch((error) => console.log(error));
+    );
+
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
 };

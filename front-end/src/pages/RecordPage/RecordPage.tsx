@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import RecordListItem from '../../components/record/RecordListItem';
 import {
   RecordPageContainer,
-  Passwordcofile,
   EmptyRecord,
+  Scroll,
+  BackIcon,
 } from './RecordPageStyles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
-import { API_BASE_URL } from '../../apis/urls';
 import { Profilekey } from '../../atoms/Profile';
 
 interface Record {
@@ -22,34 +22,17 @@ interface Record {
 }
 
 const RecordPage = () => {
-  const [password, setPassword] = useState('');
   const token = useRecoilValue(tokenState);
   const profileId = useRecoilValue(Profilekey);
-  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
-  const navigate = useNavigate();
   const [records, setRecords] = useState<Record[]>([]);
-
-  const passwordClick = () => {
-    axios
-      .post(
-        `${API_BASE_URL}/users/pw-check`,
-        { password },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        setIsPasswordCorrect(true);
-      })
-      .catch((error) => {
-        alert('비밀번호를 확인해주세요.');
-      });
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getRecord();
+    if (!token) {
+      navigate('/login');
+    } else {
+      getRecord();
+    }
   }, [profileId, token]);
 
   const getRecord = () => {
@@ -62,7 +45,11 @@ const RecordPage = () => {
         console.log('녹화영상 불러오기');
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('녹화영상불러오기오류', error);
+        }
       });
   };
 
@@ -72,9 +59,10 @@ const RecordPage = () => {
 
   return (
     <RecordPageContainer>
-      {isPasswordCorrect ? (
-        records.length > 0 ? (
-          records.map((record) => (
+      <BackIcon onClick={getBack} />
+      {records.length > 0 ? (
+        <Scroll>
+          {records.map((record) => (
             <RecordListItem
               key={record.record_id}
               name={record.name}
@@ -83,22 +71,11 @@ const RecordPage = () => {
               video_path={record.video_path}
               create_time={record.create_time}
             />
-          ))
-        ) : (
-          <EmptyRecord />
-        )
+          ))}
+        </Scroll>
       ) : (
-        <Passwordcofile>
-          <input
-            type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={passwordClick}>확인</button>
-        </Passwordcofile>
+        <EmptyRecord />
       )}
-      <button onClick={getBack}>뒤로가기</button>
     </RecordPageContainer>
   );
 };

@@ -17,6 +17,7 @@ export const PasswordChange = styled.div`
   width: 80px;
   height: 80px;
   margin-left: auto;
+  cursor: pointer;
 `;
 
 export const MarginContainer = styled.div`

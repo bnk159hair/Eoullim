@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -19,6 +19,12 @@ export const ModalContent = styled.div`
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
   width: 30%;
   // max-width: 600px;
+`;
+
+export const ModalHeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const ModalFormContainer = styled.form`
