@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import CreateBox from '../../assets/ecc/createprofile.png';
+import styled from "styled-components";
+import CreateBox from "../../assets/ecc/createprofile.png";
 
 export const ProfileCreateBox = styled.div`
   height: 300px;
@@ -14,7 +14,6 @@ export const ProfileCreateBox = styled.div`
 
   &:hover {
     transform: scale(1.25);
-    z-index: 99;
   }
 `;
 
