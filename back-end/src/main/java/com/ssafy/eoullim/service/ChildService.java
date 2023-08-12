@@ -8,11 +8,10 @@ import com.ssafy.eoullim.model.entity.AnimonEntity;
 import com.ssafy.eoullim.model.entity.ChildAnimonEntity;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.model.entity.UserEntity;
-import com.ssafy.eoullim.repository.AnimonRepository;
-import com.ssafy.eoullim.repository.ChildAnimonRepository;
-import com.ssafy.eoullim.repository.ChildRepository;
+import com.ssafy.eoullim.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +33,7 @@ public class ChildService {
     private final ChildRepository childRepository;
     private final ChildAnimonRepository childAnimonRepository;
     private final AnimonRepository animonRepository;
+    private final ChildCacheRepository childCacheRepository;
 
     @Value("${public-api.service-key}")
     private String serviceKey;
@@ -62,7 +62,8 @@ public class ChildService {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND,
                         String.format("child %d is not found", childId)));
-        childEntity.setStatus(Status.ON);
+//        childEntity.setStatus(Status.ON);
+        childCacheRepository.setStatus(childId);
         return Child.fromEntity(childEntity);
     }
 
@@ -71,8 +72,10 @@ public class ChildService {
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND,
                         String.format("child %d is not found", childId)));
-        childEntity.setStatus(Status.OFF);
+//        childEntity.setStatus(Status.OFF);
+        childCacheRepository.delete(childId);
     }
+
 
     public Child getChildInfo(Integer childId, Integer userId) {
         // ERROR: 찾으려는 아이가 없음
