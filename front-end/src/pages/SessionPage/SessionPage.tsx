@@ -37,9 +37,22 @@ import { API_BASE_URL } from '../../apis/urls';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 
+interface FriendsProfile {
+  id: number;
+  name: string;
+  birth: number;
+  gender: string;
+  school: string;
+  grade: number;
+  status: string;
+  animon: { id: number; imagePath: string; name: string };
+}
+
 const SessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [friends, setFriends] = useState<FriendsProfile[]>([]);
+  const [isFriend, setFriend] = useState(false);
   const [publisherId, setPublisherId] = useRecoilState(PublisherId);
   const [subscriberId, setSubscriberId] = useRecoilState(SubscriberId);
   const [publisherVideoStatus, setPublisherVideoStatus] =
@@ -91,6 +104,7 @@ const SessionPage = () => {
     setSubscriberVideoStatus(false);
     setPublisherGuideStatus(false);
     setSubscriberGuideStatus(false);
+    getFriends();
   }, []);
 
   useEffect(() => {
@@ -104,7 +118,13 @@ const SessionPage = () => {
       }
       if (subscriberId) {
         getAnimon();
-        console.log(subscriberAnimonURL, subscriberName);
+        friends.forEach((user: any) => {
+          console.log(user.id, subscriberId)
+          if (user.id===Number(subscriberId)) {
+            console.log('친구입니다.')
+            setFriend(true);
+          }
+        })
       }
     }
   }, [streamList]);
@@ -175,6 +195,27 @@ const SessionPage = () => {
       };
     }
   }, [streamList]);
+
+  const getFriends = () => {
+    axios
+      .get(`${API_BASE_URL}/friendship/${profileId}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then((response) => {
+        const data = response.data.result;
+        setFriends(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('친구목록불러오기오류', error);
+        }
+      });
+  };
 
   const getAnimon = async () => {
     try {
@@ -349,8 +390,38 @@ const SessionPage = () => {
         </SessionPageContainer>
       ) : streamList.length !== 2 ? (
         navigate('/')
-      ) : (
-        <Container>
+      ) : (!isFriend ? (<Container>
+        <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
+          <Box
+            sx={{
+              position: 'absolute' as 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 400,
+              bgcolor: 'background.paper',
+              border: '2px solid black',
+              boxShadow: 24,
+              p: 4,
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="h4" component="h2">
+              친구 조아?
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+              }}
+            >
+              <IconButton onClick={addFriend}>O</IconButton>
+              <IconButton onClick={leaveSession}>X</IconButton>
+            </Box>
+          </Box>
+        </Modal>
+      </Container>) : (<Container>
           <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
             <Box
               sx={{
@@ -367,7 +438,7 @@ const SessionPage = () => {
               }}
             >
               <Typography variant="h4" component="h2">
-                친구 조아?
+                통화가 끝났습니다.
               </Typography>
               <Box
                 sx={{
@@ -376,13 +447,11 @@ const SessionPage = () => {
                   alignItems: 'center',
                 }}
               >
-                <IconButton onClick={addFriend}>O</IconButton>
                 <IconButton onClick={leaveSession}>X</IconButton>
               </Box>
             </Box>
           </Modal>
-        </Container>
-      )}
+        </Container>))}
     </>
   );
 };
