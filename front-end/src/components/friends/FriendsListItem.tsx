@@ -1,5 +1,5 @@
 import React from 'react';
-import { FriendCard, FriendImg, FrinedInfo } from './FriendsListItemStyles';
+import { FriendCard, FriendImg, FrinedInfo,InviteButton } from './FriendsListItemStyles';
 import axios from 'axios';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { tokenState, userState } from '../../atoms/Auth';
@@ -61,7 +61,7 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
       <FriendImg style={{ backgroundImage: `url(${IMGURL})` }} />
       <FrinedInfo>
         <div>친구 이름 : {friendName}</div>
-        <button onClick={handleInvite}>초대하기</button>
+        <InviteButton onClick={handleInvite}/>
       </FrinedInfo>
     </FriendCard>
   );

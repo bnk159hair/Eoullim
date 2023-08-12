@@ -13,6 +13,7 @@ import {
   SessionPageContainer,
   SideBar,
   YourVideo,
+  Click
 } from './SessionPageStyles';
 import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -300,7 +301,7 @@ const SessionPage = () => {
               </YourVideo>
             </MainWrapper>
             <SideBar>
-              <Character onClick={nextGuidance}>{guidance[step]}</Character>
+              <Character onClick={nextGuidance}>{guidance[step]}<Click/></Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
                   <StreamCanvas

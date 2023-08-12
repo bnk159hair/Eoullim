@@ -29,9 +29,7 @@ const MainPage: React.FC = () => {
   const navigate = useNavigate();
   const profileId = useRecoilValue(Profilekey);
   const token = useRecoilValue(tokenState);
-
   const [profile, setProfile] = useRecoilState(Profile);
-  
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
   const [userName,setUserName] = useState<string>('');
@@ -112,6 +110,7 @@ const MainPage: React.FC = () => {
       };
     }
   });
+  
 
   const getNewFriend = () => {
     navigate('/session');
