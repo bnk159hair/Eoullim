@@ -38,10 +38,23 @@ import { WebSocketApis } from '../../apis/webSocketApis';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
 
+interface FriendsProfile {
+  id: number;
+  name: string;
+  birth: number;
+  gender: string;
+  school: string;
+  grade: number;
+  status: string;
+  animon: { id: number; imagePath: string; name: string };
+}
+
 const FriendSessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [refuse, setRefuse] = useState(false);
+  const [friends, setFriends] = useState<FriendsProfile[]>([]);
+  const [isFriend, setFriend] = useState(false);
   const [publisherId, setPublisherId] = useRecoilState(PublisherId);
   const [subscriberId, setSubscriberId] = useRecoilState(SubscriberId);
   const [publisherVideoStatus, setPublisherVideoStatus] =
@@ -97,6 +110,7 @@ const FriendSessionPage = () => {
     setSubscriberVideoStatus(false);
     setPublisherGuideStatus(false);
     setSubscriberGuideStatus(false);
+    getFriends();
   }, []);
 
   useEffect(() => {
@@ -110,6 +124,13 @@ const FriendSessionPage = () => {
       }
       if (subscriberId) {
         getAnimon();
+        friends.forEach((user: any) => {
+          console.log(user.id, subscriberId)
+          if (user.id===Number(subscriberId)) {
+            console.log('친구입니다.')
+            setFriend(true);
+          }
+        })
       }
     }
   }, [streamList]);
@@ -185,6 +206,27 @@ const FriendSessionPage = () => {
       };
     }
   }, [streamList]);
+
+  const getFriends = () => {
+    axios
+      .get(`${API_BASE_URL}/friendship/${profileId}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then((response) => {
+        const data = response.data.result;
+        setFriends(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('친구목록불러오기오류', error);
+        }
+      });
+  };
 
   const getAnimon = async () => {
     try {
@@ -391,7 +433,38 @@ const FriendSessionPage = () => {
             </Modal>
           </Container>
       )
-      ) : (<Container>
+      ) : (!isFriend ? (<Container>
+        <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
+          <Box
+            sx={{
+              position: 'absolute' as 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 400,
+              bgcolor: 'background.paper',
+              border: '2px solid black',
+              boxShadow: 24,
+              p: 4,
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="h4" component="h2">
+              친구 조아?
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+              }}
+            >
+              <IconButton onClick={addFriend}>O</IconButton>
+              <IconButton onClick={leaveSession}>X</IconButton>
+            </Box>
+          </Box>
+        </Modal>
+      </Container>) : (<Container>
           <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
             <Box
               sx={{
@@ -421,7 +494,7 @@ const FriendSessionPage = () => {
               </Box>
             </Box>
           </Modal>
-        </Container>))
+        </Container>)))
       }
     </>
   );
