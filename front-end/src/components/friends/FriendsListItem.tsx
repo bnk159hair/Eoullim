@@ -61,8 +61,7 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
       <FriendImg style={{ backgroundImage: `url(${IMGURL})` }} />
       <FrinedInfo>
         <div>친구 이름 : {friendName}</div>
-        <InviteButton/>
-        {/* <button onClick={handleInvite}>초대하기</button> */}
+        <InviteButton onClick={handleInvite}/>
       </FrinedInfo>
     </FriendCard>
   );
