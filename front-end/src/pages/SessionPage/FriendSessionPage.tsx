@@ -10,10 +10,14 @@ import {
   Container,
   MainWrapper,
   MyVideo,
+  NavContainer,
+  SessionPageContainer,
   SideBar,
   YourVideo,
 } from './SessionPageStyles';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Profile, Profilekey } from '../../atoms/Profile';
 import { invitationToken, invitationSessionId } from '../../atoms/Ivitation';
@@ -34,7 +38,7 @@ import { WebSocketApis } from '../../apis/webSocketApis';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
 
-const SessionPage = () => {
+const FriendSessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [publisherId, setPublisherId] = useRecoilState(PublisherId);
@@ -63,13 +67,14 @@ const SessionPage = () => {
   const IMGURL = '/bear.png';
   const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
   const [step, setStep] = useState(0);
+  const [subscriberName, setSubscriberName] = useState('');
 
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
-  setPublisherAnimonURL(profile.animon.name + 'mask');
+  setPublisherAnimonURL('https://i9c207.p.ssafy.io/' + profile.animon.name + 'mask');
   console.log(profileId, sessionId, sessionToken);
-  const { publisher, streamList, session, isOpen } = useOpenVidu(
+  const { publisher, streamList, session, isOpen, onChangeMicStatus } = useOpenVidu(
     profileId,
     sessionId,
     sessionToken
@@ -77,6 +82,11 @@ const SessionPage = () => {
   const sessionOver = () => {
     setOpen(true);
   };
+
+  const [micStatus, setMicStatus] = useState(true);
+  useEffect(() => {
+    onChangeMicStatus(micStatus);
+  }, [micStatus]);
 
   const [connected, setConnected] = useState<boolean>(false);
   const [stompClient, setStompClient] = useState<Client | null>(null);
@@ -98,7 +108,7 @@ const SessionPage = () => {
         setSubscriberId(user.userId);
       }
       if (subscriberId) {
-        // setSubscriberAnimonURL(url+'mask');
+        getAnimon();
       }
     }
   }, [streamList]);
@@ -144,6 +154,16 @@ const SessionPage = () => {
             setSubscriberGuideStatus(message.isNextGuideOn);
           }
         });
+        client.subscribe(
+          `/topic/${session.sessionId}/leave-session`,
+          (response) => {
+            const message = JSON.parse(response.body);
+            console.log(message);
+            if (message.childId !== String(publisherId)) {
+              setOpen(true);
+            }
+          }
+        );
       };
 
       client.onDisconnect = () => {
@@ -160,10 +180,45 @@ const SessionPage = () => {
     }
   }, [streamList]);
 
+  const getAnimon = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/children/participant/${subscriberId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+
+      console.log('유저 정보 가져오기 성공!');
+      console.log(response);
+      setSubscriberAnimonURL(
+        'https://i9c207.p.ssafy.io/' + response.data.result.animon.name + 'mask'
+      );
+      setSubscriberName(response.data.result.name);
+      return response.data.result;
+    } catch (error) {
+      console.log('유저 정보 가져오기 실패ㅠ');
+      console.log(error);
+      throw error;
+    }
+  };
+
   const leaveSession = () => {
     setOpen(false);
-    setSessionToken('');
-    setSessionId('');
+    if (connected && stompClient) {
+      const jsonMessage = {
+        childId: String(publisherId),
+        isLeft: true,
+      };
+      const message = JSON.stringify(jsonMessage);
+      stompClient.publish({
+        destination: `/app/${session.sessionId}/leave-session`,
+        body: message,
+      });
+      console.log('메시지 전송:', message);
+    }
     navigate('/');
   };
 
@@ -209,6 +264,10 @@ const SessionPage = () => {
     }
   };
 
+  const changeAudioStatus = () => {
+    setMicStatus((prev) => !prev);
+  };
+
   const nextGuidance = () => {
     if (connected && stompClient) {
       const isNextGuideOn = !publisherGuideStatus;
@@ -229,46 +288,69 @@ const SessionPage = () => {
   return (
     <>
       {!open ? (
-        <Container>
-          <MainWrapper>
-            <YourVideo>
-              {streamList.length > 1 && streamList[1].streamManager ? (
-                <StreamCanvas
-                  streamManager={streamList[1].streamManager}
-                  id={streamList[1].userId}
-                  avatarPath="http://localhost:3000/14.png"
-                  videoState={subscriberVideoStatus}
-                />
-              ) : (
-                <Loading />
-              )}
-            </YourVideo>
-          </MainWrapper>
-          <SideBar>
-            <Character
-              style={{ backgroundImage: `url(${IMGURL})` }}
-              onClick={nextGuidance}
-            >
-              {guidance[step]}
-            </Character>
-            <MyVideo>
-              {streamList.length > 1 && streamList[0].streamManager ? (
-                <StreamCanvas
-                  streamManager={streamList[0].streamManager}
-                  id={streamList[0].userId}
-                  avatarPath={publisherAnimonURL}
-                  videoState={publisherVideoStatus}
-                />
-              ) : (
-                <Loading />
-              )}
-            </MyVideo>
+        <SessionPageContainer>
+          <Container>
+            <MainWrapper>
+              <YourVideo>
+                {streamList.length > 1 && streamList[1].streamManager ? (
+                  <StreamCanvas
+                    streamManager={streamList[1].streamManager}
+                    name={subscriberName}
+                    avatarPath={subscriberAnimonURL}
+                    videoState={subscriberVideoStatus}
+                  />
+                ) : (
+                  <Loading />
+                )}
+              </YourVideo>
+            </MainWrapper>
+            <SideBar>
+              <Character onClick={nextGuidance}>{guidance[step]}</Character>
+              <MyVideo>
+                {streamList.length > 1 && streamList[0].streamManager ? (
+                  <StreamCanvas
+                    streamManager={streamList[0].streamManager}
+                    name={profile.name}
+                    avatarPath={`${publisherAnimonURL}`}
+                    videoState={publisherVideoStatus}
+                  />
+                ) : (
+                  <Loading />
+                )}
+              </MyVideo>
+            </SideBar>
+          </Container>
+          <NavContainer>
             <Buttons>
-              <button onClick={changeVideoStatus}>애니몬</button>
-              <button onClick={sessionOver}>나가기</button>
+              <Button
+                variant="contained"
+                onClick={changeVideoStatus}
+                sx={{ fontSize: '30px' }}
+              >
+                {publisherVideoStatus
+                  ? profile.gender === 'W'
+                    ? '👩'
+                    : '🧑'
+                  : '🙈'}
+              </Button>
+              <Button variant="contained" onClick={changeAudioStatus}>
+                {micStatus ? (
+                  <MicIcon fontSize="large"></MicIcon>
+                ) : (
+                  <MicOffIcon fontSize="large"></MicOffIcon>
+                )}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={sessionOver}
+                sx={{ fontSize: '30px' }}
+              >
+                나가기
+              </Button>
             </Buttons>
-          </SideBar>
-        </Container>
+          </NavContainer>
+        </SessionPageContainer>
       ) : streamList.length !== 2 ? (
         navigate('/')
       ) : (
@@ -309,4 +391,4 @@ const SessionPage = () => {
   );
 };
 
-export default SessionPage;
+export default FriendSessionPage;
