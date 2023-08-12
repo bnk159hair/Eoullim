@@ -13,6 +13,15 @@ import { Profilekey } from "../../atoms/Profile";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { Button } from "@mui/material";
 import ToRecordModal from "./ToRecordModal";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#b6d36f",
+    },
+  },
+});
 
 interface ProfileListItemProps {
   name: string;
@@ -80,40 +89,42 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
 
   return (
     <>
-      <div>
-        <ProfileUserContainer
-          style={{ backgroundImage: `url(${IMGURL})` }}
-          onClick={handleMainClick}
-        >
-          <NameTag>{name}</NameTag>
-        </ProfileUserContainer>
-        <ButtonContainer>
-          <Button
-            variant="contained"
-            sx={{ fontSize: "18px", paddingX: "2rem" }}
-            onClick={handleModalOpen}
+      <ThemeProvider theme={theme}>
+        <div>
+          <ProfileUserContainer
+            style={{ backgroundImage: `url(${IMGURL})` }}
+            onClick={handleMainClick}
           >
-            프로필 관리
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ fontSize: "18px", paddingX: "2rem" }}
-            onClick={handleRecordOpen}
-          >
-            녹화영상
-          </Button>
-        </ButtonContainer>
-      </div>
-      {isModalOpen && (
-        <ModifyModal
-          onClose={handleModalClose}
-          childId={childId}
-          resetList={resetList}
-        />
-      )}
-      {isRecordOpen && (
-        <ToRecordModal onClose={handleRecordClose} childId={childId} />
-      )}
+            <NameTag>{name}</NameTag>
+          </ProfileUserContainer>
+          <ButtonContainer>
+            <Button
+              variant="contained"
+              sx={{ fontSize: "18px", paddingX: "2rem" }}
+              onClick={handleModalOpen}
+            >
+              프로필 관리
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ fontSize: "18px", paddingX: "2rem" }}
+              onClick={handleRecordOpen}
+            >
+              녹화영상
+            </Button>
+          </ButtonContainer>
+        </div>
+        {isModalOpen && (
+          <ModifyModal
+            onClose={handleModalClose}
+            childId={childId}
+            resetList={resetList}
+          />
+        )}
+        {isRecordOpen && (
+          <ToRecordModal onClose={handleRecordClose} childId={childId} />
+        )}
+      </ThemeProvider>
     </>
   );
 };

@@ -196,7 +196,6 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
               <Button
                 variant="contained"
                 size="small"
-                color="info"
                 sx={{ fontSize: "18px", margin: "0.5rem" }}
                 onClick={passwordCheck}
                 fullWidth
@@ -206,7 +205,6 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
               <Button
                 variant="contained"
                 size="small"
-                color="info"
                 sx={{ fontSize: "18px", margin: "0.5rem" }}
                 onClick={onClose}
                 fullWidth
@@ -323,10 +321,10 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
             </ToggleButtonGroup>
             <ButtonContainer>
               <Button
-                variant="outlined"
+                variant="contained"
                 size="small"
                 sx={{
-                  width: "50%",
+                  width: "47%",
                   padding: "0.6rem",
                   marginTop: "1rem",
                   fontSize: "18px",
@@ -336,11 +334,11 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
                 수정
               </Button>
               <Button
-                variant="outlined"
+                variant="contained"
                 color="error"
                 size="small"
                 sx={{
-                  width: "50%",
+                  width: "47%",
                   padding: "0.6rem",
                   marginTop: "1rem",
                   fontSize: "18px",

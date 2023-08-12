@@ -22,6 +22,15 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { FormContainer } from "./ModifyModalStyles";
 import CloseIcon from "@mui/icons-material/Close";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#b6d36f",
+    },
+  },
+});
 
 interface CreateModalProps {
   onClose: () => void;
@@ -96,99 +105,101 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose, resetList }) => {
   return (
     <ModalOverlay>
       <ModalContent>
-        <FormContainer>
-          <HeaderContainer>
-            <h2>프로필 생성</h2>
-            <IconButton onClick={onClose}>
-              <CloseIcon fontSize="large" />
-            </IconButton>
-          </HeaderContainer>
-          <FlexContainer>
-            <TextField
-              label="이름"
-              variant="outlined"
-              placeholder="홍길동"
-              value={name}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setChildName(event.target.value)
-              }
-              sx={{ width: "65%", marginBottom: "1rem" }}
-            />
+        <ThemeProvider theme={theme}>
+          <FormContainer>
+            <HeaderContainer>
+              <h2>프로필 생성</h2>
+              <IconButton onClick={onClose}>
+                <CloseIcon fontSize="large" />
+              </IconButton>
+            </HeaderContainer>
+            <FlexContainer>
+              <TextField
+                label="이름"
+                variant="outlined"
+                placeholder="홍길동"
+                value={name}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setChildName(event.target.value)
+                }
+                sx={{ width: "65%", marginBottom: "1rem" }}
+              />
+              <ToggleButtonGroup
+                color="primary"
+                value={gender}
+                exclusive
+                sx={{ marginLeft: "auto" }}
+                size="large"
+                onChange={(_, newGender) => setChildGender(newGender)}
+              >
+                <ToggleButton value="M">남성</ToggleButton>
+                <ToggleButton value="W">여성</ToggleButton>
+              </ToggleButtonGroup>
+            </FlexContainer>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="생년월일"
+                onChange={(newDate: dayjs.Dayjs | null) => {
+                  if (newDate) {
+                    setChildBirth(newDate.format("YYYY-MM-DD"));
+                  }
+                }}
+                format="YYYY-MM-DD"
+                sx={{ marginBottom: "1rem" }}
+              />
+            </LocalizationProvider>
+            <FlexContainer>
+              <TextField
+                label="학교 이름"
+                variant="outlined"
+                value={school}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setChildSchool(event.target.value)
+                }
+                sx={{ width: "65%", marginBottom: "1rem" }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">초등학교</InputAdornment>
+                  ),
+                }}
+                helperText={isSchoolCorrect && "학교 등록이 완료되었습니다."}
+                disabled={isSchoolCorrect && true}
+              />
+              <Button
+                variant="contained"
+                size="large"
+                sx={{
+                  width: "25%",
+                  padding: "0.7rem",
+                  marginLeft: "auto",
+                  fontSize: "18px",
+                }}
+                onClick={handleSchoolCheck}
+              >
+                학교확인
+              </Button>
+            </FlexContainer>
             <ToggleButtonGroup
               color="primary"
-              value={gender}
+              value={grade}
               exclusive
-              sx={{ marginLeft: "auto" }}
-              size="large"
-              onChange={(_, newGender) => setChildGender(newGender)}
+              fullWidth
+              onChange={(_, newGrade) => setChildGrade(newGrade)}
             >
-              <ToggleButton value="M">남성</ToggleButton>
-              <ToggleButton value="W">여성</ToggleButton>
+              <ToggleButton value="1">1학년</ToggleButton>
+              <ToggleButton value="2">2학년</ToggleButton>
+              <ToggleButton value="3">3학년</ToggleButton>
             </ToggleButtonGroup>
-          </FlexContainer>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="생년월일"
-              onChange={(newDate: dayjs.Dayjs | null) => {
-                if (newDate) {
-                  setChildBirth(newDate.format("YYYY-MM-DD"));
-                }
-              }}
-              format="YYYY-MM-DD"
-              sx={{ marginBottom: "1rem" }}
-            />
-          </LocalizationProvider>
-          <FlexContainer>
-            <TextField
-              label="학교 이름"
-              variant="outlined"
-              value={school}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setChildSchool(event.target.value)
-              }
-              sx={{ width: "65%", marginBottom: "1rem" }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">초등학교</InputAdornment>
-                ),
-              }}
-              helperText={isSchoolCorrect && "학교 등록이 완료되었습니다."}
-              disabled={isSchoolCorrect && true}
-            />
             <Button
               variant="contained"
               size="large"
-              sx={{
-                width: "25%",
-                padding: "0.7rem",
-                marginLeft: "auto",
-                fontSize: "18px",
-              }}
-              onClick={handleSchoolCheck}
+              sx={{ padding: "0.4rem", marginTop: "1rem", fontSize: "20px" }}
+              onClick={handleCreateProfile}
             >
-              학교확인
+              생성하기
             </Button>
-          </FlexContainer>
-          <ToggleButtonGroup
-            color="primary"
-            value={grade}
-            exclusive
-            fullWidth
-            onChange={(_, newGrade) => setChildGrade(newGrade)}
-          >
-            <ToggleButton value="1">1학년</ToggleButton>
-            <ToggleButton value="2">2학년</ToggleButton>
-            <ToggleButton value="3">3학년</ToggleButton>
-          </ToggleButtonGroup>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ padding: "0.4rem", marginTop: "1rem", fontSize: "20px" }}
-            onClick={handleCreateProfile}
-          >
-            생성하기
-          </Button>
-        </FormContainer>
+          </FormContainer>
+        </ThemeProvider>
       </ModalContent>
     </ModalOverlay>
   );

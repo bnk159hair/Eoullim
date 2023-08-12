@@ -65,7 +65,6 @@ const ToRecordModal: React.FC<ToRecordModalProps> = ({ onClose, childId }) => {
             <Button
               variant="contained"
               size="small"
-              color="info"
               sx={{ fontSize: "18px", margin: "0.5rem" }}
               onClick={passwordCheck}
               fullWidth
@@ -75,7 +74,6 @@ const ToRecordModal: React.FC<ToRecordModalProps> = ({ onClose, childId }) => {
             <Button
               variant="contained"
               size="small"
-              color="info"
               sx={{ fontSize: "18px", margin: "0.5rem" }}
               onClick={onClose}
               fullWidth
