@@ -4,6 +4,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import box from '../../assets/box/backgroundmusic.png'
 import { url } from 'inspector';
+import {SoundOn, SoundOff} from './BackgroundMusicStyles'
 
 const BackgroundMusic: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -51,7 +52,8 @@ const BackgroundMusic: React.FC = () => {
 
   return (
     <div style={{ position: 'fixed', bottom: 5, left: 3, zIndex: 999,display: 'flex',alignItems: 'center', backgroundImage:`url(${box})`, borderRadius: '5px' }}>  
-      {isPlaying ? <VolumeUpIcon onClick={toggleMusic}/> : <VolumeOffIcon onClick={toggleMusic}/>}
+      {isPlaying ? <SoundOn onClick={toggleMusic}/> : <SoundOff onClick={toggleMusic}/>}
+      
       <input
         type="range"
         min="0"

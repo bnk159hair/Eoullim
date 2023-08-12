@@ -5,7 +5,7 @@ import { API_BASE_URL } from '../../apis/urls';
 import { tokenState } from '../../atoms/Auth';
 import { Profilekey } from '../../atoms/Profile';
 import { useRecoilValue } from 'recoil';
-import { EmptyFriend } from './FriendsListStyles';
+import { EmptyFriend,BeforeButton,AfterButton,FriendsListContent } from './FriendsListStyles';
 import { useNavigate } from 'react-router-dom';
 
 interface FriendsProfile {
@@ -71,11 +71,14 @@ const FriendsList = () => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       {friends.length > friendsPerPage && (
-        <div>{currentPage > 1 && <button onClick={prevPage}>이전</button>}</div>
+        <div style={{width: '80px'}}>{currentPage > 1 && 
+        <BeforeButton onClick={prevPage}/>
+        }</div>
       )}
-      <div
-        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
-      >
+      <FriendsListContent>
+      {/* <div
+        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '1200px' }}
+      > */}
         {currentFriends.length > 0 ? (
           currentFriends.map((friend) => (
             <FriendsListItem
@@ -88,11 +91,12 @@ const FriendsList = () => {
         ) : (
           <EmptyFriend />
         )}
-      </div>
+      {/* </div> */}
+      </FriendsListContent>
       {friends.length > friendsPerPage && (
-        <div>
+        <div style={{width: '80px'}}>
           {currentPage < Math.ceil(friends.length / friendsPerPage) && (
-            <button onClick={nextPage}>다음</button>
+            <AfterButton onClick={nextPage}/>
           )}
         </div>
       )}
