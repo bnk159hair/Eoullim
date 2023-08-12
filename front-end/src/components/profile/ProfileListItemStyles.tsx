@@ -16,6 +16,8 @@ export const ProfileUserContainer = styled.div`
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  position: relative;
+  z-index: 1000;
 
   &:hover {
     transform: scale(1.25);
