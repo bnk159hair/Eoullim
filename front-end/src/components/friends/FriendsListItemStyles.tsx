@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import friendbox from '../../assets/box/friend.png'
+import invite from '../../assets/ecc/invite.png'
 
 export const FriendCard = styled.div`
   // background-color: #ffffff;
@@ -34,4 +35,20 @@ export const FrinedInfo = styled.div`
   color: white;
   font-family: 'HakgyoansimBunpilR';
   font-size: 20px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
+
+export const InviteButton = styled.div`
+  background-size: 100% 100%;
+  background-image: url(${invite});
+  width: 120px; 
+  height: 30px;
+  margin: 7px;
+  cursor:pointer;
+  &:hover {
+    transform: scale(1.25);
+  }
+`
