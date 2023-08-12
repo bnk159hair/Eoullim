@@ -102,6 +102,22 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
   };
 
   const handleUpdateProfile = async () => {
+    if (
+      !childProfile.name ||
+      !childProfile.birth ||
+      !childProfile.gender ||
+      !childProfile.school ||
+      !childProfile.grade
+    ) {
+      alert("모든 정보를 입력해주세요.");
+      return;
+    }
+
+    if (!isSchoolCorrect) {
+      alert("학교 확인을 해주세요");
+      return;
+    }
+
     try {
       const response = await axios.put(
         `${API_BASE_URL}/children/${childProfile.id}`,
