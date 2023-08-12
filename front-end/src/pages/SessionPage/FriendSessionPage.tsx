@@ -41,6 +41,7 @@ import { API_BASE_URL } from '../../apis/urls';
 const FriendSessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [refuse, setRefuse] = useState(false);
   const [publisherId, setPublisherId] = useRecoilState(PublisherId);
   const [subscriberId, setSubscriberId] = useRecoilState(SubscriberId);
   const [publisherVideoStatus, setPublisherVideoStatus] =
@@ -160,7 +161,12 @@ const FriendSessionPage = () => {
             const message = JSON.parse(response.body);
             console.log(message);
             if (message.childId !== String(publisherId)) {
-              setOpen(true);
+              if (message.isLeft === true) {setOpen(true);}
+              else if(message.isLeft === false) {
+                console.log('초대를 거절했습니다.')
+                setRefuse(true);
+                setOpen(true);
+              }
             }
           }
         );
@@ -206,6 +212,7 @@ const FriendSessionPage = () => {
   };
 
   const leaveSession = () => {
+    setRefuse(false);
     setOpen(false);
     if (connected && stompClient) {
       const jsonMessage = {
@@ -351,10 +358,40 @@ const FriendSessionPage = () => {
             </Buttons>
           </NavContainer>
         </SessionPageContainer>
-      ) : streamList.length !== 2 ? (
-        navigate('/')
-      ) : (
+      ) : (streamList.length !== 2 ? (!refuse ? (navigate('/')) : (
         <Container>
+            <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
+              <Box
+                sx={{
+                  position: 'absolute' as 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 400,
+                  bgcolor: 'background.paper',
+                  border: '2px solid black',
+                  boxShadow: 24,
+                  p: 4,
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" component="h2">
+                  친구가 지금 바쁜 상태입니다.
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                  }}
+                >
+                  <IconButton onClick={leaveSession}>나가기</IconButton>
+                </Box>
+              </Box>
+            </Modal>
+          </Container>
+      )
+      ) : (<Container>
           <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
             <Box
               sx={{
@@ -371,7 +408,7 @@ const FriendSessionPage = () => {
               }}
             >
               <Typography variant="h4" component="h2">
-                친구 조아?
+                통화가 끝났습니다.
               </Typography>
               <Box
                 sx={{
@@ -380,13 +417,12 @@ const FriendSessionPage = () => {
                   alignItems: 'center',
                 }}
               >
-                <IconButton onClick={addFriend}>O</IconButton>
                 <IconButton onClick={leaveSession}>X</IconButton>
               </Box>
             </Box>
           </Modal>
-        </Container>
-      )}
+        </Container>))
+      }
     </>
   );
 };
