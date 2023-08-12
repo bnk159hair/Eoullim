@@ -17,7 +17,6 @@ export const ModalContent = styled.div`
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
   width: 30%;
 `;
 
@@ -26,13 +25,8 @@ export const FormContainer = styled.form`
   flex-direction: column;
 `;
 
-export const HeaderContainer = styled.div`
+export const ButtonContainer = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-`;
-
-export const FlexContainer = styled.div`
-  display: flex;
-  align-items: start;
 `;

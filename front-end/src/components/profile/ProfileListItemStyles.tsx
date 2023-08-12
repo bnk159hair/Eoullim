@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import nametag from "../../assets/ecc/nametag.png";
 
-export const ProfileContainer = styled.div``;
-
 export const ProfileUserContainer = styled.div`
   width: 300px;
   height: 300px;
@@ -17,7 +15,7 @@ export const ProfileUserContainer = styled.div`
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
   position: relative;
-  z-index: 1000;
+  z-index: 1;
 
   &:hover {
     transform: scale(1.25);

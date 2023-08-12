@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  ProfileContainer,
   ProfileUserContainer,
   NameTag,
   ButtonContainer,
@@ -13,6 +12,7 @@ import { tokenState, userState } from "../../atoms/Auth";
 import { Profilekey } from "../../atoms/Profile";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { Button } from "@mui/material";
+import ToRecordModal from "./ToRecordModal";
 
 interface ProfileListItemProps {
   name: string;
@@ -28,10 +28,11 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
   imgurl,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isRecordOpen, setIsRecordOpen] = useState(false);
   const token = useRecoilValue(tokenState);
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
   const [userName, setUserName] = useRecoilState(userState);
+  const navigate = useNavigate();
   const IMGURL = `/${imgurl}.png`;
 
   const handleModalOpen = () => {
@@ -68,13 +69,18 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
         console.log("프로필 로그인 오류", error);
       });
   };
-  const handleRecordClick = () => {
-    setProfileKey(childId);
-    navigate("/record");
+
+  const handleRecordOpen = () => {
+    setIsRecordOpen(true);
   };
+
+  const handleRecordClose = () => {
+    setIsRecordOpen(false);
+  };
+
   return (
     <>
-      <ProfileContainer>
+      <div>
         <ProfileUserContainer
           style={{ backgroundImage: `url(${IMGURL})` }}
           onClick={handleMainClick}
@@ -92,18 +98,21 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
           <Button
             variant="contained"
             sx={{ fontSize: "18px", paddingX: "2rem" }}
-            onClick={handleRecordClick}
+            onClick={handleRecordOpen}
           >
             녹화영상
           </Button>
         </ButtonContainer>
-      </ProfileContainer>
+      </div>
       {isModalOpen && (
         <ModifyModal
           onClose={handleModalClose}
           childId={childId}
           resetList={resetList}
         />
+      )}
+      {isRecordOpen && (
+        <ToRecordModal onClose={handleRecordClose} childId={childId} />
       )}
     </>
   );
