@@ -23,6 +23,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isIdUnique, setIsIdUnique] = useState(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+  const phoneNumberPattern = /^010\d{8}$/;
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
@@ -38,6 +39,12 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
 
     if (!isPasswordMatch) {
       alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    const isValidPhoneNumber = phoneNumberPattern.test(phoneNumber);
+    if (!isValidPhoneNumber) {
+      alert("올바른 전화번호 형식이 아닙니다.");
       return;
     }
 
@@ -93,15 +100,15 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
         <ModalHeaderContainer>
           <h2>회원가입</h2>
           <IconButton onClick={onClose}>
-            <CloseIcon fontSize='large' />
+            <CloseIcon fontSize="large" />
           </IconButton>
         </ModalHeaderContainer>
         <ModalFormContainer>
           <IdContainer>
             <TextField
-              label='아이디'
-              variant='outlined'
-              margin='dense'
+              label="아이디"
+              variant="outlined"
+              margin="dense"
               value={userName}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setUserName(event.target.value)
@@ -109,29 +116,30 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
               sx={{ width: "75%" }}
             />
             <Button
-              variant='contained'
-              size='large'
-              color='warning'
+              variant="contained"
+              size="large"
+              color="warning"
               sx={{ padding: "0.8rem", marginLeft: "auto", fontSize: "16px" }}
-              onClick={handleIdCheck}>
+              onClick={handleIdCheck}
+            >
               중복확인
             </Button>
           </IdContainer>
           <TextField
-            label='비밀번호'
-            variant='outlined'
-            margin='dense'
-            type='password'
+            label="비밀번호"
+            variant="outlined"
+            margin="dense"
+            type="password"
             value={password}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setPassword(event.target.value)
             }
           />
           <TextField
-            label='비밀번호 확인'
-            variant='outlined'
-            margin='dense'
-            type='password'
+            label="비밀번호 확인"
+            variant="outlined"
+            margin="dense"
+            type="password"
             value={passwordConfirmation}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               handlePasswordConfirmation(event)
@@ -140,32 +148,33 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
             helperText={!isPasswordMatch && "비밀번호가 일치하지 않습니다."}
           />
           <TextField
-            label='이름'
-            variant='outlined'
-            margin='dense'
+            label="이름"
+            variant="outlined"
+            margin="dense"
             value={name}
-            placeholder='홍길동'
+            placeholder="홍길동"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setName(event.target.value)
             }
           />
           <TextField
-            label='전화번호'
-            variant='outlined'
-            margin='dense'
+            label="전화번호"
+            variant="outlined"
+            margin="dense"
             value={phoneNumber}
-            placeholder='01012345678'
+            placeholder="01012345678"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setPhoneNumber(event.target.value)
             }
             helperText="'-'없이 입력해주세요."
           />
           <Button
-            variant='contained'
-            size='large'
-            color='warning'
+            variant="contained"
+            size="large"
+            color="warning"
             sx={{ padding: "0.6rem", marginTop: "1rem", fontSize: "20px" }}
-            onClick={handleSignUp}>
+            onClick={handleSignUp}
+          >
             가입완료
           </Button>
         </ModalFormContainer>
