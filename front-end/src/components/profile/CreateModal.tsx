@@ -108,14 +108,14 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose, resetList }) => {
         <ThemeProvider theme={theme}>
           <FormContainer>
             <HeaderContainer>
-              <h2>프로필 생성</h2>
+              <h2>아이 프로필 생성</h2>
               <IconButton onClick={onClose}>
                 <CloseIcon fontSize="large" />
               </IconButton>
             </HeaderContainer>
             <FlexContainer>
               <TextField
-                label="이름"
+                label="아이 이름"
                 variant="outlined"
                 placeholder="홍길동"
                 value={name}
