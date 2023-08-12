@@ -1,5 +1,6 @@
-import { styled } from 'styled-components';
+import { styled, keyframes } from 'styled-components';
 import loginBackground from '../../assets/background/login.gif';
+import click from '../../assets/ecc/click.png'
 const IMGURL = '/bear.png';
 
 export const SessionPageContainer = styled.div`
@@ -75,3 +76,20 @@ export const Buttons = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
+
+const blinkAnimation = keyframes`
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+`;
+
+export const Click = styled.div`
+  width: 90px;
+  height:90px;
+  background-image: url(${click});
+  background-size:cover;
+  animation: ${blinkAnimation} 1s infinite;
+`
