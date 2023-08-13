@@ -109,7 +109,7 @@ const SessionPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!open && streamList[0]?.userId && streamList[1]?.userId) {
+    if (!open && streamList[0]?.userId && streamList[1]?.userId && step === 1) {
       guidance.play();
     }
   }, [streamList])
@@ -138,7 +138,9 @@ const SessionPage = () => {
 
   useEffect(() => {
     if (publisherGuideStatus && subscriberGuideStatus) {
-      setStep(step + 1);
+      const nextStep = step + 1;
+      setStep(nextStep);
+      const guidance = new Audio(`http://localhost:3000/${nextStep}.mp3`)
       guidance.play();
       setPublisherGuideStatus(false);
       setSubscriberGuideStatus(false);
