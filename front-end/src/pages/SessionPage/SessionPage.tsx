@@ -141,7 +141,7 @@ const SessionPage = () => {
       const nextStep = step + 1;
       setStep(nextStep);
       const guidance = new Audio(`http://localhost:3000/${nextStep}.mp3`)
-      guidance.play();
+      if (nextStep <= 8) guidance.play();
       setPublisherGuideStatus(false);
       setSubscriberGuideStatus(false);
       console.log(step);
