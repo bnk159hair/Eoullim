@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 
-export const SpinnerContainer = styled.div`
-  width: 100%;
-  height: 100%;
+export const TimerWrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  position: relative;
+  width: 80px;
+  height: 60px;
+  font-size: 32px;
+  text-align: center;
+  padding-top: 34px;
 `;
 
 export const Spinner = styled.div`
@@ -15,7 +18,7 @@ export const Spinner = styled.div`
 export const AnimalEmoji = styled.span`
   font-size: 80px;
   position: absolute;
-  top: 47%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 `;

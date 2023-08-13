@@ -4,6 +4,7 @@ import {
   LoginContainer,
   Logo,
   ImageContainer,
+  Animals,
 } from "./LoginPageStyles";
 
 const LoginPage = () => {
@@ -14,6 +15,7 @@ const LoginPage = () => {
       </LoginContainer>
       <ImageContainer>
         <Logo onClick={() => window.location.reload()} />
+        <Animals />
       </ImageContainer>
     </LoginPageContainer>
   );

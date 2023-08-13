@@ -9,6 +9,7 @@ import FriendSessionPage from './pages/SessionPage/FriendSessionPage';
 import FriendsPage from './pages/Friendspage/FriendsPage';
 import RecordPage from './pages/RecordPage/RecordPage';
 import BackgroundMusic from './components/main/BackgroundMusic';
+import { useEffect } from 'react';
 
 function App() {
   return (

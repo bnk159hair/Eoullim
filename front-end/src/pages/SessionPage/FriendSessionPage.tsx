@@ -10,10 +10,14 @@ import {
   Container,
   MainWrapper,
   MyVideo,
+  NavContainer,
+  SessionPageContainer,
   SideBar,
   YourVideo,
 } from './SessionPageStyles';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Profile, Profilekey } from '../../atoms/Profile';
 import { invitationToken, invitationSessionId } from '../../atoms/Ivitation';
@@ -34,9 +38,23 @@ import { WebSocketApis } from '../../apis/webSocketApis';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
 
-const SessionPage = () => {
+interface FriendsProfile {
+  id: number;
+  name: string;
+  birth: number;
+  gender: string;
+  school: string;
+  grade: number;
+  status: string;
+  animon: { id: number; imagePath: string; name: string };
+}
+
+const FriendSessionPage = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [refuse, setRefuse] = useState(false);
+  const [friends, setFriends] = useState<FriendsProfile[]>([]);
+  const [isFriend, setFriend] = useState(false);
   const [publisherId, setPublisherId] = useRecoilState(PublisherId);
   const [subscriberId, setSubscriberId] = useRecoilState(SubscriberId);
   const [publisherVideoStatus, setPublisherVideoStatus] =
@@ -63,13 +81,14 @@ const SessionPage = () => {
   const IMGURL = '/bear.png';
   const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
   const [step, setStep] = useState(0);
+  const [subscriberName, setSubscriberName] = useState('');
 
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
-  setPublisherAnimonURL(profile.animon.name + 'mask');
+  setPublisherAnimonURL('https://i9c207.p.ssafy.io/' + profile.animon.name + 'mask');
   console.log(profileId, sessionId, sessionToken);
-  const { publisher, streamList, session, isOpen } = useOpenVidu(
+  const { publisher, streamList, session, isOpen, onChangeMicStatus } = useOpenVidu(
     profileId,
     sessionId,
     sessionToken
@@ -77,6 +96,11 @@ const SessionPage = () => {
   const sessionOver = () => {
     setOpen(true);
   };
+
+  const [micStatus, setMicStatus] = useState(true);
+  useEffect(() => {
+    onChangeMicStatus(micStatus);
+  }, [micStatus]);
 
   const [connected, setConnected] = useState<boolean>(false);
   const [stompClient, setStompClient] = useState<Client | null>(null);
@@ -86,6 +110,7 @@ const SessionPage = () => {
     setSubscriberVideoStatus(false);
     setPublisherGuideStatus(false);
     setSubscriberGuideStatus(false);
+    getFriends();
   }, []);
 
   useEffect(() => {
@@ -98,7 +123,14 @@ const SessionPage = () => {
         setSubscriberId(user.userId);
       }
       if (subscriberId) {
-        // setSubscriberAnimonURL(url+'mask');
+        getAnimon();
+        friends.forEach((user: any) => {
+          console.log(user.id, subscriberId)
+          if (user.id===Number(subscriberId)) {
+            console.log('친구입니다.')
+            setFriend(true);
+          }
+        })
       }
     }
   }, [streamList]);
@@ -144,6 +176,21 @@ const SessionPage = () => {
             setSubscriberGuideStatus(message.isNextGuideOn);
           }
         });
+        client.subscribe(
+          `/topic/${session.sessionId}/leave-session`,
+          (response) => {
+            const message = JSON.parse(response.body);
+            console.log(message);
+            if (message.childId !== String(publisherId)) {
+              if (message.isLeft === true) {setOpen(true);}
+              else if(message.isLeft === false) {
+                console.log('초대를 거절했습니다.')
+                setRefuse(true);
+                setOpen(true);
+              }
+            }
+          }
+        );
       };
 
       client.onDisconnect = () => {
@@ -160,10 +207,67 @@ const SessionPage = () => {
     }
   }, [streamList]);
 
+  const getFriends = () => {
+    axios
+      .get(`${API_BASE_URL}/friendship/${profileId}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then((response) => {
+        const data = response.data.result;
+        setFriends(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        } else {
+          console.log('친구목록불러오기오류', error);
+        }
+      });
+  };
+
+  const getAnimon = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/children/participant/${subscriberId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+
+      console.log('유저 정보 가져오기 성공!');
+      console.log(response);
+      setSubscriberAnimonURL(
+        'https://i9c207.p.ssafy.io/' + response.data.result.animon.name + 'mask'
+      );
+      setSubscriberName(response.data.result.name);
+      return response.data.result;
+    } catch (error) {
+      console.log('유저 정보 가져오기 실패ㅠ');
+      console.log(error);
+      throw error;
+    }
+  };
+
   const leaveSession = () => {
+    setRefuse(false);
     setOpen(false);
-    setSessionToken('');
-    setSessionId('');
+    if (connected && stompClient) {
+      const jsonMessage = {
+        childId: String(publisherId),
+        isLeft: true,
+      };
+      const message = JSON.stringify(jsonMessage);
+      stompClient.publish({
+        destination: `/app/${session.sessionId}/leave-session`,
+        body: message,
+      });
+      console.log('메시지 전송:', message);
+    }
     navigate('/');
   };
 
@@ -209,6 +313,10 @@ const SessionPage = () => {
     }
   };
 
+  const changeAudioStatus = () => {
+    setMicStatus((prev) => !prev);
+  };
+
   const nextGuidance = () => {
     if (connected && stompClient) {
       const isNextGuideOn = !publisherGuideStatus;
@@ -229,50 +337,134 @@ const SessionPage = () => {
   return (
     <>
       {!open ? (
-        <Container>
-          <MainWrapper>
-            <YourVideo>
-              {streamList.length > 1 && streamList[1].streamManager ? (
-                <StreamCanvas
-                  streamManager={streamList[1].streamManager}
-                  id={streamList[1].userId}
-                  avatarPath="http://localhost:3000/14.png"
-                  videoState={subscriberVideoStatus}
-                />
-              ) : (
-                <Loading />
-              )}
-            </YourVideo>
-          </MainWrapper>
-          <SideBar>
-            <Character
-              style={{ backgroundImage: `url(${IMGURL})` }}
-              onClick={nextGuidance}
-            >
-              {guidance[step]}
-            </Character>
-            <MyVideo>
-              {streamList.length > 1 && streamList[0].streamManager ? (
-                <StreamCanvas
-                  streamManager={streamList[0].streamManager}
-                  id={streamList[0].userId}
-                  avatarPath={publisherAnimonURL}
-                  videoState={publisherVideoStatus}
-                />
-              ) : (
-                <Loading />
-              )}
-            </MyVideo>
+        <SessionPageContainer>
+          <Container>
+            <MainWrapper>
+              <YourVideo>
+                {streamList.length > 1 && streamList[1].streamManager ? (
+                  <StreamCanvas
+                    streamManager={streamList[1].streamManager}
+                    name={subscriberName}
+                    avatarPath={subscriberAnimonURL}
+                    videoState={subscriberVideoStatus}
+                  />
+                ) : (
+                  <Loading />
+                )}
+              </YourVideo>
+            </MainWrapper>
+            <SideBar>
+              <Character onClick={nextGuidance}>{guidance[step]}</Character>
+              <MyVideo>
+                {streamList.length > 1 && streamList[0].streamManager ? (
+                  <StreamCanvas
+                    streamManager={streamList[0].streamManager}
+                    name={profile.name}
+                    avatarPath={`${publisherAnimonURL}`}
+                    videoState={publisherVideoStatus}
+                  />
+                ) : (
+                  <Loading />
+                )}
+              </MyVideo>
+            </SideBar>
+          </Container>
+          <NavContainer>
             <Buttons>
-              <button onClick={changeVideoStatus}>애니몬</button>
-              <button onClick={sessionOver}>나가기</button>
+              <Button
+                variant="contained"
+                onClick={changeVideoStatus}
+                sx={{ fontSize: '30px' }}
+              >
+                {publisherVideoStatus
+                  ? profile.gender === 'W'
+                    ? '👩'
+                    : '🧑'
+                  : '🙈'}
+              </Button>
+              <Button variant="contained" onClick={changeAudioStatus}>
+                {micStatus ? (
+                  <MicIcon fontSize="large"></MicIcon>
+                ) : (
+                  <MicOffIcon fontSize="large"></MicOffIcon>
+                )}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={sessionOver}
+                sx={{ fontSize: '30px' }}
+              >
+                나가기
+              </Button>
             </Buttons>
-          </SideBar>
-        </Container>
-      ) : streamList.length !== 2 ? (
-        navigate('/')
-      ) : (
+          </NavContainer>
+        </SessionPageContainer>
+      ) : (streamList.length !== 2 ? (!refuse ? (navigate('/')) : (
         <Container>
+            <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
+              <Box
+                sx={{
+                  position: 'absolute' as 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 400,
+                  bgcolor: 'background.paper',
+                  border: '2px solid black',
+                  boxShadow: 24,
+                  p: 4,
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" component="h2">
+                  친구가 지금 바쁜 상태입니다.
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                  }}
+                >
+                  <IconButton onClick={leaveSession}>나가기</IconButton>
+                </Box>
+              </Box>
+            </Modal>
+          </Container>
+      )
+      ) : (!isFriend ? (<Container>
+        <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
+          <Box
+            sx={{
+              position: 'absolute' as 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 400,
+              bgcolor: 'background.paper',
+              border: '2px solid black',
+              boxShadow: 24,
+              p: 4,
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="h4" component="h2">
+              친구 조아?
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+              }}
+            >
+              <IconButton onClick={addFriend}>O</IconButton>
+              <IconButton onClick={leaveSession}>X</IconButton>
+            </Box>
+          </Box>
+        </Modal>
+      </Container>) : (<Container>
           <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
             <Box
               sx={{
@@ -289,7 +481,7 @@ const SessionPage = () => {
               }}
             >
               <Typography variant="h4" component="h2">
-                친구 조아?
+                통화가 끝났습니다.
               </Typography>
               <Box
                 sx={{
@@ -298,15 +490,14 @@ const SessionPage = () => {
                   alignItems: 'center',
                 }}
               >
-                <IconButton onClick={addFriend}>O</IconButton>
                 <IconButton onClick={leaveSession}>X</IconButton>
               </Box>
             </Box>
           </Modal>
-        </Container>
-      )}
+        </Container>)))
+      }
     </>
   );
 };
 
-export default SessionPage;
+export default FriendSessionPage;

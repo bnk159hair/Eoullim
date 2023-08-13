@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -10,42 +10,15 @@ export const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  z-index: 2;
 `;
 
 export const ModalContent = styled.div`
-  background-color: #fff; /* 모달용 흰 배경 */
+  background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2); /* 모달용 그림자 효과 */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
   width: 30%;
-
-  // input {
-  //   width: calc(100% - 20px);
-  //   padding: 10px;
-  //   margin-bottom: 10px;
-  //   border: 1px solid #ccc;
-  //   border-radius: 4px;
-  // }
-
-  // div {
-  //   display: flex;
-  //   align-items: center;
-  //   margin-bottom: 10px;
-
-  //   label {
-  //     margin-right: 10px;
-  //   }
-  // }
-
-  // button {
-  //   padding: 10px 20px;
-  //   margin-right: 10px;
-  //   border: none;
-  //   border-radius: 4px;
-  //   color: #fff;
-  //   cursor: pointer;
-  // }
 `;
 
 export const FormContainer = styled.form`
@@ -67,6 +40,6 @@ export const FlexContainer = styled.div`
 export const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
-  // justify-content: st;
+  justify-content: space-evenly;
   align-items: center;
 `;
