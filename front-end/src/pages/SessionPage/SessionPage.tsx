@@ -75,8 +75,8 @@ const SessionPage = () => {
   const profile = useRecoilValue(Profile);
   const [subscriberName, setSubscriberName] = useState("");
 
-  const guidance = ["0번 가이드", "1번 가이드", "2번 가이드", "3번 가이드"];
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
+  const guidance = new Audio(`http://localhost:3000/${step}.mp3`);
   const ANIMON_URL = 'http://i9c207.p.ssafy.io/'
 
   console.log("오픈비두 시작");
@@ -109,6 +109,12 @@ const SessionPage = () => {
   }, []);
 
   useEffect(() => {
+    if (!open && streamList[0]?.userId && streamList[1]?.userId) {
+      guidance.play();
+    }
+  }, [streamList])
+
+  useEffect(() => {
     setOpen(isOpen);
   }, [isOpen]);
 
@@ -133,6 +139,7 @@ const SessionPage = () => {
   useEffect(() => {
     if (publisherGuideStatus && subscriberGuideStatus) {
       setStep(step + 1);
+      guidance.play();
       setPublisherGuideStatus(false);
       setSubscriberGuideStatus(false);
       console.log(step);
@@ -344,7 +351,7 @@ const SessionPage = () => {
             </MainWrapper>
             <SideBar>
               <Character onClick={nextGuidance}>
-                {guidance[step]}
+                {step}
                 <Click />
               </Character>
               <MyVideo>

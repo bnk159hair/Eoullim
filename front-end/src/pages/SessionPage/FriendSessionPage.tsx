@@ -88,7 +88,7 @@ const FriendSessionPage = () => {
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
-  setPublisherAnimonURL(ANIMON_URL + profile.animon.name + 'mask');
+  setPublisherAnimonURL(ANIMON_URL + profile.animon.name + 'mask.png');
   console.log(profileId, sessionId, sessionToken);
   const { publisher, streamList, session, isOpen, onChangeMicStatus } = useOpenVidu(
     profileId,
@@ -244,7 +244,7 @@ const FriendSessionPage = () => {
       console.log('유저 정보 가져오기 성공!');
       console.log(response);
       setSubscriberAnimonURL(
-        ANIMON_URL + response.data.result.animon.name + 'mask'
+        ANIMON_URL + response.data.result.animon.name + 'mask.png'
       );
       setSubscriberName(response.data.result.name);
       return response.data.result;
