@@ -59,7 +59,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             String key = "BlackList:" + userName;
             String isLogout = (String) blackList.opsForValue().get(key);
-            log.info(String.valueOf(isLogout));
             if (ObjectUtils.isEmpty(isLogout)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null,

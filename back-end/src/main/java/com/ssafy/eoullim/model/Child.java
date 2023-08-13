@@ -3,9 +3,11 @@ package com.ssafy.eoullim.model;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Setter
 @Getter
 @AllArgsConstructor
 public class Child {
