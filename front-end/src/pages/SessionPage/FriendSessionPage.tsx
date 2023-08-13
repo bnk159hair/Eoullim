@@ -84,11 +84,17 @@ const FriendSessionPage = () => {
   const [step, setStep] = useState(0);
   const [subscriberName, setSubscriberName] = useState("");
 
-  console.log("오픈비두 시작");
+  const ANIMON_URL = 'http://i9c207.p.ssafy.io/'
+
+  console.log('오픈비두 시작');
 
   setPublisherId(profileId);
-  setPublisherAnimonURL(
-    "https://i9c207.p.ssafy.io/" + profile.animon.name + "mask"
+  setPublisherAnimonURL(ANIMON_URL + profile.animon.name + 'mask');
+  console.log(profileId, sessionId, sessionToken);
+  const { publisher, streamList, session, isOpen, onChangeMicStatus } = useOpenVidu(
+    profileId,
+    sessionId,
+    sessionToken
   );
   console.log(profileId, sessionId, sessionToken);
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
@@ -243,7 +249,7 @@ const FriendSessionPage = () => {
       console.log("유저 정보 가져오기 성공!");
       console.log(response);
       setSubscriberAnimonURL(
-        "https://i9c207.p.ssafy.io/" + response.data.result.animon.name + "mask"
+        ANIMON_URL + response.data.result.animon.name + 'mask'
       );
       setSubscriberName(response.data.result.name);
       return response.data.result;

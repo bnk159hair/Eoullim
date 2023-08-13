@@ -32,7 +32,7 @@ export const useFaceMeshModel = (): any => {
 export const useFaceMask = (
   videoElement: HTMLVideoElement | null,
   canvasElement: HTMLCanvasElement | null,
-  avatarPath: any
+  avatarPath: any,
 ) => {
   const [model, setModel] = useState<any>();
 

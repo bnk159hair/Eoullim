@@ -78,12 +78,13 @@ const SessionPage = () => {
 
   const guidance = ["0번 가이드", "1번 가이드", "2번 가이드", "3번 가이드"];
   const [step, setStep] = useState(0);
+  const ANIMON_URL = 'http://i9c207.p.ssafy.io/'
 
   console.log("오픈비두 시작");
 
   setPublisherId(profileId);
   setPublisherAnimonURL(
-    "https://i9c207.p.ssafy.io/" + profile.animon.name + "mask"
+    ANIMON_URL + profile.animon.name + "mask.png"
   );
 
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
@@ -232,7 +233,7 @@ const SessionPage = () => {
       console.log("유저 정보 가져오기 성공!");
       console.log(response);
       setSubscriberAnimonURL(
-        "https://i9c207.p.ssafy.io/" + response.data.result.animon.name + "mask"
+        ANIMON_URL + response.data.result.animon.name + "mask.png"
       );
       setSubscriberName(response.data.result.name);
       return response.data.result;
