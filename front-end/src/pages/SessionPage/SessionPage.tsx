@@ -77,14 +77,13 @@ const SessionPage = () => {
   const [subscriberName, setSubscriberName] = useState("");
 
   const [step, setStep] = useState(1);
-  const guidance = new Audio(`http://localhost:3000/${step}.mp3`);
-  const ANIMON_URL = 'http://i9c207.p.ssafy.io/'
+  const guidance = new Audio(`/${step}.mp3`);
 
   console.log("오픈비두 시작");
 
   setPublisherId(profileId);
   setPublisherAnimonURL(
-    ANIMON_URL + profile.animon.name + "mask.png"
+    profile.animon.name + "mask.png"
   );
 
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
@@ -141,7 +140,7 @@ const SessionPage = () => {
     if (publisherGuideStatus && subscriberGuideStatus) {
       const nextStep = step + 1;
       setStep(nextStep);
-      const guidance = new Audio(`http://localhost:3000/${nextStep}.mp3`)
+      const guidance = new Audio(`/${nextStep}.mp3`)
       if (nextStep <= 8) guidance.play();
       setPublisherGuideStatus(false);
       setSubscriberGuideStatus(false);
@@ -242,7 +241,7 @@ const SessionPage = () => {
       console.log("유저 정보 가져오기 성공!");
       console.log(response);
       setSubscriberAnimonURL(
-        ANIMON_URL + response.data.result.animon.name + "mask.png"
+        response.data.result.animon.name + "mask.png"
       );
       setSubscriberName(response.data.result.name);
       return response.data.result;
