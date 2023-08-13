@@ -253,7 +253,7 @@ export const useOpenVidu = (
       setPublisher(null);
       setSubscribers([]);
     };
-  }, [sessionId]);
+  }, []);
 
   useEffect(() => {
     console.log("탭 종료 시에 leaveSession 함수 실행할 것이다.");
