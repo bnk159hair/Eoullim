@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
 export const Canvas = styled.canvas<{ videoState: boolean }>`
-  width: 1000;
-  height: 400;
   position: absolute;
   top: 0;
   left: 0;
@@ -18,4 +16,15 @@ export const Video = styled.video<{ videoState: boolean }>`
   object-fit: cover;
   visibility: ${(props) => (props.videoState ? "visible" : "visible")};
   z-index: 2000;
+`;
+
+export const UserName = styled.div`
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  padding: 0.25rem 0.7rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 10%;
+  z-index: 2001;
 `;
