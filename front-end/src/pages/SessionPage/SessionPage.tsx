@@ -15,7 +15,7 @@ import {
   YourVideo,
   Click,
 } from "./SessionPageStyles";
-import { Modal, Box, Typography, IconButton, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Profile, Profilekey } from "../../atoms/Profile";
 import { tokenState } from "../../atoms/Auth";
@@ -36,6 +36,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../../apis/urls";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
+import EndModal from "../../components/stream/EndModal";
 
 interface FriendsProfile {
   id: number;
@@ -77,12 +78,13 @@ const SessionPage = () => {
 
   const guidance = ["0번 가이드", "1번 가이드", "2번 가이드", "3번 가이드"];
   const [step, setStep] = useState(0);
+  const ANIMON_URL = 'http://i9c207.p.ssafy.io/'
 
   console.log("오픈비두 시작");
 
   setPublisherId(profileId);
   setPublisherAnimonURL(
-    "https://i9c207.p.ssafy.io/" + profile.animon.name + "mask"
+    ANIMON_URL + profile.animon.name + "mask.png"
   );
 
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
@@ -231,7 +233,7 @@ const SessionPage = () => {
       console.log("유저 정보 가져오기 성공!");
       console.log(response);
       setSubscriberAnimonURL(
-        "https://i9c207.p.ssafy.io/" + response.data.result.animon.name + "mask"
+        ANIMON_URL + response.data.result.animon.name + "mask.png"
       );
       setSubscriberName(response.data.result.name);
       return response.data.result;
@@ -394,70 +396,17 @@ const SessionPage = () => {
       ) : streamList.length !== 2 ? (
         navigate("/")
       ) : !isFriend ? (
-        <Container>
-          <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
-            <Box
-              sx={{
-                position: "absolute" as "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid black",
-                boxShadow: 24,
-                p: 4,
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h4" component="h2">
-                친구 조아?
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                }}
-              >
-                <IconButton onClick={addFriend}>O</IconButton>
-                <IconButton onClick={leaveSession}>X</IconButton>
-              </Box>
-            </Box>
-          </Modal>
-        </Container>
+        <EndModal
+          onClose={leaveSession}
+          message="친구 조아?"
+          isFriend={isFriend}
+        />
       ) : (
-        <Container>
-          <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
-            <Box
-              sx={{
-                position: "absolute" as "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid black",
-                boxShadow: 24,
-                p: 4,
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h4" component="h2">
-                통화가 끝났습니다.
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                }}
-              >
-                <IconButton onClick={leaveSession}>X</IconButton>
-              </Box>
-            </Box>
-          </Modal>
-        </Container>
+        <EndModal
+          onClose={leaveSession}
+          message="통화가 끝났습니다."
+          isFriend={isFriend}
+        />
       )}
     </>
   );
