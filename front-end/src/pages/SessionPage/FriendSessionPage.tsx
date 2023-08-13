@@ -410,6 +410,7 @@ const FriendSessionPage = () => {
             onClose={leaveSession}
             message="친구가 지금 바쁜 상태입니다."
             isFriend={true}
+            addFriend={addFriend}
           />
         )
       ) : !isFriend ? (
@@ -417,12 +418,14 @@ const FriendSessionPage = () => {
           onClose={leaveSession}
           message="친구 조아?"
           isFriend={isFriend}
+          addFriend={addFriend}
         />
       ) : (
         <EndModal
           onClose={leaveSession}
           message="통화가 끝났습니다."
           isFriend={isFriend}
+          addFriend={addFriend}
         />
       )}
     </>
