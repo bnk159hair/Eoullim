@@ -18,6 +18,9 @@ export const PasswordChange = styled.div`
   height: 80px;
   margin-left: auto;
   cursor: pointer;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 export const MarginContainer = styled.div`
