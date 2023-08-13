@@ -12,9 +12,10 @@ interface EndModalProps {
   message: string;
   onClose: () => void;
   isFriend: boolean;
+  addFriend: ()=>void;
 }
 
-const EndModal: React.FC<EndModalProps> = ({ onClose, message, isFriend }) => {
+const EndModal: React.FC<EndModalProps> = ({ onClose, message, isFriend,addFriend }) => {
   return (
     <>
       <ModalOverlay>
@@ -23,7 +24,7 @@ const EndModal: React.FC<EndModalProps> = ({ onClose, message, isFriend }) => {
           <FlexContent>
             {!isFriend ? (
               <>
-                <Accept onClick={onClose} />
+                <Accept onClick={addFriend} />
                 <Refuse onClick={onClose} />
               </>
             ) : (

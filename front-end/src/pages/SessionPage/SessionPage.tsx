@@ -400,12 +400,15 @@ const SessionPage = () => {
           onClose={leaveSession}
           message="친구 조아?"
           isFriend={isFriend}
+          addFriend = {addFriend}
+
         />
       ) : (
         <EndModal
           onClose={leaveSession}
           message="통화가 끝났습니다."
           isFriend={isFriend}
+          addFriend = {addFriend}
         />
       )}
     </>
