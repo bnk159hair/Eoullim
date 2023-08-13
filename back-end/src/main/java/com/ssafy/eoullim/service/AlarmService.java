@@ -28,6 +28,7 @@ public class AlarmService {
                                 .data(alarm));
                         log.info("성공적으로 보냈어요");
                     } catch (IOException exception) {
+                        log.info("delete를 하려고 할 때 발생한 에러");
                         emitterRepository.delete(receiverId);
                         throw new EoullimApplicationException(ErrorCode.NOTIFICATION_CONNECT_ERROR,
                                 String.format("%d 에게 초대장 전송을 실패했어요.", receiverId));

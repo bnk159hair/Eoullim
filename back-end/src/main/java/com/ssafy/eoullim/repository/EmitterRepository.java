@@ -26,6 +26,7 @@ public class EmitterRepository {
 
     public void delete(Integer childId) {
         log.info("delete call");
+        log.info(childId + "여기서 에러 발생");
         emitterMap.remove(getKey(childId));
     }
     public Optional<SseEmitter> get(Integer childId) {

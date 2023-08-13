@@ -3,8 +3,10 @@ package com.ssafy.eoullim.service;
 import com.ssafy.eoullim.exception.EoullimApplicationException;
 import com.ssafy.eoullim.exception.ErrorCode;
 import com.ssafy.eoullim.model.Child;
+import com.ssafy.eoullim.model.Status;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.model.entity.FriendshipEntity;
+import com.ssafy.eoullim.repository.ChildCacheRepository;
 import com.ssafy.eoullim.repository.ChildRepository;
 import com.ssafy.eoullim.repository.FriendshipRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final ChildRepository childRepository;
+    private final ChildCacheRepository childCacheRepository;
 
     public void regist(Integer myId, Integer friendId) {
         // ERROR : 두 childId가 같은 경우
@@ -44,9 +47,16 @@ public class FriendshipService {
         if(!childEntity.getUser().getId().equals(userId))
             throw new EoullimApplicationException(ErrorCode.FORBIDDEN_NO_PERMISSION,
                     String.format("you have no permission with child %d", childId));
-        return friendshipRepository.findFriendsByMyId(childId)
-                .stream()
-                .map(Child::fromEntity)
-                .collect(Collectors.toList());
+        // 친구들의 접속 상태 확인 후 반환
+        List<Child> friends = friendshipRepository.findFriendsByMyId(childId)
+                                .stream()
+                                .map(Child::fromEntity)
+                                .collect(Collectors.toList());
+        for (Child friend : friends) {
+            if (childCacheRepository.isON(friend.getId()))
+                friend.setStatus(Status.ON);
+            else friend.setStatus(Status.OFF);
+        }
+        return friends;
     }
 }
