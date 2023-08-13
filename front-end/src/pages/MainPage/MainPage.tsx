@@ -51,6 +51,7 @@ const MainPage: React.FC = () => {
       navigate('/login');
     } else {
       getprofilelist();
+      profileLogin();
     }
   }, [profileId, token, navigate]);
 
@@ -76,13 +77,33 @@ const MainPage: React.FC = () => {
     }
   });
   
+  const profileLogin = () => {
+    axios
+      .post(
+        `${API_BASE_URL}/children/login/${profileId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("프로필로그인");
+      })
+      .catch((error) => {
+        console.log("프로필 로그인 오류", error);
+      });
+  };
 
   const getNewFriend = () => {
     navigate('/session');
+    profileLogout();
   };
 
   const handleFriendsClick = () => {
     navigate('/friends');
+    profileLogout();
   };
   const getBack = () => {
     profileLogout();

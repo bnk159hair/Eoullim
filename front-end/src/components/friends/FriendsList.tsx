@@ -86,6 +86,7 @@ const FriendsList = () => {
               friendId={friend.id}
               friendName={friend.name}
               animon={friend.animon.name}
+              status={friend.status}
             />
           ))
         ) : (

@@ -45,7 +45,7 @@ const BackgroundMusic: React.FC = () => {
     }
   };
 
-  if (location.pathname === '/session') {
+  if (location.pathname === '/session' || location.pathname === '/friendsession') {
     pauseMusic();
     return null;
   }
