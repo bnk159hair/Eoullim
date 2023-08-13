@@ -26,11 +26,10 @@ const MainPage: React.FC = () => {
   const navigate = useNavigate();
   const profileId = useRecoilValue(Profilekey);
   const token = useRecoilValue(tokenState);
-
   const [profile, setProfile] = useRecoilState(Profile);
-  
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
+  const [userName,setUserName] = useState<string>('');
 
   useEffect(() => {
     const source = new EventSource(
@@ -48,6 +47,14 @@ const MainPage: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    } else {
+      getprofilelist();
+    }
+  }, [profileId, token, navigate]);
+
+  useEffect(() => {
     if (eventSource) {
       const eventListener = (event: any) => {
         if (event.data === 'connect completed') {
@@ -57,6 +64,7 @@ const MainPage: React.FC = () => {
           const message = JSON.parse(event.data)
           console.log(message.sessionId)
           setSessionId(message.sessionId)
+          setUserName(message.userName)
           setAlarmOpen(true)
         }
       };
@@ -67,6 +75,7 @@ const MainPage: React.FC = () => {
       };
     }
   });
+  
 
   const getNewFriend = () => {
     navigate('/session');
@@ -79,13 +88,7 @@ const MainPage: React.FC = () => {
     profileLogout();
     navigate('/profile');
   };
-  useEffect(() => {
-    if (!token) {
-      navigate('/login');
-    } else {
-      getprofilelist();
-    }
-  }, [profileId, token, navigate]);
+  
 
   const getprofilelist = () => {
     axios
@@ -163,7 +166,7 @@ const MainPage: React.FC = () => {
           <AnimonModal onClose={closeModal} profile={getprofilelist} />
         )}
         {isAlarmOpen && (
-          <AlarmModal onClose={closeAlarm} sessionId={sessionId} />
+          <AlarmModal onClose={closeAlarm} sessionId={sessionId} userName={userName}/>
         )}
         <HoberLeft onClick={getNewFriend}>
           <NewFriend />

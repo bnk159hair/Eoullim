@@ -1,13 +1,5 @@
-import styled from 'styled-components';
-import nametag from '../../assets/ecc/nametag.png';
-
-export const ProfileContainer = styled.div`
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.25);
-  }
-`;
+import styled from "styled-components";
+import nametag from "../../assets/ecc/nametag.png";
 
 export const ProfileUserContainer = styled.div`
   width: 300px;
@@ -21,6 +13,13 @@ export const ProfileUserContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  position: relative;
+  z-index: 1;
+
+  &:hover {
+    transform: scale(1.25);
+  }
 `;
 
 export const NameTag = styled.div`
@@ -33,4 +32,11 @@ export const NameTag = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: bold;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
 `;

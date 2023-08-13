@@ -108,3 +108,23 @@ export const destroySession = async (session: Session, userToken: any) => {
     console.log(error);
   }
 };
+
+export const destroyFriendSession = async (sessionId: string, userToken: any) => {
+  console.log('친구 세션 녹화 종료');
+
+  try {
+    const response = await axios.post(
+    `${API_BASE_URL}/meetings/friend/stop`,
+    {sessionId: sessionId,},
+    {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    }
+    );
+
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
