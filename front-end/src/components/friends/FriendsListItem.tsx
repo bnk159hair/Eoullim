@@ -12,12 +12,14 @@ interface FriendsListItemProps {
   friendId: number;
   friendName: string;
   animon: string;
+  status: string;
 }
 
 const FriendsListItem: React.FC<FriendsListItemProps> = ({
   friendId,
   friendName,
   animon,
+  status
 }) => {
   const [sessionToken, setSessionToken] = useRecoilState(invitationToken);
   const [invitationId, setInvitationId] = useRecoilState(invitationSessionId);
@@ -61,7 +63,7 @@ const FriendsListItem: React.FC<FriendsListItemProps> = ({
       <FriendImg style={{ backgroundImage: `url(${IMGURL})` }} />
       <FrinedInfo>
         <div>친구 이름 : {friendName}</div>
-        <InviteButton onClick={handleInvite}/>
+        {status === 'ON' && <InviteButton onClick={handleInvite} />}
       </FrinedInfo>
     </FriendCard>
   );
