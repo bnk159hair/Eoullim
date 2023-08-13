@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { useFaceMask } from "../../hooks/useFaceMesh";
 import { StreamManager } from "openvidu-browser";
 import { useStream } from "../../hooks/useStream";
-import { Canvas, Video } from "./StreamCanvasStyles";
+import { Canvas, UserName, Video } from "./StreamCanvasStyles";
 
 interface IProps {
   streamManager: StreamManager;
@@ -26,7 +26,7 @@ export const StreamCanvas: FC<IProps> = ({
     <>
       <Canvas ref={canvasRef} tabIndex={1} videoState={videoState}></Canvas>
       <Video ref={videoRef} videoState={videoState}></Video>
-      <p>{name}</p>
+      <UserName>{name}</UserName>
     </>
   );
 };

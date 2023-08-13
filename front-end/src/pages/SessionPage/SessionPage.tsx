@@ -15,7 +15,7 @@ import {
   YourVideo,
   Click,
 } from "./SessionPageStyles";
-import { Modal, Box, Typography, IconButton, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Profile, Profilekey } from "../../atoms/Profile";
 import { tokenState } from "../../atoms/Auth";
@@ -36,6 +36,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../../apis/urls";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
+import EndModal from "../../components/stream/EndModal";
 
 interface FriendsProfile {
   id: number;
@@ -404,70 +405,20 @@ const SessionPage = () => {
       ) : streamList.length !== 2 ? (
         navigate("/")
       ) : !isFriend ? (
-        <Container>
-          <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
-            <Box
-              sx={{
-                position: "absolute" as "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid black",
-                boxShadow: 24,
-                p: 4,
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h4" component="h2">
-                친구 조아?
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                }}
-              >
-                <IconButton onClick={addFriend}>O</IconButton>
-                <IconButton onClick={leaveSession}>X</IconButton>
-              </Box>
-            </Box>
-          </Modal>
-        </Container>
+        <EndModal
+          onClose={leaveSession}
+          message="친구 조아?"
+          isFriend={isFriend}
+          addFriend = {addFriend}
+
+        />
       ) : (
-        <Container>
-          <Modal open={open} onClose={leaveSession} hideBackdrop={true}>
-            <Box
-              sx={{
-                position: "absolute" as "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid black",
-                boxShadow: 24,
-                p: 4,
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h4" component="h2">
-                통화가 끝났습니다.
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                }}
-              >
-                <IconButton onClick={leaveSession}>X</IconButton>
-              </Box>
-            </Box>
-          </Modal>
-        </Container>
+        <EndModal
+          onClose={leaveSession}
+          message="통화가 끝났습니다."
+          isFriend={isFriend}
+          addFriend = {addFriend}
+        />
       )}
     </>
   );
