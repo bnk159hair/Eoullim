@@ -28,6 +28,7 @@ import {
   SubscriberAnimonURL,
   PublisherGuideStatus,
   SubscriberGuideStatus,
+  IsAnimonLoaded,
 } from '../../atoms/Session';
 import { Client } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
@@ -72,12 +73,12 @@ const SessionPage = () => {
     SubscriberGuideStatus
   );
 
-
   const [clickEnabled, setClickEnabled] = useState(false);
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
   const [subscriberName, setSubscriberName] = useState('');
+  const isAnimonLoaded = useRecoilValue(IsAnimonLoaded);
 
   const [step, setStep] = useState(1);
   const guidance = new Audio(`/${step}.mp3`);
@@ -131,7 +132,7 @@ const SessionPage = () => {
     ) {
       setFirst(isFalse);
       setTimeout(() => {
-        guidance.play(); 
+        guidance.play();
         setIsPlaying(true);
       }, 5000);
       guidance.addEventListener('ended', () => {
@@ -161,7 +162,7 @@ const SessionPage = () => {
     if (publisherGuideStatus && subscriberGuideStatus) {
       const nextStep = step + 1;
       setStep(nextStep);
-      console.log('안녕')
+      console.log('안녕');
       const guidance = new Audio(`/${nextStep}.mp3`);
       if (nextStep <= 8) guidance.play();
       setIsPlaying(true);
@@ -172,8 +173,8 @@ const SessionPage = () => {
         setIsPlaying(false);
       });
       setTimeout(() => {
-        setClickEnabled(true); 
-      }, 30000); 
+        setClickEnabled(true);
+      }, 30000);
     }
   }, [publisherGuideStatus, subscriberGuideStatus]);
 
@@ -235,14 +236,14 @@ const SessionPage = () => {
     }
   }, [streamList]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const timer = setTimeout(() => {
       setClickEnabled(true);
-    }, 30000); 
+    }, 30000);
     return () => {
       clearTimeout(timer);
     };
-  },[])
+  }, []);
 
   const getFriends = () => {
     console.log(profileId);
@@ -369,7 +370,6 @@ const SessionPage = () => {
         });
         console.log('가이드 전송:', message);
       }
-      
     }
   };
 
@@ -389,31 +389,37 @@ const SessionPage = () => {
             <MainWrapper>
               <YourVideo>
                 {streamList.length > 1 && streamList[1].streamManager ? (
-                  <StreamCanvas
-                    streamManager={streamList[1].streamManager}
-                    name={subscriberName}
-                    avatarPath={subscriberAnimonURL}
-                    videoState={subscriberVideoStatus}
-                  />
+                  <>
+                    <StreamCanvas
+                      streamManager={streamList[1].streamManager}
+                      name={subscriberName}
+                      avatarPath={subscriberAnimonURL}
+                      videoState={subscriberVideoStatus}
+                    />
+                    <Loading isAnimonLoaded={isAnimonLoaded} />
+                  </>
                 ) : (
-                  <Loading />
+                  <Loading isAnimonLoaded={false} />
                 )}
               </YourVideo>
             </MainWrapper>
             <SideBar>
               <Character onClick={nextGuidance} isPlaying={isPlaying}>
-                {clickEnabled ? (<Click />):(<></>)}
+                {clickEnabled ? <Click /> : <></>}
               </Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
-                  <StreamCanvas
-                    streamManager={streamList[0].streamManager}
-                    name={profile.name}
-                    avatarPath={`${publisherAnimonURL}`}
-                    videoState={publisherVideoStatus}
-                  />
+                  <>
+                    <StreamCanvas
+                      streamManager={streamList[0].streamManager}
+                      name={profile.name}
+                      avatarPath={`${publisherAnimonURL}`}
+                      videoState={publisherVideoStatus}
+                    />
+                    <Loading isAnimonLoaded={isAnimonLoaded} />
+                  </>
                 ) : (
-                  <Loading />
+                  <Loading isAnimonLoaded={false} />
                 )}
               </MyVideo>
             </SideBar>
