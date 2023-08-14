@@ -39,3 +39,8 @@ export const SubscriberGuideStatus = atom<boolean>({
   key: 'subscriberGuideStatus',
   default: false,
 });
+
+export const IsAnimonLoaded = atom<boolean>({
+  key: 'isAnimonLoaded',
+  default: false,
+});

@@ -28,6 +28,9 @@ import {
   SubscriberVideoStatus,
   PublisherAnimonURL,
   SubscriberAnimonURL,
+  PublisherGuideStatus,
+  SubscriberGuideStatus,
+  IsAnimonLoaded,
 } from '../../atoms/Session';
 import { Client } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
@@ -71,6 +74,7 @@ const FriendSessionPage = () => {
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
+  const isAnimonLoaded = useRecoilValue(IsAnimonLoaded);
 
   const IMGURL = '/bear.png';
   const [subscriberName, setSubscriberName] = useState('');
@@ -311,29 +315,35 @@ const FriendSessionPage = () => {
             <MainWrapper>
               <YourVideo>
                 {streamList.length > 1 && streamList[1].streamManager ? (
-                  <StreamCanvas
-                    streamManager={streamList[1].streamManager}
-                    name={subscriberName}
-                    avatarPath={subscriberAnimonURL}
-                    videoState={subscriberVideoStatus}
-                  />
+                  <>
+                    <StreamCanvas
+                      streamManager={streamList[1].streamManager}
+                      name={subscriberName}
+                      avatarPath={subscriberAnimonURL}
+                      videoState={subscriberVideoStatus}
+                    />
+                    <Loading isAnimonLoaded={isAnimonLoaded} />
+                  </>
                 ) : (
-                  <Loading />
+                  <Loading isAnimonLoaded={false} />
                 )}
               </YourVideo>
             </MainWrapper>
             <SideBar>
-              <Character></Character>
+              <Character isPlaying={false}></Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
-                  <StreamCanvas
-                    streamManager={streamList[0].streamManager}
-                    name={profile.name}
-                    avatarPath={`${publisherAnimonURL}`}
-                    videoState={publisherVideoStatus}
-                  />
+                  <>
+                    <StreamCanvas
+                      streamManager={streamList[0].streamManager}
+                      name={profile.name}
+                      avatarPath={`${publisherAnimonURL}`}
+                      videoState={publisherVideoStatus}
+                    />
+                    <Loading isAnimonLoaded={isAnimonLoaded} />
+                  </>
                 ) : (
-                  <Loading />
+                  <Loading isAnimonLoaded={false} />
                 )}
               </MyVideo>
             </SideBar>
