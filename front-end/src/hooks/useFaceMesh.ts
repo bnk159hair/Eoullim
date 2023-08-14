@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import { TRIANGULATION } from '../assets/data/triangulation';
 import { uvs } from '../assets/data/frontProjectionUVMap';
 import { positionBufferData } from '../assets/data/positionBufferData';
+import { useRecoilState } from 'recoil';
+import { IsAnimonLoaded } from '../atoms/Session';
 
 export const useFaceMeshModel = (): any => {
   const [model, setModel] = useState<any>(undefined);
@@ -32,7 +34,7 @@ export const useFaceMeshModel = (): any => {
 export const useFaceMask = (
   videoElement: HTMLVideoElement | null,
   canvasElement: HTMLCanvasElement | null,
-  avatarPath: any,
+  avatarPath: any
 ) => {
   const [model, setModel] = useState<any>();
 
@@ -52,6 +54,7 @@ export const useFaceMask = (
 
   const requestRef = useRef<number>(0);
   const [faceCanvas, setFaceCanvas] = useState<FaceCanvas>();
+  const [isAnimonLoaded, setIsAnimonLoaded] = useRecoilState(IsAnimonLoaded);
 
   const animate = useCallback(async () => {
     if (!model) {
@@ -74,6 +77,9 @@ export const useFaceMask = (
             h: videoElement!.clientHeight,
           })
         );
+        setTimeout(() => {
+          setIsAnimonLoaded(true);
+        }, 2000);
         return;
       }
 
@@ -124,7 +130,7 @@ class FaceCanvas {
       -this._halfH,
       this._halfH,
       1,
-      1000
+      800
     );
     this._camera.position.x = 320;
     this._camera.position.y = 240;
@@ -197,8 +203,8 @@ class FaceCanvas {
       canvas: canvas,
     });
     this._renderer.setSize(w, h);
-    this._halfW = w * 0.5;
-    this._halfH = h * 0.5;
+    this._halfW = w * 0.4;
+    this._halfH = h * 0.4;
     this._textureFilePath = textureFilePath;
     this._setupScene();
   }

@@ -6,15 +6,13 @@ import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
   Buttons,
   Character,
+  CharacterContainer,
   Container,
-  MainWrapper,
   MyVideo,
   NavContainer,
   SessionPageContainer,
-  SideBar,
-  YourVideo,
 } from './SessionPageStyles';
-import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -28,6 +26,7 @@ import {
   SubscriberVideoStatus,
   PublisherAnimonURL,
   SubscriberAnimonURL,
+  IsAnimonLoaded,
 } from '../../atoms/Session';
 import { Client } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
@@ -71,8 +70,8 @@ const FriendSessionPage = () => {
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
+  const isAnimonLoaded = useRecoilValue(IsAnimonLoaded);
 
-  const IMGURL = '/bear.png';
   const [subscriberName, setSubscriberName] = useState('');
 
   console.log('오픈비두 시작');
@@ -308,35 +307,37 @@ const FriendSessionPage = () => {
       {!open ? (
         <SessionPageContainer>
           <Container>
-            <MainWrapper>
-              <YourVideo>
-                {streamList.length > 1 && streamList[1].streamManager ? (
-                  <StreamCanvas
-                    streamManager={streamList[1].streamManager}
-                    name={subscriberName}
-                    avatarPath={subscriberAnimonURL}
-                    videoState={subscriberVideoStatus}
-                  />
-                ) : (
-                  <Loading />
-                )}
-              </YourVideo>
-            </MainWrapper>
-            <SideBar>
-              <Character></Character>
-              <MyVideo>
-                {streamList.length > 1 && streamList[0].streamManager ? (
+            {streamList.length > 1 && streamList[1].streamManager ? (
+              <>
+                <StreamCanvas
+                  streamManager={streamList[1].streamManager}
+                  name={subscriberName}
+                  avatarPath={subscriberAnimonURL}
+                  videoState={subscriberVideoStatus}
+                />
+                <Loading isAnimonLoaded={isAnimonLoaded} />
+              </>
+            ) : (
+              <Loading isAnimonLoaded={false} />
+            )}
+            <CharacterContainer>
+              <Character isPlaying={false}></Character>
+            </CharacterContainer>
+            <MyVideo>
+              {streamList.length > 1 && streamList[0].streamManager ? (
+                <>
                   <StreamCanvas
                     streamManager={streamList[0].streamManager}
                     name={profile.name}
                     avatarPath={`${publisherAnimonURL}`}
                     videoState={publisherVideoStatus}
                   />
-                ) : (
-                  <Loading />
-                )}
-              </MyVideo>
-            </SideBar>
+                  <Loading isAnimonLoaded={isAnimonLoaded} />
+                </>
+              ) : (
+                <Loading isAnimonLoaded={false} />
+              )}
+            </MyVideo>
           </Container>
           <NavContainer>
             <Buttons>
