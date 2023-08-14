@@ -99,7 +99,7 @@ public class MatchController {
 
                     String token = session.createConnection(connectionProperties).getToken();
 
-                    List<Integer> random = RandomGeneratorUtils.generateRandomNumbers(1, 11, 4);
+                    List<Integer> random = RandomGeneratorUtils.generateRandomNumbers(2, 12, 4);
 
                     Room newRoom = new Room();
                     newRoom.setSessionId(session.getSessionId());
