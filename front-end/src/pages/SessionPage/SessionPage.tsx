@@ -7,13 +7,11 @@ import {
   Buttons,
   Character,
   Container,
-  MainWrapper,
   MyVideo,
   NavContainer,
   SessionPageContainer,
-  SideBar,
-  YourVideo,
   Click,
+  CharacterContainer,
 } from './SessionPageStyles';
 import { Button } from '@mui/material';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -386,43 +384,41 @@ const SessionPage = () => {
       {!open ? (
         <SessionPageContainer>
           <Container>
-            <MainWrapper>
-              <YourVideo>
-                {streamList.length > 1 && streamList[1].streamManager ? (
-                  <>
-                    <StreamCanvas
-                      streamManager={streamList[1].streamManager}
-                      name={subscriberName}
-                      avatarPath={subscriberAnimonURL}
-                      videoState={subscriberVideoStatus}
-                    />
-                    <Loading isAnimonLoaded={isAnimonLoaded} />
-                  </>
-                ) : (
-                  <Loading isAnimonLoaded={false} />
-                )}
-              </YourVideo>
-            </MainWrapper>
-            <SideBar>
+            <MyVideo>
+              {streamList.length > 1 && streamList[1].streamManager ? (
+                <>
+                  <StreamCanvas
+                    streamManager={streamList[1].streamManager}
+                    name={subscriberName}
+                    avatarPath={subscriberAnimonURL}
+                    videoState={subscriberVideoStatus}
+                  />
+                  <Loading isAnimonLoaded={isAnimonLoaded} />
+                </>
+              ) : (
+                <Loading isAnimonLoaded={false} />
+              )}
+            </MyVideo>
+            <CharacterContainer>
               <Character onClick={nextGuidance} isPlaying={isPlaying}>
                 {clickEnabled ? <Click /> : <></>}
               </Character>
-              <MyVideo>
-                {streamList.length > 1 && streamList[0].streamManager ? (
-                  <>
-                    <StreamCanvas
-                      streamManager={streamList[0].streamManager}
-                      name={profile.name}
-                      avatarPath={`${publisherAnimonURL}`}
-                      videoState={publisherVideoStatus}
-                    />
-                    <Loading isAnimonLoaded={isAnimonLoaded} />
-                  </>
-                ) : (
-                  <Loading isAnimonLoaded={false} />
-                )}
-              </MyVideo>
-            </SideBar>
+            </CharacterContainer>
+            <MyVideo>
+              {streamList.length > 1 && streamList[0].streamManager ? (
+                <>
+                  <StreamCanvas
+                    streamManager={streamList[0].streamManager}
+                    name={profile.name}
+                    avatarPath={`${publisherAnimonURL}`}
+                    videoState={publisherVideoStatus}
+                  />
+                  <Loading isAnimonLoaded={isAnimonLoaded} />
+                </>
+              ) : (
+                <Loading isAnimonLoaded={false} />
+              )}
+            </MyVideo>{' '}
           </Container>
           <NavContainer>
             <Buttons>
