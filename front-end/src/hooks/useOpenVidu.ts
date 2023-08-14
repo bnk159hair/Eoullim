@@ -6,6 +6,7 @@ import {
   getFriendSessionToken,
   destroyFriendSession,
 } from '../apis/openViduApis';
+import { GuideScript, TimeStamp, guideSeq } from '../atoms/Session';
 import { invitationSessionId, invitationToken } from '../atoms/Ivitation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
@@ -28,7 +29,10 @@ export const useOpenVidu = (
   const [publisher, setPublisher] = useState<any>(null);
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [guide, setGuide] = useRecoilState(guideSeq);
   const userToken = useRecoilValue(tokenState);
+  const guideScript = useRecoilValue(GuideScript);
+  const timeStamp = useRecoilValue(TimeStamp);
 
   const [, setSessionId] = useRecoilState(invitationSessionId);
   const [, setSessionToken] = useRecoilState(invitationToken);
@@ -50,7 +54,7 @@ export const useOpenVidu = (
       session.disconnect();
       console.log(session);
       console.log('서버에 세션 끊어달라고 보내기');
-      destroySession(session, userToken);
+      destroySession(session, guideScript, timeStamp, userToken);
     }
     setSession(null);
     setPublisher(null);
@@ -109,7 +113,9 @@ export const useOpenVidu = (
             grade: userInfo.grade,
           },
           userToken
-        ).then((token: any) => {
+        ).then((data: { token: string; guideSeq: [] }) => {
+          const token = data.token;
+          setGuide(data.guideSeq);
           console.log('가져온 토큰 :', token);
           console.log('가져온 토큰으로 세션에 연결');
           mySession
@@ -242,7 +248,7 @@ export const useOpenVidu = (
       } else if (mySession) {
         console.log('서버에 세션 끊어달라고 보내기');
         console.log(mySession);
-        destroySession(mySession, userToken);
+        destroySession(mySession, guideScript, timeStamp, userToken);
       }
       setSession(null);
       setPublisher(null);

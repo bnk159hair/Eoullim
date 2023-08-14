@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { tokenState } from '../../atoms/Auth';
 import { useRecoilValue } from 'recoil';
 import { Profilekey } from '../../atoms/Profile';
+import { API_BASE_URL } from '../../apis/urls';
 
 interface Record {
   animonName: string;
@@ -37,7 +38,7 @@ const RecordPage = () => {
 
   const getRecord = () => {
     axios
-      .get(`https://i9c207.p.ssafy.io/api/openvidu/recordings/${profileId}`)
+      .get(`${API_BASE_URL}/recordings/${profileId}`)
       .then((response) => {
         const data = response.data;
         console.log(response);
