@@ -1,4 +1,4 @@
-import { styled, keyframes } from "styled-components";
+import { styled, keyframes,css } from "styled-components";
 import loginBackground from "../../assets/background/login.gif";
 import click from "../../assets/ecc/click.png";
 const IMGURL = "/bear.png";
@@ -44,7 +44,35 @@ export const YourVideo = styled.div`
   font-size: 40px;
 `;
 
-export const Character = styled.div`
+
+const gelatineAnimation = keyframes`
+  from, to {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+  from, to {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+`;
+
+export const Character = styled.div<{ isPlaying: boolean }>`
   background-image: url(${IMGURL});
   width: 55%;
   height: 40%;
@@ -53,6 +81,12 @@ export const Character = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  
+  ${props =>
+    props.isPlaying &&
+    css`
+      animation: ${gelatineAnimation} 0.5s infinite;
+    `}
 `;
 
 export const MyVideo = styled.div`

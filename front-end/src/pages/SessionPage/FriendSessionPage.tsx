@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/stream/Loading';
-import { getUserInfo } from '../../apis/openViduApis';
 import { useOpenVidu } from '../../hooks/useOpenVidu';
 import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
@@ -68,11 +67,7 @@ const FriendSessionPage = () => {
     useRecoilState(PublisherAnimonURL);
   const [subscriberAnimonURL, setSubscriberAnimonURL] =
     useRecoilState(SubscriberAnimonURL);
-  const [publisherGuideStatus, setPublisherGuideStatus] =
-    useRecoilState(PublisherGuideStatus);
-  const [subscriberGuideStatus, setSubscriberGuideStatus] = useRecoilState(
-    SubscriberGuideStatus
-  );
+
   const [sessionId, setSessionId] = useRecoilState(invitationSessionId);
   const [sessionToken, setSessionToken] = useRecoilState(invitationToken);
 
@@ -82,22 +77,18 @@ const FriendSessionPage = () => {
   const isAnimonLoaded = useRecoilValue(IsAnimonLoaded);
 
   const IMGURL = '/bear.png';
-  const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
-  const [step, setStep] = useState(0);
   const [subscriberName, setSubscriberName] = useState('');
-
-  const ANIMON_URL = 'http://i9c207.p.ssafy.io/';
 
   console.log('오픈비두 시작');
 
   setPublisherId(profileId);
-  setPublisherAnimonURL(ANIMON_URL + profile.animon.name + 'mask.png');
+  setPublisherAnimonURL(profile.animon.name + 'mask.png');
   console.log(profileId, sessionId, sessionToken);
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
     useOpenVidu(profileId, sessionId, sessionToken);
 
   const sessionOver = () => {
-    setOpen(true);
+    setOpen(isTrue);
   };
 
   const [micStatus, setMicStatus] = useState(true);
@@ -109,10 +100,9 @@ const FriendSessionPage = () => {
   const [stompClient, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    setPublisherVideoStatus(false);
-    setSubscriberVideoStatus(false);
-    setPublisherGuideStatus(false);
-    setSubscriberGuideStatus(false);
+    setPublisherVideoStatus(isFalse);
+    setSubscriberVideoStatus(isFalse);
+    console.log('친구불러오기 시작');
     getFriends();
   }, []);
 
@@ -122,30 +112,28 @@ const FriendSessionPage = () => {
 
   useEffect(() => {
     for (const user of streamList) {
-      if (user.userId !== publisherId) {
+      if (Number(user.userId) !== Number(publisherId)) {
+        console.log(user);
+        console.log(user.userId, publisherId);
         setSubscriberId(user.userId);
-      }
-      if (subscriberId) {
-        getAnimon();
-        friends.forEach((user: any) => {
-          console.log(user.id, subscriberId);
-          if (user.id === Number(subscriberId)) {
-            console.log('친구입니다.');
-            setFriend(true);
-          }
-        });
+        console.log(subscriberId);
       }
     }
+    console.log(publisherId, subscriberId);
   }, [streamList]);
 
   useEffect(() => {
-    if (publisherGuideStatus && subscriberGuideStatus) {
-      setStep(step + 1);
-      setPublisherGuideStatus(false);
-      setSubscriberGuideStatus(false);
-      console.log(step);
+    if (subscriberId) {
+      getAnimon();
+      friends.forEach((user: any) => {
+        console.log(user.id, subscriberId);
+        if (Number(user.id) === Number(subscriberId)) {
+          console.log('친구입니다.');
+          setFriend(isTrue);
+        }
+      });
     }
-  }, [publisherGuideStatus, subscriberGuideStatus]);
+  }, [subscriberId]);
 
   useEffect(() => {
     if (session) {
@@ -158,7 +146,7 @@ const FriendSessionPage = () => {
 
       client.onConnect = () => {
         console.log('WebSocket 연결됨');
-        setConnected(true);
+        setConnected(isTrue);
         setStompClient(client);
 
         client.subscribe(`/topic/${session.sessionId}/animon`, (response) => {
@@ -171,14 +159,6 @@ const FriendSessionPage = () => {
             setSubscriberVideoStatus(message.isAnimonOn);
           }
         });
-        client.subscribe(`/topic/${session.sessionId}/guide`, (response) => {
-          const message = JSON.parse(response.body);
-          console.log(message);
-          if (message.childId !== String(publisherId)) {
-            setSubscriberId(message.childId);
-            setSubscriberGuideStatus(message.isNextGuideOn);
-          }
-        });
         client.subscribe(
           `/topic/${session.sessionId}/leave-session`,
           (response) => {
@@ -186,11 +166,11 @@ const FriendSessionPage = () => {
             console.log(message);
             if (message.childId !== String(publisherId)) {
               if (message.isLeft === true) {
-                setOpen(true);
+                setOpen(isTrue);
               } else if (message.isLeft === false) {
                 console.log('초대를 거절했습니다.');
-                setRefuse(true);
-                setOpen(true);
+                setRefuse(isTrue);
+                setOpen(isTrue);
               }
             }
           }
@@ -199,7 +179,7 @@ const FriendSessionPage = () => {
 
       client.onDisconnect = () => {
         console.log('WebSocket 연결 닫힘');
-        setConnected(false);
+        setConnected(isFalse);
         setStompClient(null);
       };
 
@@ -245,9 +225,7 @@ const FriendSessionPage = () => {
 
       console.log('유저 정보 가져오기 성공!');
       console.log(response);
-      setSubscriberAnimonURL(
-        ANIMON_URL + response.data.result.animon.name + 'mask.png'
-      );
+      setSubscriberAnimonURL(response.data.result.animon.name + 'mask.png');
       setSubscriberName(response.data.result.name);
       return response.data.result;
     } catch (error) {
@@ -258,8 +236,8 @@ const FriendSessionPage = () => {
   };
 
   const leaveSession = () => {
-    setRefuse(false);
-    setOpen(false);
+    setRefuse(isFalse);
+    setOpen(isFalse);
     if (connected && stompClient) {
       const jsonMessage = {
         childId: String(publisherId),
@@ -321,21 +299,12 @@ const FriendSessionPage = () => {
     setMicStatus((prev) => !prev);
   };
 
-  const nextGuidance = () => {
-    if (connected && stompClient) {
-      const isNextGuideOn = !publisherGuideStatus;
-      setPublisherGuideStatus(isNextGuideOn);
-      const jsonMessage = {
-        childId: String(publisherId),
-        isNextGuideOn: isNextGuideOn,
-      };
-      const message = JSON.stringify(jsonMessage);
-      stompClient.publish({
-        destination: `/app/${session.sessionId}/guide`,
-        body: message,
-      });
-      console.log('가이드 전송:', message);
-    }
+  const isTrue = () => {
+    return true;
+  };
+
+  const isFalse = () => {
+    return false;
   };
 
   return (
@@ -361,7 +330,7 @@ const FriendSessionPage = () => {
               </YourVideo>
             </MainWrapper>
             <SideBar>
-              <Character onClick={nextGuidance}>{guidance[step]}</Character>
+              <Character isPlaying={false}></Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
                   <>
