@@ -323,7 +323,7 @@ const FriendSessionPage = () => {
               </YourVideo>
             </MainWrapper>
             <SideBar>
-              <Character></Character>
+              <Character isPlaying={false}></Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
                   <StreamCanvas
