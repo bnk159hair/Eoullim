@@ -27,6 +27,9 @@ import {
   PublisherGuideStatus,
   SubscriberGuideStatus,
   IsAnimonLoaded,
+  guideSeq,
+  GuideScript,
+  TimeStamp,
 } from '../../atoms/Session';
 import { Client } from '@stomp/stompjs';
 import { WS_BASE_URL } from '../../apis/urls';
@@ -77,18 +80,22 @@ const SessionPage = () => {
   const profile = useRecoilValue(Profile);
   const [subscriberName, setSubscriberName] = useState('');
   const isAnimonLoaded = useRecoilValue(IsAnimonLoaded);
-
-  const [step, setStep] = useState(1);
-  const guidance = new Audio(`/${step}.mp3`);
+  const step = useRecoilValue(guideSeq);
+  const [guideScript, setGuideScript] = useRecoilState(GuideScript);
+  const [index, setIndex] = useState(-1);
+  const guideSequence = [...step, 13];
+  const guidance = new Audio(`/1.mp3`);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  console.log('오픈비두 시작');
+  const [startTime, setStartTime] = useState(0);
+  const [timeStamp, setTimeStamp] = useRecoilState(TimeStamp);
 
   setPublisherId(profileId);
   setPublisherAnimonURL(profile.animon.name + 'mask.png');
 
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
     useOpenVidu(profileId);
+  console.log(session);
   const [micStatus, setMicStatus] = useState(true);
   useEffect(() => {
     onChangeMicStatus(micStatus);
@@ -106,7 +113,8 @@ const SessionPage = () => {
     setSubscriberVideoStatus(isFalse);
     setPublisherGuideStatus(isFalse);
     setSubscriberGuideStatus(isFalse);
-    console.log('친구불러오기 시작');
+    setGuideScript('');
+    setTimeStamp('');
     getFriends();
   }, []);
 
@@ -121,14 +129,9 @@ const SessionPage = () => {
     }
     console.log(publisherId, subscriberId);
 
-    if (
-      !open &&
-      streamList[0]?.userId &&
-      streamList[1]?.userId &&
-      first &&
-      step === 1
-    ) {
+    if (!open && streamList[0]?.userId && streamList[1]?.userId && first) {
       setFirst(isFalse);
+      setStartTime(Date.now());
       setTimeout(() => {
         guidance.play();
         setIsPlaying(true);
@@ -158,17 +161,24 @@ const SessionPage = () => {
 
   useEffect(() => {
     if (publisherGuideStatus && subscriberGuideStatus) {
-      const nextStep = step + 1;
-      setStep(nextStep);
-      console.log('안녕');
-      const guidance = new Audio(`/${nextStep}.mp3`);
-      if (nextStep <= 8) guidance.play();
+      const nextIndex = index + 1;
+      setIndex(nextIndex);
+      const guidance = new Audio(`/${guideSequence[nextIndex]}.mp3`);
+      if (nextIndex <= 4) {
+        const nextGuide = guideScript + guideSequence[nextIndex] + ' ';
+        setGuideScript(nextGuide);
+        const nextTime = timeStamp + String(Date.now() - startTime) + ' ';
+        setTimeStamp(nextTime);
+        guidance.play();
+      }
       setIsPlaying(true);
       setPublisherGuideStatus(isFalse);
       setSubscriberGuideStatus(isFalse);
-      console.log(step);
       guidance.addEventListener('ended', () => {
         setIsPlaying(false);
+        if (nextIndex === 4) {
+          sessionOver();
+        }
       });
       setTimeout(() => {
         setClickEnabled(true);
@@ -418,7 +428,7 @@ const SessionPage = () => {
               ) : (
                 <Loading isAnimonLoaded={false} />
               )}
-            </MyVideo>{' '}
+            </MyVideo>
           </Container>
           <NavContainer>
             <Buttons>

@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import CreateBox from "../../assets/ecc/createprofile.png";
+import styled from 'styled-components';
+import CreateBox from '../../assets/ecc/createprofile.png';
 
 export const ProfileCreateBox = styled.div`
   height: 300px;
@@ -7,7 +7,6 @@ export const ProfileCreateBox = styled.div`
   background-image: url(${CreateBox});
   background-size: cover;
   border-radius: 5%;
-  border: 1px solid black;
   cursor: pointer;
 
   transition: transform 0.2s ease-in-out;

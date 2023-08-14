@@ -40,7 +40,8 @@ export const MainCharacter = styled.div`
   height: 30%;
   cursor: pointer;
   background-size: 100% 100%;
-  margin-top: 380px;
+  margin-top: auto;
+  margin-bottom: 4%;
   &:hover {
     transform: scale(1.1);
   }
@@ -67,16 +68,16 @@ export const NewFriend = styled.div`
   height: 30%;
   background-size: 100% 100%;
   background-image: url(${bear});
-  margin-left: 90px;
-  margin-top: 90px;
+  margin-left: 15%;
+  margin-top: 15%;
 `;
 export const NewFirendsignpost = styled.div`
-  width: 150px;
-  height: 150px;
+  width: 25%;
+  height: 25%;
   background-size: 100% 100%;
   background-image: url(${newfriend});
-  margin-left: 120px;
-  margin-top: 280px;
+  margin-left: 15%;
+  margin-top: 45%;
   transform: rotate(15deg);
 `;
 export const MyFriend = styled.div`
@@ -84,18 +85,18 @@ export const MyFriend = styled.div`
   height: 30%;
   background-size: 100% 100%;
   background-image: url(${fox});
-  margin-right: 90px;
-  margin-top: 90px;
+  margin-right: 15%;
+  margin-top: 15%;
   background-size: cover;
 `;
 
 export const MyFirendsignpost = styled.div`
-  width: 150px;
-  height: 150px;
+  width: 25%;
+  height: 25%;
   background-size: 100% 100%;
   background-image: url(${myfriend});
-  margin-right: 140px;
-  margin-top: 270px;
+  margin-right: 15%;
+  margin-top: 45%;
   background-size: cover;
   transform: rotate(347deg);
 `;
