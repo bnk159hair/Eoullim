@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Loading from "../../components/stream/Loading";
-import { getUserInfo } from "../../apis/openViduApis";
-import { useOpenVidu } from "../../hooks/useOpenVidu";
-import { StreamCanvas } from "../../components/stream/StreamCanvas";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Loading from '../../components/stream/Loading';
+import { getUserInfo } from '../../apis/openViduApis';
+import { useOpenVidu } from '../../hooks/useOpenVidu';
+import { StreamCanvas } from '../../components/stream/StreamCanvas';
 import {
   Buttons,
   Character,
@@ -14,14 +14,14 @@ import {
   SessionPageContainer,
   SideBar,
   YourVideo,
-} from "./SessionPageStyles";
-import { Modal, Box, Typography, IconButton, Button } from "@mui/material";
-import MicIcon from "@mui/icons-material/Mic";
-import MicOffIcon from "@mui/icons-material/MicOff";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { Profile, Profilekey } from "../../atoms/Profile";
-import { invitationToken, invitationSessionId } from "../../atoms/Ivitation";
-import { tokenState } from "../../atoms/Auth";
+} from './SessionPageStyles';
+import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { Profile, Profilekey } from '../../atoms/Profile';
+import { invitationToken, invitationSessionId } from '../../atoms/Ivitation';
+import { tokenState } from '../../atoms/Auth';
 import {
   PublisherId,
   SubscriberId,
@@ -31,13 +31,14 @@ import {
   SubscriberAnimonURL,
   PublisherGuideStatus,
   SubscriberGuideStatus,
-} from "../../atoms/Session";
-import { Client } from "@stomp/stompjs";
-import { WS_BASE_URL } from "../../apis/urls";
-import { WebSocketApis } from "../../apis/webSocketApis";
-import axios from "axios";
-import { API_BASE_URL } from "../../apis/urls";
-import EndModal from "../../components/stream/EndModal";
+  IsAnimonLoaded,
+} from '../../atoms/Session';
+import { Client } from '@stomp/stompjs';
+import { WS_BASE_URL } from '../../apis/urls';
+import { WebSocketApis } from '../../apis/webSocketApis';
+import axios from 'axios';
+import { API_BASE_URL } from '../../apis/urls';
+import EndModal from '../../components/stream/EndModal';
 
 interface FriendsProfile {
   id: number;
@@ -78,15 +79,16 @@ const FriendSessionPage = () => {
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
+  const isAnimonLoaded = useRecoilValue(IsAnimonLoaded);
 
-  const IMGURL = "/bear.png";
-  const guidance = ["0번 가이드", "1번 가이드", "2번 가이드", "3번 가이드"];
+  const IMGURL = '/bear.png';
+  const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
   const [step, setStep] = useState(0);
-  const [subscriberName, setSubscriberName] = useState("");
+  const [subscriberName, setSubscriberName] = useState('');
 
-  const ANIMON_URL = "http://i9c207.p.ssafy.io/";
+  const ANIMON_URL = 'http://i9c207.p.ssafy.io/';
 
-  console.log("오픈비두 시작");
+  console.log('오픈비두 시작');
 
   setPublisherId(profileId);
   setPublisherAnimonURL(ANIMON_URL + profile.animon.name + 'mask.png');
@@ -128,7 +130,7 @@ const FriendSessionPage = () => {
         friends.forEach((user: any) => {
           console.log(user.id, subscriberId);
           if (user.id === Number(subscriberId)) {
-            console.log("친구입니다.");
+            console.log('친구입니다.');
             setFriend(true);
           }
         });
@@ -155,16 +157,16 @@ const FriendSessionPage = () => {
       });
 
       client.onConnect = () => {
-        console.log("WebSocket 연결됨");
+        console.log('WebSocket 연결됨');
         setConnected(true);
         setStompClient(client);
 
         client.subscribe(`/topic/${session.sessionId}/animon`, (response) => {
-          console.log("메시지 수신:", response.body);
+          console.log('메시지 수신:', response.body);
           const message = JSON.parse(response.body);
           if (message.childId !== String(publisherId)) {
             console.log(message.childId, message.isAnimonOn);
-            console.log("상대방이 화면을 껐습니다.");
+            console.log('상대방이 화면을 껐습니다.');
             setSubscriberId(message.childId);
             setSubscriberVideoStatus(message.isAnimonOn);
           }
@@ -186,7 +188,7 @@ const FriendSessionPage = () => {
               if (message.isLeft === true) {
                 setOpen(true);
               } else if (message.isLeft === false) {
-                console.log("초대를 거절했습니다.");
+                console.log('초대를 거절했습니다.');
                 setRefuse(true);
                 setOpen(true);
               }
@@ -196,7 +198,7 @@ const FriendSessionPage = () => {
       };
 
       client.onDisconnect = () => {
-        console.log("WebSocket 연결 닫힘");
+        console.log('WebSocket 연결 닫힘');
         setConnected(false);
         setStompClient(null);
       };
@@ -223,9 +225,9 @@ const FriendSessionPage = () => {
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
-          navigate("/login");
+          navigate('/login');
         } else {
-          console.log("친구목록불러오기오류", error);
+          console.log('친구목록불러오기오류', error);
         }
       });
   };
@@ -241,7 +243,7 @@ const FriendSessionPage = () => {
         }
       );
 
-      console.log("유저 정보 가져오기 성공!");
+      console.log('유저 정보 가져오기 성공!');
       console.log(response);
       setSubscriberAnimonURL(
         ANIMON_URL + response.data.result.animon.name + 'mask.png'
@@ -249,7 +251,7 @@ const FriendSessionPage = () => {
       setSubscriberName(response.data.result.name);
       return response.data.result;
     } catch (error) {
-      console.log("유저 정보 가져오기 실패ㅠ");
+      console.log('유저 정보 가져오기 실패ㅠ');
       console.log(error);
       throw error;
     }
@@ -268,9 +270,9 @@ const FriendSessionPage = () => {
         destination: `/app/${session.sessionId}/leave-session`,
         body: message,
       });
-      console.log("메시지 전송:", message);
+      console.log('메시지 전송:', message);
     }
-    navigate("/");
+    navigate('/');
   };
 
   const addFriend = () => {
@@ -291,7 +293,7 @@ const FriendSessionPage = () => {
         leaveSession();
       })
       .catch((error) => {
-        if (error.response.data.resultCode === "INVALID_DATA") {
+        if (error.response.data.resultCode === 'INVALID_DATA') {
           leaveSession();
         } else console.log(error);
       });
@@ -311,7 +313,7 @@ const FriendSessionPage = () => {
         destination: `/app/${session.sessionId}/animon`,
         body: message,
       });
-      console.log("메시지 전송:", message);
+      console.log('메시지 전송:', message);
     }
   };
 
@@ -332,7 +334,7 @@ const FriendSessionPage = () => {
         destination: `/app/${session.sessionId}/guide`,
         body: message,
       });
-      console.log("가이드 전송:", message);
+      console.log('가이드 전송:', message);
     }
   };
 
@@ -344,14 +346,17 @@ const FriendSessionPage = () => {
             <MainWrapper>
               <YourVideo>
                 {streamList.length > 1 && streamList[1].streamManager ? (
-                  <StreamCanvas
-                    streamManager={streamList[1].streamManager}
-                    name={subscriberName}
-                    avatarPath={subscriberAnimonURL}
-                    videoState={subscriberVideoStatus}
-                  />
+                  <>
+                    <StreamCanvas
+                      streamManager={streamList[1].streamManager}
+                      name={subscriberName}
+                      avatarPath={subscriberAnimonURL}
+                      videoState={subscriberVideoStatus}
+                    />
+                    <Loading isAnimonLoaded={isAnimonLoaded} />
+                  </>
                 ) : (
-                  <Loading />
+                  <Loading isAnimonLoaded={false} />
                 )}
               </YourVideo>
             </MainWrapper>
@@ -359,14 +364,17 @@ const FriendSessionPage = () => {
               <Character onClick={nextGuidance}>{guidance[step]}</Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
-                  <StreamCanvas
-                    streamManager={streamList[0].streamManager}
-                    name={profile.name}
-                    avatarPath={`${publisherAnimonURL}`}
-                    videoState={publisherVideoStatus}
-                  />
+                  <>
+                    <StreamCanvas
+                      streamManager={streamList[0].streamManager}
+                      name={profile.name}
+                      avatarPath={`${publisherAnimonURL}`}
+                      videoState={publisherVideoStatus}
+                    />
+                    <Loading isAnimonLoaded={isAnimonLoaded} />
+                  </>
                 ) : (
-                  <Loading />
+                  <Loading isAnimonLoaded={false} />
                 )}
               </MyVideo>
             </SideBar>
@@ -376,13 +384,13 @@ const FriendSessionPage = () => {
               <Button
                 variant="contained"
                 onClick={changeVideoStatus}
-                sx={{ fontSize: "30px" }}
+                sx={{ fontSize: '30px' }}
               >
                 {publisherVideoStatus
-                  ? profile.gender === "W"
-                    ? "👩"
-                    : "🧑"
-                  : "🙈"}
+                  ? profile.gender === 'W'
+                    ? '👩'
+                    : '🧑'
+                  : '🙈'}
               </Button>
               <Button variant="contained" onClick={changeAudioStatus}>
                 {micStatus ? (
@@ -395,7 +403,7 @@ const FriendSessionPage = () => {
                 variant="contained"
                 color="error"
                 onClick={sessionOver}
-                sx={{ fontSize: "30px" }}
+                sx={{ fontSize: '30px' }}
               >
                 나가기
               </Button>
@@ -404,7 +412,7 @@ const FriendSessionPage = () => {
         </SessionPageContainer>
       ) : streamList.length !== 2 ? (
         !refuse ? (
-          navigate("/")
+          navigate('/')
         ) : (
           <EndModal
             onClose={leaveSession}
