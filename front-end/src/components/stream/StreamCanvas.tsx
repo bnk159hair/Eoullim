@@ -1,9 +1,9 @@
-import { FC } from "react";
-import { useRef } from "react";
-import { useFaceMask } from "../../hooks/useFaceMesh";
-import { StreamManager } from "openvidu-browser";
-import { useStream } from "../../hooks/useStream";
-import { Canvas, UserName, Video } from "./StreamCanvasStyles";
+import { FC } from 'react';
+import { useRef } from 'react';
+import { useFaceMask } from '../../hooks/useFaceMesh';
+import { StreamManager } from 'openvidu-browser';
+import { useStream } from '../../hooks/useStream';
+import { Canvas, UserName, Video } from './StreamCanvasStyles';
 
 interface IProps {
   streamManager: StreamManager;
