@@ -104,10 +104,21 @@ const SessionPage = () => {
     setSubscriberVideoStatus(isFalse);
     setPublisherGuideStatus(isFalse);
     setSubscriberGuideStatus(isFalse);
+    console.log('친구불러오기 시작');
     getFriends();
   }, []);
 
   useEffect(() => {
+    for (const user of streamList) {
+      if (Number(user.userId) !== Number(publisherId)) {
+        console.log(user);
+        console.log(user.userId, publisherId);
+        setSubscriberId(user.userId);
+        console.log(subscriberId);
+      }
+    }
+    console.log(publisherId, subscriberId);
+
     if (
       !open &&
       streamList[0]?.userId &&
@@ -125,11 +136,6 @@ const SessionPage = () => {
   }, [isOpen]);
 
   useEffect(() => {
-    for (const user of streamList) {
-      if (Number(user.userId) !== publisherId) {
-        setSubscriberId(Number(user.userId));
-      }
-    }
     if (subscriberId) {
       getAnimon();
       friends.forEach((user: any) => {
@@ -140,7 +146,7 @@ const SessionPage = () => {
         }
       });
     }
-  }, [streamList]);
+  }, [subscriberId]);
 
   useEffect(() => {
     if (publisherGuideStatus && subscriberGuideStatus) {
@@ -174,7 +180,7 @@ const SessionPage = () => {
           if (message.childId !== String(publisherId)) {
             console.log(message.childId, message.isAnimonOn);
             console.log('상대방이 화면을 껐습니다.');
-            setSubscriberId(message.childId);
+            // setSubscriberId(message.childId);
             setSubscriberVideoStatus(message.isAnimonOn);
           }
         });
@@ -182,7 +188,7 @@ const SessionPage = () => {
           const message = JSON.parse(response.body);
           console.log(message);
           if (message.childId !== String(publisherId)) {
-            setSubscriberId(message.childId);
+            // setSubscriberId(message.childId);
             setSubscriberGuideStatus(message.isNextGuideOn);
           }
         });
@@ -213,6 +219,7 @@ const SessionPage = () => {
   }, [streamList]);
 
   const getFriends = () => {
+    console.log(profileId);
     axios
       .get(`${API_BASE_URL}/friendship/${profileId}`, {
         headers: {
