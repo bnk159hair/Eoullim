@@ -179,7 +179,7 @@ public class MatchController {
                 mapSessions.remove(sessionId);
 
                 String guideSeq = (String) params.get("guideSeq");
-                mapRooms.get(sessionId).setTimeline(guideSeq);
+                mapRooms.get(sessionId).setGuideSeq(guideSeq);
 
                 String timeline = (String) params.get("timeline");
                 mapRooms.get(sessionId).setTimeline(timeline);
