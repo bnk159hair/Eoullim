@@ -70,10 +70,10 @@ public class RecordService {
             JSONObject clientData = (JSONObject) parser.parse((String)element.get("clientData"));
             int userId = Integer.parseInt((String)clientData.get("childId"));
             if(room.getChildOne().intValue() == userId){ // 영상의 주인이 첫번째 사람
-                roomRepository.save(RecordEntity.of(downFolder+name, userId, room.getChildTwo()));
+                roomRepository.save(RecordEntity.of(downFolder+name, userId, room.getChildTwo(), room.getGuideSeq(), room.getTimeline()));
             }
             if(room.getChildTwo().intValue() == userId){ // 영상의 주인이 두번째 사람
-                roomRepository.save(RecordEntity.of(downFolder+name, userId, room.getChildOne()));
+                roomRepository.save(RecordEntity.of(downFolder+name, userId, room.getChildOne(), room.getGuideSeq(), room.getTimeline()));
             }
 
         }

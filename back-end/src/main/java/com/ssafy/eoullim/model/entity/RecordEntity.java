@@ -14,13 +14,6 @@ import java.time.LocalDateTime;
 @Table(name="record_info")
 @NoArgsConstructor
 public class RecordEntity {
-    public RecordEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId) {
-        this.recordId = recordId;
-        this.videoPath = videoPath;
-        this.masterId = masterId;
-        this.participantId = participantId;
-    }
-
     @Id
     @Column(name="record_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,12 +32,29 @@ public class RecordEntity {
     @Column(name="participant_id")
     private Integer participantId;
 
-    public static RecordEntity of(String videoPath, Integer masterId, Integer participantId){
+    @Column(name="guide_seq")
+    private String guideSeq;
+
+    @Column(name="timeline")
+    private String timeline;
+
+    public RecordEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId, String guideSeq, String timeline) {
+        this.recordId = recordId;
+        this.videoPath = videoPath;
+        this.masterId = masterId;
+        this.participantId = participantId;
+        this.guideSeq = guideSeq;
+        this.timeline = timeline;
+    }
+
+    public static RecordEntity of(String videoPath, Integer masterId, Integer participantId, String guideSeq, String timeline){
         return new RecordEntity(
                 null,
                 videoPath,
                 masterId,
-                participantId
+                participantId,
+                guideSeq,
+                timeline
         );
     }
 
