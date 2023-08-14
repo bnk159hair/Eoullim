@@ -1,24 +1,24 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   ProfileUserContainer,
   NameTag,
   ButtonContainer,
-} from "./ProfileListItemStyles";
-import ModifyModal from "./ModifyModal";
-import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../../apis/urls";
-import axios from "axios";
-import { tokenState, userState } from "../../atoms/Auth";
-import { Profilekey } from "../../atoms/Profile";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { Button } from "@mui/material";
-import ToRecordModal from "./ToRecordModal";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+} from './ProfileListItemStyles';
+import ModifyModal from './ModifyModal';
+import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../apis/urls';
+import axios from 'axios';
+import { tokenState, userState } from '../../atoms/Auth';
+import { Profilekey } from '../../atoms/Profile';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { Button } from '@mui/material';
+import ToRecordModal from './ToRecordModal';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#b6d36f",
+      main: '#b6d36f',
     },
   },
 });
@@ -57,7 +57,7 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
     setProfileKey(childId);
     setUserName(name);
     profileLogin();
-    navigate("/");
+    navigate('/');
   };
 
   const profileLogin = () => {
@@ -72,10 +72,10 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
         }
       )
       .then((response) => {
-        console.log("프로필로그인");
+        console.log('프로필로그인');
       })
       .catch((error) => {
-        console.log("프로필 로그인 오류", error);
+        console.log('프로필 로그인 오류', error);
       });
   };
 
@@ -100,14 +100,14 @@ const ProfileListItem: React.FC<ProfileListItemProps> = ({
           <ButtonContainer>
             <Button
               variant="contained"
-              sx={{ fontSize: "18px", paddingX: "2rem" }}
+              sx={{ fontSize: '18px', paddingX: '1.8rem' }}
               onClick={handleModalOpen}
             >
               프로필 관리
             </Button>
             <Button
               variant="contained"
-              sx={{ fontSize: "18px", paddingX: "2rem" }}
+              sx={{ fontSize: '18px', paddingX: '1.8rem' }}
               onClick={handleRecordOpen}
             >
               녹화영상
