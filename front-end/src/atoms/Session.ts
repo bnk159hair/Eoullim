@@ -44,3 +44,18 @@ export const IsAnimonLoaded = atom<boolean>({
   key: 'isAnimonLoaded',
   default: false,
 });
+
+export const guideSeq = atom<Number[]>({
+  key: 'guideSeq',
+  default: [],
+});
+
+export const GuideScript = atom<string>({
+  key: 'guideScript',
+  default: '',
+});
+
+export const TimeStamp = atom<string>({
+  key: 'timeStamp',
+  default: '',
+});
