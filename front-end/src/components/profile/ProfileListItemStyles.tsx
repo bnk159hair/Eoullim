@@ -1,13 +1,12 @@
-import styled from "styled-components";
-import nametag from "../../assets/ecc/nametag.png";
+import styled from 'styled-components';
+import nametag from '../../assets/ecc/nametag.png';
 
 export const ProfileUserContainer = styled.div`
   width: 300px;
   height: 300px;
   background-size: 100% 100%;
-  background-color: #87cefa;
+  background-color: #fbe9a2;
   border-radius: 5%;
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

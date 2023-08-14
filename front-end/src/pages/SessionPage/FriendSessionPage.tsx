@@ -307,19 +307,21 @@ const FriendSessionPage = () => {
       {!open ? (
         <SessionPageContainer>
           <Container>
-            {streamList.length > 1 && streamList[1].streamManager ? (
-              <>
-                <StreamCanvas
-                  streamManager={streamList[1].streamManager}
-                  name={subscriberName}
-                  avatarPath={subscriberAnimonURL}
-                  videoState={subscriberVideoStatus}
-                />
-                <Loading isAnimonLoaded={isAnimonLoaded} />
-              </>
-            ) : (
-              <Loading isAnimonLoaded={false} />
-            )}
+            <MyVideo>
+              {streamList.length > 1 && streamList[1].streamManager ? (
+                <>
+                  <StreamCanvas
+                    streamManager={streamList[1].streamManager}
+                    name={subscriberName}
+                    avatarPath={subscriberAnimonURL}
+                    videoState={subscriberVideoStatus}
+                  />
+                  <Loading isAnimonLoaded={isAnimonLoaded} />
+                </>
+              ) : (
+                <Loading isAnimonLoaded={false} />
+              )}
+            </MyVideo>
             <CharacterContainer>
               <Character isPlaying={false}></Character>
             </CharacterContainer>
