@@ -73,8 +73,6 @@ const FriendSessionPage = () => {
   const profile = useRecoilValue(Profile);
 
   const IMGURL = '/bear.png';
-  const guidance = ['0번 가이드', '1번 가이드', '2번 가이드', '3번 가이드'];
-  const [step, setStep] = useState(0);
   const [subscriberName, setSubscriberName] = useState('');
 
   console.log('오픈비두 시작');
@@ -100,6 +98,7 @@ const FriendSessionPage = () => {
   useEffect(() => {
     setPublisherVideoStatus(isFalse);
     setSubscriberVideoStatus(isFalse);
+    console.log('친구불러오기 시작');
     getFriends();
   }, []);
 
@@ -109,21 +108,28 @@ const FriendSessionPage = () => {
 
   useEffect(() => {
     for (const user of streamList) {
-      if (user.userId !== publisherId) {
+      if (Number(user.userId) !== Number(publisherId)) {
+        console.log(user);
+        console.log(user.userId, publisherId);
         setSubscriberId(user.userId);
-      }
-      if (subscriberId) {
-        getAnimon();
-        friends.forEach((user: any) => {
-          console.log(user.id, subscriberId);
-          if (user.id === Number(subscriberId)) {
-            console.log('친구입니다.');
-            setFriend(isTrue);
-          }
-        });
+        console.log(subscriberId);
       }
     }
+    console.log(publisherId, subscriberId);
   }, [streamList]);
+
+  useEffect(() => {
+    if (subscriberId) {
+      getAnimon();
+      friends.forEach((user: any) => {
+        console.log(user.id, subscriberId);
+        if (Number(user.id) === Number(subscriberId)) {
+          console.log('친구입니다.');
+          setFriend(isTrue);
+        }
+      });
+    }
+  }, [subscriberId]);
 
   useEffect(() => {
     if (session) {
