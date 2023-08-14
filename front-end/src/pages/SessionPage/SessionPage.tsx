@@ -418,7 +418,7 @@ const SessionPage = () => {
               ) : (
                 <Loading isAnimonLoaded={false} />
               )}
-            </MyVideo>{' '}
+            </MyVideo>
           </Container>
           <NavContainer>
             <Buttons>
