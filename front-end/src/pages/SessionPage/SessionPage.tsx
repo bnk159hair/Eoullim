@@ -72,6 +72,8 @@ const SessionPage = () => {
     SubscriberGuideStatus
   );
 
+
+  const [clickEnabled, setClickEnabled] = useState(false);
   const profileId = useRecoilValue(Profilekey);
   const userToken = useRecoilValue(tokenState);
   const profile = useRecoilValue(Profile);
@@ -79,6 +81,7 @@ const SessionPage = () => {
 
   const [step, setStep] = useState(1);
   const guidance = new Audio(`/${step}.mp3`);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   console.log('오픈비두 시작');
 
@@ -127,7 +130,13 @@ const SessionPage = () => {
       step === 1
     ) {
       setFirst(isFalse);
-      guidance.play();
+      setTimeout(() => {
+        guidance.play(); 
+        setIsPlaying(true);
+      }, 5000);
+      guidance.addEventListener('ended', () => {
+        setIsPlaying(false);
+      });
     }
   }, [streamList]);
 
@@ -152,11 +161,19 @@ const SessionPage = () => {
     if (publisherGuideStatus && subscriberGuideStatus) {
       const nextStep = step + 1;
       setStep(nextStep);
+      console.log('안녕')
       const guidance = new Audio(`/${nextStep}.mp3`);
       if (nextStep <= 8) guidance.play();
+      setIsPlaying(true);
       setPublisherGuideStatus(isFalse);
       setSubscriberGuideStatus(isFalse);
       console.log(step);
+      guidance.addEventListener('ended', () => {
+        setIsPlaying(false);
+      });
+      setTimeout(() => {
+        setClickEnabled(true); 
+      }, 30000); 
     }
   }, [publisherGuideStatus, subscriberGuideStatus]);
 
@@ -217,6 +234,15 @@ const SessionPage = () => {
       };
     }
   }, [streamList]);
+
+  useEffect(()=>{
+    const timer = setTimeout(() => {
+      setClickEnabled(true);
+    }, 30000); 
+    return () => {
+      clearTimeout(timer);
+    };
+  },[])
 
   const getFriends = () => {
     console.log(profileId);
@@ -327,19 +353,23 @@ const SessionPage = () => {
   };
 
   const nextGuidance = () => {
-    if (connected && stompClient) {
-      const isNextGuideOn = !publisherGuideStatus;
-      setPublisherGuideStatus(isNextGuideOn);
-      const jsonMessage = {
-        childId: String(publisherId),
-        isNextGuideOn: isNextGuideOn,
-      };
-      const message = JSON.stringify(jsonMessage);
-      stompClient.publish({
-        destination: `/app/${session.sessionId}/guide`,
-        body: message,
-      });
-      console.log('가이드 전송:', message);
+    if (clickEnabled) {
+      setClickEnabled(false); // 클릭 비활성화
+      if (connected && stompClient) {
+        const isNextGuideOn = !publisherGuideStatus;
+        setPublisherGuideStatus(isNextGuideOn);
+        const jsonMessage = {
+          childId: String(publisherId),
+          isNextGuideOn: isNextGuideOn,
+        };
+        const message = JSON.stringify(jsonMessage);
+        stompClient.publish({
+          destination: `/app/${session.sessionId}/guide`,
+          body: message,
+        });
+        console.log('가이드 전송:', message);
+      }
+      
     }
   };
 
@@ -371,9 +401,8 @@ const SessionPage = () => {
               </YourVideo>
             </MainWrapper>
             <SideBar>
-              <Character onClick={nextGuidance}>
-                {step}
-                <Click />
+              <Character onClick={nextGuidance} isPlaying={isPlaying}>
+                {clickEnabled ? (<Click />):(<></>)}
               </Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
