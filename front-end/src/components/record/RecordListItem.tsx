@@ -1,5 +1,6 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { RecordItemContainer,RecordProfileImg,OpponentImformation,RecordUrl } from './RecordListItemStyles';
+import VideoModal from './RecordVideo'
 
 interface RecordListItemProps{
     animonName: string;
@@ -11,11 +12,19 @@ interface RecordListItemProps{
 
 const RecordListItem: React.FC<RecordListItemProps> =({name,animonName,school,video_path,create_time}) => {
     const IMGURL = `/${animonName}.png`
+    const [isModalOpen, setModalOpen] = useState(false);
+    const openModal = () => {
+        setModalOpen(true);
+      };
     
+      const closeModal = () => {
+        setModalOpen(false);
+      };
     const formatTime = (timeString: string) => {
         const date = new Date(timeString);
         return date.toLocaleString(); // 원하는 형식으로 변환할 수 있습니다.
       };
+
 
     return (
         <RecordItemContainer>
@@ -31,9 +40,10 @@ const RecordListItem: React.FC<RecordListItemProps> =({name,animonName,school,vi
                     녹화 날짜 : {formatTime(create_time)}
                 </div>
             </OpponentImformation>
-            <a href={video_path}>
-            <RecordUrl/>
-            </a>
+            {isModalOpen && (
+            <VideoModal onClose={closeModal} videoPath={video_path} />
+            )}
+            <RecordUrl onClick={openModal}/>
         </RecordItemContainer>
     );
 };
