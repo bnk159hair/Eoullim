@@ -402,10 +402,7 @@ const SessionPage = () => {
             </MainWrapper>
             <SideBar>
               <Character onClick={nextGuidance} isPlaying={isPlaying}>
-                {isPlaying ?(<div>hi</div>):(<></>)}
-                {/* {step} */}
                 {clickEnabled ? (<Click />):(<></>)}
-                {/* <Click /> */}
               </Character>
               <MyVideo>
                 {streamList.length > 1 && streamList[0].streamManager ? (
