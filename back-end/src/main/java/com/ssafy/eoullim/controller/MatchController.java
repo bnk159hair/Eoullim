@@ -7,6 +7,7 @@ import com.ssafy.eoullim.model.Alarm;
 import com.ssafy.eoullim.model.Room;
 import com.ssafy.eoullim.service.AlarmService;
 import com.ssafy.eoullim.service.RecordService;
+import com.ssafy.eoullim.utils.RandomGeneratorUtils;
 import io.openvidu.java.client.*;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.OpenVidu;
@@ -25,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/meetings")
 @RequiredArgsConstructor
@@ -97,13 +99,18 @@ public class MatchController {
 
                     String token = session.createConnection(connectionProperties).getToken();
 
+                    List<Integer> random = RandomGeneratorUtils.generateRandomNumbers(1, 11, 4);
+
                     Room newRoom = new Room();
                     newRoom.setSessionId(session.getSessionId());
+                    newRoom.setRandom(random);
+
                     matchingQueue.add(newRoom);
 
-                    Map<String, String> result = new HashMap<>(); // 리턴할 결과 객체
+                    Map<String, Object> result = new HashMap<>(); // 리턴할 결과 객체
                     result.put("sessionId", session.getSessionId());
                     result.put("token", token);
+                    result.put("guideSeq", newRoom.getRandom());
 
                     mapSessions.put(sessionId, session);
 
@@ -122,9 +129,10 @@ public class MatchController {
             if(mapSessions.get(sessionId) != null){ // 세션이 정상적으로 존재한다면
                 System.out.println("[ALREADY] Session created: " + sessionId);
                 String token = mapSessions.get(sessionId).createConnection(connectionProperties).getToken();
-                Map<String, String> result = new HashMap<>();
+                Map<String, Object> result = new HashMap<>();
                 result.put("sessionId", sessionId);
                 result.put("token", token);
+                result.put("guideSeq", existingRoom.getRandom());
 
                 RecordingProperties recordingProperties = new RecordingProperties.Builder() // 녹화 설정
                         .outputMode(Recording.OutputMode.INDIVIDUAL)
@@ -169,6 +177,12 @@ public class MatchController {
 
                 sessionRecordings.remove(sessionId);
                 mapSessions.remove(sessionId);
+
+                String guideSeq = (String) params.get("guideSeq");
+                mapRooms.get(sessionId).setTimeline(guideSeq);
+
+                String timeline = (String) params.get("timeline");
+                mapRooms.get(sessionId).setTimeline(timeline);
 
                 recordService.writeVideoToDB(recordId, mapRooms.get(sessionId));
 
@@ -236,6 +250,7 @@ public class MatchController {
                     return new ResponseEntity<>(result, HttpStatus.OK);
 
                 }catch (Exception e){
+                    e.printStackTrace();
                     return getErrorResponse(e);
                 }
             }
