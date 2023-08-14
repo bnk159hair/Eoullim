@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useRecoilValue, useRecoilState } from "recoil";
-import axios from "axios";
-import { tokenState } from "../../atoms/Auth";
-import { API_BASE_URL } from "../../apis/urls";
-import { Profilekey } from "../../atoms/Profile";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import axios from 'axios';
+import { tokenState } from '../../atoms/Auth';
+import { API_BASE_URL } from '../../apis/urls';
+import { Profilekey } from '../../atoms/Profile';
 import {
   ModalOverlay,
   ModalContent,
   FormContainer,
   ButtonContainer,
-} from "./ToRecordModalStyles";
-import { Button, TextField } from "@mui/material";
+} from './ToRecordModalStyles';
+import { Button, TextField } from '@mui/material';
+import Swal from 'sweetalert2';
 
 interface ToRecordModalProps {
   onClose: () => void;
@@ -20,7 +21,7 @@ interface ToRecordModalProps {
 
 const ToRecordModal: React.FC<ToRecordModalProps> = ({ onClose, childId }) => {
   const token = useRecoilValue(tokenState);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [profilekey, setProfileKey] = useRecoilState(Profilekey);
   const navigate = useNavigate();
 
@@ -37,12 +38,20 @@ const ToRecordModal: React.FC<ToRecordModalProps> = ({ onClose, childId }) => {
         }
       )
       .then((response) => {
-        alert("비밀번호가 확인되었습니다.");
+        Swal.fire({
+          text: '비밀번호가 확인되었습니다!',
+          icon: 'success',
+          confirmButtonText: '닫기',
+        });
         setProfileKey(childId);
-        navigate("/record");
+        navigate('/record');
       })
       .catch((error) => {
-        alert("비밀번호를 확인해주세요.");
+        Swal.fire({
+          text: '비밀번호를 확인해주세요!',
+          icon: 'error',
+          confirmButtonText: '닫기',
+        });
       });
   };
 
@@ -52,10 +61,10 @@ const ToRecordModal: React.FC<ToRecordModalProps> = ({ onClose, childId }) => {
         <FormContainer onSubmit={passwordCheck}>
           <h2>비밀번호 확인</h2>
           <TextField
-            label="비밀번호 확인"
-            variant="outlined"
-            margin="dense"
-            type="password"
+            label='비밀번호 확인'
+            variant='outlined'
+            margin='dense'
+            type='password'
             value={password}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setPassword(event.target.value)
@@ -63,21 +72,19 @@ const ToRecordModal: React.FC<ToRecordModalProps> = ({ onClose, childId }) => {
           />
           <ButtonContainer>
             <Button
-              variant="contained"
-              size="small"
-              sx={{ fontSize: "18px", margin: "0.5rem" }}
+              variant='contained'
+              size='small'
+              sx={{ fontSize: '18px', margin: '0.5rem' }}
               onClick={passwordCheck}
-              fullWidth
-            >
+              fullWidth>
               확인
             </Button>
             <Button
-              variant="contained"
-              size="small"
-              sx={{ fontSize: "18px", margin: "0.5rem" }}
+              variant='contained'
+              size='small'
+              sx={{ fontSize: '18px', margin: '0.5rem' }}
               onClick={onClose}
-              fullWidth
-            >
+              fullWidth>
               닫기
             </Button>
           </ButtonContainer>

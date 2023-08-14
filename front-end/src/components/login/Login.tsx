@@ -14,6 +14,7 @@ import { TextField, InputAdornment } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import KeyIcon from '@mui/icons-material/Key';
 import SignupModal from './SignupModal';
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const [userName, setUsername] = useState('');
@@ -24,6 +25,15 @@ const Login = () => {
 
   const handleLogin = (event: any) => {
     event.preventDefault();
+    if (!userName.trim() || !password.trim()) {
+      Swal.fire({
+        text: '아이디와 비밀번호를 확인해주세요!',
+        icon: 'error',
+        confirmButtonText: '닫기',
+      });
+      return;
+    }
+
     axios
       .post(`${API_BASE_URL}/users/login`, { userName, password })
       .then((response) => {
@@ -31,7 +41,11 @@ const Login = () => {
         navigate('/profile');
       })
       .catch((error) => {
-        alert('아이디와 비밀번호를 확인해주세요.');
+        Swal.fire({
+          text: '아이디와 비밀번호를 확인해주세요!',
+          icon: 'error',
+          confirmButtonText: '닫기',
+        });
       });
   };
 
@@ -47,10 +61,10 @@ const Login = () => {
     <>
       <FormContainer onSubmit={handleLogin}>
         <TextField
-          label="아이디"
-          variant="filled"
-          color="success"
-          margin="dense"
+          label='아이디'
+          variant='filled'
+          color='success'
+          margin='dense'
           value={userName}
           sx={{
             bgcolor: '#F5EBC9',
@@ -62,18 +76,18 @@ const Login = () => {
           }
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <AccountCircle />
               </InputAdornment>
             ),
           }}
         />
         <TextField
-          label="비밀번호"
-          variant="filled"
-          color="success"
-          margin="dense"
-          type="password"
+          label='비밀번호'
+          variant='filled'
+          color='success'
+          margin='dense'
+          type='password'
           value={password}
           sx={{
             bgcolor: '#F5EBC9',
@@ -85,13 +99,13 @@ const Login = () => {
           }
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <KeyIcon />
               </InputAdornment>
             ),
           }}
         />
-        <LoginButton type="submit">로그인</LoginButton>
+        <LoginButton type='submit'>로그인</LoginButton>
       </FormContainer>
       <SignupContainer>
         <span>아직 회원이 아니신가요?</span>

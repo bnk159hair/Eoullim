@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -34,5 +34,5 @@ export const ModalFormContainer = styled.form`
 
 export const IdContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
 `;
