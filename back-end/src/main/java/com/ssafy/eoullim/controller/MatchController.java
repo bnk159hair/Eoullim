@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
@@ -49,8 +50,7 @@ public class MatchController {
     private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
     // Collection to pair session names and tokens (the inner Map pairs tokens and
     // role associated)
-    private Map<String, Map<String, String>> mapSessionNamesTokens = new ConcurrentHashMap<>();
-    // Collection to pair session names and recording objects
+
     private Map<String, String> sessionRecordings = new ConcurrentHashMap<>();
     private Map<String, Room> mapRooms = new ConcurrentHashMap<>();
 
@@ -64,7 +64,8 @@ public class MatchController {
     }
 
     @PostMapping("/random/start")
-    public ResponseEntity<?> startRandom(
+    @Transactional
+    public synchronized ResponseEntity<?> startRandom(
             @RequestBody MatchRequest matchRequest
     ) throws OpenViduJavaClientException, OpenViduHttpException {
 
@@ -105,8 +106,6 @@ public class MatchController {
                     result.put("token", token);
 
                     mapSessions.put(sessionId, session);
-//                    mapSessionNamesTokens.put(sessionId, new ConcurrentHashMap<>());
-//                    mapSessionNamesTokens.get(sessionId).put(token, token);
 
                     newRoom.setChildOne(matchRequest.getChildId()); // 첫 입장자 아이디 저장
                     mapRooms.put(sessionId, newRoom);
@@ -123,11 +122,9 @@ public class MatchController {
             if(mapSessions.get(sessionId) != null){ // 세션이 정상적으로 존재한다면
                 System.out.println("[ALREADY] Session created: " + sessionId);
                 String token = mapSessions.get(sessionId).createConnection(connectionProperties).getToken();
-//                mapSessionNamesTokens.get(sessionId).put(token, token);
                 Map<String, String> result = new HashMap<>();
                 result.put("sessionId", sessionId);
                 result.put("token", token);
-//                mapSessionNamesTokens.get(sessionId).put(token, token);
 
                 RecordingProperties recordingProperties = new RecordingProperties.Builder() // 녹화 설정
                         .outputMode(Recording.OutputMode.INDIVIDUAL)
@@ -155,7 +152,6 @@ public class MatchController {
         String sessionId = (String) params.get("sessionId");
         System.out.println("[STOP] Session created: " + sessionId);
 
-//        if(mapSessions.get(sessionId) != null && mapSessionNamesTokens.get(sessionId) != null && mapRooms.get(sessionId)!= null){
         if(mapSessions.get(sessionId) != null && mapRooms.get(sessionId)!= null){
 
             Session session = mapSessions.get(sessionId);
@@ -163,7 +159,6 @@ public class MatchController {
 
                 matchingQueue.remove(mapRooms.get(sessionId));
                 mapSessions.remove(sessionId);
-//                mapSessionNamesTokens.remove(sessionId);
                 mapRooms.remove(sessionId);
 
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -174,7 +169,6 @@ public class MatchController {
 
                 sessionRecordings.remove(sessionId);
                 mapSessions.remove(sessionId);
-//                mapSessionNamesTokens.remove(sessionId);
 
                 recordService.writeVideoToDB(recordId, mapRooms.get(sessionId));
 
@@ -252,11 +246,9 @@ public class MatchController {
                     Room existingRoom = mapRooms.get(sessionId);
                     System.out.println("[ALREADY] Session created: " + sessionId);
                     String token = mapSessions.get(sessionId).createConnection(connectionProperties).getToken();
-//                    mapSessionNamesTokens.get(sessionId).put(token, token);
                     Map<String, String> result = new HashMap<>();
                     result.put("sessionId", sessionId);
                     result.put("token", token);
-//                    mapSessionNamesTokens.get(sessionId).put(token, token);
 
                     RecordingProperties recordingProperties = new RecordingProperties.Builder() // 녹화 설정
                             .outputMode(Recording.OutputMode.INDIVIDUAL)
@@ -294,7 +286,6 @@ public class MatchController {
             if(matchingQueue.contains(mapRooms.get(sessionId))){ // 매치가 안되었는데 나갔을 경우
 
                 mapSessions.remove(sessionId);
-//                mapSessionNamesTokens.remove(sessionId);
                 mapRooms.remove(sessionId);
 
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -305,7 +296,6 @@ public class MatchController {
 
                 sessionRecordings.remove(sessionId);
                 mapSessions.remove(sessionId);
-//                mapSessionNamesTokens.remove(sessionId);
 
                 recordService.writeVideoToDB(recordId, mapRooms.get(sessionId));
 
@@ -318,21 +308,6 @@ public class MatchController {
         }
     }
 
-
-//    /* 녹화 정지를 위함 */
-//    @PostMapping("/api/sessions/recording/stop")
-//    public ResponseEntity<?> stopRecording(
-//            @RequestBody(required = false) Map<String, Object> params
-//    ) throws OpenViduJavaClientException, OpenViduHttpException {
-//        String sessionId = (String) params.get("session");
-//
-//        try {
-//            Recording recording = openvidu.stopRecording(sessionId);
-//            return new ResponseEntity<>(recording, HttpStatus.OK);
-//        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
     private ResponseEntity<JsonObject> getErrorResponse(Exception e) {
         JsonObject json = new JsonObject();
         json.addProperty("cause", e.getCause().toString());
