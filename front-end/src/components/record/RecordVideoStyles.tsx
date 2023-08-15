@@ -45,4 +45,24 @@ export const VideoInfo = styled.div`
     background-size: 100% 100%;
     width: 700px;
     height: 500px;
+    justify-content: flex-start;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
 `;
+
+export const GuideInfo = styled.div`
+  font-family: 'omyu_pretty';
+  font-size: 20px;
+  width: 450px;
+  margin: 10px
+`
+
+export const GuideContainer = styled.div`
+  margin: 20px
+  width: 550px;
+  height: 400px;
+  overflow: auto;
+`
