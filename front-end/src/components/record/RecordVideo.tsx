@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   ModalOverlay,
   ModalContent,
@@ -83,7 +83,9 @@ const VideoModal: React.FC<VideoModalProps> = ({
     const index = guideIndex[i];
     const guide = guideScript[index];
     const time = format(highlight[i]);
-    info.push([guide, time, Number(highlight[i]) / 1000]);
+    if (guide && time) {
+      info.push([guide, time, Number(highlight[i]) / 1000]);
+    }
   }
 
   const progressHandler = (changeState: any) => {
@@ -123,32 +125,38 @@ const VideoModal: React.FC<VideoModalProps> = ({
               onProgress={progressHandler} // 재생 및 로드된 시점을 반환
             />
             <VideoInfo>
-              {info ? (
-                info.map(([guide, time, second]: any[], index: number) => (
-                  <div
-                    className="timestamp_box"
-                    key={index}
-                    onClick={() => {
-                      videoRef.current.seekTo(second);
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <span>{time}</span>
-                    </Button>
-                    <span>{guide}</span>
-                  </div>
-                ))
+              {info.length ? (
+                info.map(([guide, time, second]: any[], index: number) => {
+                  if (guide && second) {
+                    return (
+                      <div
+                        className="timestamp_box"
+                        key={index}
+                        onClick={() => {
+                          videoRef.current.seekTo(second);
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <span>{time}</span>
+                        </Button>
+                        <span>{guide}</span>
+                      </div>
+                    );
+                  } else {
+                    return null;
+                  }
+                })
               ) : (
-                <></>
+                <span>타임라인이 없습니다</span>
               )}
             </VideoInfo>
           </FormContainer>
