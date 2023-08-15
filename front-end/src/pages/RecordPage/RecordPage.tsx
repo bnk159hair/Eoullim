@@ -20,6 +20,8 @@ interface Record {
   school: string;
   video_path: string;
   name: string;
+  guide_seq: string;
+  timeline: string;
 }
 
 const RecordPage = () => {
@@ -38,7 +40,11 @@ const RecordPage = () => {
 
   const getRecord = () => {
     axios
-      .get(`${API_BASE_URL}/recordings/${profileId}`)
+      .get(`${API_BASE_URL}/recordings/${profileId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const data = response.data;
         console.log(response);
@@ -71,6 +77,8 @@ const RecordPage = () => {
               school={record.school}
               video_path={record.video_path}
               create_time={record.create_time}
+              guide_seq={record.guide_seq}
+              timeline={record.timeline}
             />
           ))}
         </Scroll>
