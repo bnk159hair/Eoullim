@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   ModalOverlay,
   ModalContent,
@@ -26,7 +26,7 @@ const VideoModal: React.FC<VideoModalProps> = ({
   timeStamp,
 }) => {
   const guideScript: { [key: string]: string } = {
-      '1': '안녕~ 다들 만나서 반가워!! 나는 어울림학교에 다니는 곰탱이 라고 해. 너희는 어디 학교 다니는지 이름이 뭔지~ 소개 해줄 수 있어?',
+    '1': '안녕~ 다들 만나서 반가워!! 나는 어울림학교에 다니는 곰탱이 라고 해. 너희는 어디 학교 다니는지 이름이 뭔지~ 소개 해줄 수 있어?',
     '2': '나는 만화를 아주 좋아하는데 엉덩이탐정을 가장 좋아해. 너희는 어떤 만화를 좋아해? 친구에게 너가 가장 좋아하는 만화를 소개해줘.',
     '3': '나는 공룡을 아주 아주 좋아해 어제 마트에 갔는데 공룡 장난감이 정말 멋지더라. 내일 내 생일인데 생일 선물로 공룡 장난감을 받고 싶어. 너희는 생일에 무슨 선물 받고 싶어?',
     '4': '나는 저번 주에 형이랑 짜장면을 시켜 먹었는데 정말 맛있었어. 너희는 무슨 음식을 제일 좋아해?',
@@ -85,7 +85,9 @@ const VideoModal: React.FC<VideoModalProps> = ({
     const index = guideIndex[i];
     const guide = guideScript[index];
     const time = format(highlight[i]);
-    info.push([guide, time, Number(highlight[i]) / 1000]);
+    if (guide && time) {
+      info.push([guide, time, Number(highlight[i]) / 1000]);
+    }
   }
 
   const progressHandler = (changeState: any) => {
@@ -151,7 +153,7 @@ const VideoModal: React.FC<VideoModalProps> = ({
                   </div>
                 ))
               ) : (
-                <></>
+                <span>타임라인이 없습니다</span>
               )}
               </GuideContainer>
             </VideoInfo>
