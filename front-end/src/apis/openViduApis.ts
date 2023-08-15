@@ -93,7 +93,7 @@ export const destroySession = async (
   userToken: any
 ) => {
   console.log('세션 파괴!!!!!!');
-  console.log(session.sessionId);
+  console.log(session.sessionId, guideScript, timeStamp);
 
   try {
     const response = await axios.post(
