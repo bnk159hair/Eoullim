@@ -38,7 +38,11 @@ const RecordPage = () => {
 
   const getRecord = () => {
     axios
-      .get(`${API_BASE_URL}/recordings/${profileId}`)
+      .get(`${API_BASE_URL}/recordings/${profileId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const data = response.data;
         console.log(response);
