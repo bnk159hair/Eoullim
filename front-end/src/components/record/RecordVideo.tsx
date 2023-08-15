@@ -5,6 +5,8 @@ import {
   HeaderContainer,
   FormContainer,
   VideoInfo,
+  GuideInfo,
+  GuideContainer
 } from './RecordVideoStyles';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Button } from '@mui/material';
@@ -125,39 +127,35 @@ const VideoModal: React.FC<VideoModalProps> = ({
               onProgress={progressHandler} // 재생 및 로드된 시점을 반환
             />
             <VideoInfo>
-              {info.length ? (
-                info.map(([guide, time, second]: any[], index: number) => {
-                  if (guide && second) {
-                    return (
-                      <div
-                        className="timestamp_box"
-                        key={index}
-                        onClick={() => {
-                          videoRef.current.seekTo(second);
-                        }}
-                      >
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <span>{time}</span>
-                        </Button>
-                        <span>{guide}</span>
-                      </div>
-                    );
-                  } else {
-                    return null;
-                  }
-                })
+            <GuideContainer>
+              {info ? (
+                info.map(([guide, time, second]: any[], index: number) => (
+                  <div
+                    className="timestamp_box"
+                    key={index}
+                    onClick={() => {
+                      videoRef.current.seekTo(second);
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span>{time}</span>
+                    </Button>
+                    <GuideInfo>{guide}</GuideInfo>
+                  </div>
+                ))
               ) : (
                 <span>타임라인이 없습니다</span>
               )}
+              </GuideContainer>
             </VideoInfo>
           </FormContainer>
         </ModalContent>
