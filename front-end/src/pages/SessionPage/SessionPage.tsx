@@ -39,6 +39,7 @@ import { API_BASE_URL } from '../../apis/urls';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import EndModal from '../../components/stream/EndModal';
+import { destroySession } from '../../apis/openViduApis';
 
 interface FriendsProfile {
   id: number;
@@ -177,6 +178,7 @@ const SessionPage = () => {
       guidance.addEventListener('ended', () => {
         setIsPlaying(false);
         if (nextIndex === 4) {
+          console.log(guideScript, timeStamp);
           sessionOver();
         }
       });
@@ -312,6 +314,7 @@ const SessionPage = () => {
       });
       console.log('메시지 전송:', message);
     }
+    destroySession(session, guideScript, timeStamp, userToken);
     navigate('/');
   };
 
