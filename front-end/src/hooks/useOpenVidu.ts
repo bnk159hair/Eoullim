@@ -2,7 +2,6 @@ import { OpenVidu } from 'openvidu-browser';
 import {
   getUserInfo,
   getToken,
-  destroySession,
   getFriendSessionToken,
   destroyFriendSession,
 } from '../apis/openViduApis';
@@ -31,6 +30,7 @@ export const useOpenVidu = (
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [guide, setGuide] = useRecoilState(guideSeq);
   const userToken = useRecoilValue(tokenState);
+  
   const guideScript = useRecoilValue(GuideScript);
   const timeStamp = useRecoilValue(TimeStamp);
 
@@ -54,7 +54,7 @@ export const useOpenVidu = (
       session.disconnect();
       console.log(session);
       console.log('서버에 세션 끊어달라고 보내기');
-      destroySession(session, guideScript, timeStamp, userToken);
+      console.log(guideScript, timeStamp);
     }
     setSession(null);
     setPublisher(null);
@@ -248,7 +248,7 @@ export const useOpenVidu = (
       } else if (mySession) {
         console.log('서버에 세션 끊어달라고 보내기');
         console.log(mySession);
-        destroySession(mySession, guideScript, timeStamp, userToken);
+        console.log(guideScript, timeStamp)
       }
       setSession(null);
       setPublisher(null);
