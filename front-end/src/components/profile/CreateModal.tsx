@@ -90,8 +90,14 @@ const CreateModal: React.FC<CreateModalProps> = ({ onClose, resetList }) => {
       );
       console.log('프로필 생성 성공:', response);
       console.log(profileData);
-      onClose();
-      resetList();
+      Swal.fire({
+        text: '프로필을 생성했습니다!',
+        icon: 'success',
+        confirmButtonText: '닫기',
+      }).then(() => {
+        onClose();
+        resetList();
+      });
     } catch (error) {
       console.log(token);
       console.log('프로필 생성실패:', error);

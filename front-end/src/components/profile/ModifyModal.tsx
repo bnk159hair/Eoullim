@@ -100,8 +100,7 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
           text: '비밀번호가 확인되었습니다!',
           icon: 'success',
           confirmButtonText: '닫기',
-        });
-        setIsPasswordCorrect(true);
+        }).then(() => setIsPasswordCorrect(true));
       })
       .catch((error) => {
         Swal.fire({
@@ -159,10 +158,21 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
       );
 
       console.log('프로필 수정 성공:', response);
-      resetList();
-      onClose();
+      Swal.fire({
+        text: '프로필 수정에 성공했습니다!',
+        icon: 'success',
+        confirmButtonText: '닫기',
+      }).then(() => {
+        resetList();
+        onClose();
+      });
     } catch (error) {
       console.log('프로필 수정 실패:', error);
+      Swal.fire({
+        text: '프로필 수정에 실패했습니다!',
+        icon: 'error',
+        confirmButtonText: '닫기',
+      });
     }
   };
 
@@ -204,17 +214,32 @@ const ModifyModal: React.FC<ModifyModalProps> = ({
   };
 
   const deleteProfile = () => {
-    axios
-      .delete(`${API_BASE_URL}/children/${childId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        resetList();
-        console.log('삭제완료');
-      })
-      .catch((error) => console.log('실패'));
+    Swal.fire({
+      title: '이 프로필을 삭제하시겠습니까?',
+      text: '되돌릴 수 없습니다!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`${API_BASE_URL}/children/${childId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            Swal.fire({
+              text: '삭제되었습니다!',
+              icon: 'success',
+              confirmButtonText: '닫기',
+            }).then(() => resetList());
+            console.log('삭제완료');
+          })
+          .catch((error) => console.log('실패'));
+      }
+    });
   };
 
   return (

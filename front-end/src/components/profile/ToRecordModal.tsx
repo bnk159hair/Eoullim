@@ -38,13 +38,12 @@ const ToRecordModal: React.FC<ToRecordModalProps> = ({ onClose, childId }) => {
         }
       )
       .then((response) => {
+        setProfileKey(childId);
         Swal.fire({
           text: '비밀번호가 확인되었습니다!',
           icon: 'success',
           confirmButtonText: '닫기',
-        });
-        setProfileKey(childId);
-        navigate('/record');
+        }).then(() => navigate('/record'));
       })
       .catch((error) => {
         Swal.fire({

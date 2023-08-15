@@ -106,8 +106,7 @@ const ChagePasswordModal: React.FC<ChagePasswordModalProps> = ({ onClose }) => {
         text: '비밀번호가 변경되었습니다!',
         icon: 'success',
         confirmButtonText: '닫기',
-      });
-      logoutClick();
+      }).then(() => logoutClick());
     } catch (error) {
       console.log(token);
       console.log('비밀번호 변경 실패', error);

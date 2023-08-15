@@ -97,6 +97,11 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose }) => {
         `${API_BASE_URL}/users/join`,
         signUpData
       );
+      Swal.fire({
+        text: '회원 가입에 성공했습니다!',
+        icon: 'success',
+        confirmButtonText: '닫기',
+      });
       onClose();
       console.log('회원가입 성공:', response);
     } catch (error) {
