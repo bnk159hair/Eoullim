@@ -203,8 +203,8 @@ class FaceCanvas {
       canvas: canvas,
     });
     this._renderer.setSize(w, h);
-    this._halfW = w * 0.4;
-    this._halfH = h * 0.4;
+    this._halfW = w * 0.38;
+    this._halfH = h * 0.38;
     this._textureFilePath = textureFilePath;
     this._setupScene();
   }

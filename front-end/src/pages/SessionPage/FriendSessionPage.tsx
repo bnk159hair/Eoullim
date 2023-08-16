@@ -34,6 +34,7 @@ import { WebSocketApis } from '../../apis/webSocketApis';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/urls';
 import EndModal from '../../components/stream/EndModal';
+import { destroySession } from '../../apis/openViduApis';
 
 interface FriendsProfile {
   id: number;
@@ -245,6 +246,7 @@ const FriendSessionPage = () => {
       });
       console.log('메시지 전송:', message);
     }
+    destroySession(session, '', '', userToken);
     navigate('/');
   };
 
@@ -374,7 +376,7 @@ const FriendSessionPage = () => {
         </SessionPageContainer>
       ) : streamList.length !== 2 ? (
         !refuse ? (
-          navigate('/')
+          leaveSession()
         ) : (
           <EndModal
             onClose={leaveSession}
