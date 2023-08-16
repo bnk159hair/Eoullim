@@ -255,9 +255,9 @@ const SessionPage = () => {
     };
   }, []);
 
-  const getFriends = () => {
+  const getFriends = async () => {
     console.log(profileId);
-    axios
+    await axios
       .get(`${API_BASE_URL}/friendship/${profileId}`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
