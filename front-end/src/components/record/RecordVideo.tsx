@@ -6,7 +6,7 @@ import {
   FormContainer,
   VideoInfo,
   GuideInfo,
-  GuideContainer
+  GuideContainer,
 } from './RecordVideoStyles';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Button } from '@mui/material';
@@ -82,11 +82,15 @@ const VideoModal: React.FC<VideoModalProps> = ({
   const info = [];
 
   for (let i = 0; i < 4; i++) {
-    const index = guideIndex[i];
-    const guide = guideScript[index];
-    const time = format(highlight[i]);
-    if (guide && time) {
-      info.push([guide, time, Number(highlight[i]) / 1000]);
+    if (guideIndex.length > i) {
+      const index = guideIndex[i];
+      const guide = guideScript[index];
+      if (guide && highlight.length > i) {
+        const time = format(highlight[i]);
+        if (guide && time) {
+          info.push([guide, time, Number(highlight[i]) / 1000]);
+        }
+      }
     }
   }
 
@@ -127,34 +131,34 @@ const VideoModal: React.FC<VideoModalProps> = ({
               onProgress={progressHandler} // 재생 및 로드된 시점을 반환
             />
             <VideoInfo>
-            <GuideContainer>
-              {info ? (
-                info.map(([guide, time, second]: any[], index: number) => (
-                  <div
-                    className="timestamp_box"
-                    key={index}
-                    onClick={() => {
-                      videoRef.current.seekTo(second);
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
+              <GuideContainer>
+                {info ? (
+                  info.map(([guide, time, second]: any[], index: number) => (
+                    <div
+                      className="timestamp_box"
+                      key={index}
+                      onClick={() => {
+                        videoRef.current.seekTo(second);
                       }}
                     >
-                      <span>{time}</span>
-                    </Button>
-                    <GuideInfo>{guide}</GuideInfo>
-                  </div>
-                ))
-              ) : (
-                <span>타임라인이 없습니다</span>
-              )}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <span>{time}</span>
+                      </Button>
+                      <GuideInfo>{guide}</GuideInfo>
+                    </div>
+                  ))
+                ) : (
+                  <span>타임라인이 없습니다</span>
+                )}
               </GuideContainer>
             </VideoInfo>
           </FormContainer>
