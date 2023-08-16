@@ -186,8 +186,8 @@ const FriendSessionPage = () => {
     }
   }, [streamList]);
 
-  const getFriends = () => {
-    axios
+  const getFriends = async () => {
+    await axios
       .get(`${API_BASE_URL}/friendship/${profileId}`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
