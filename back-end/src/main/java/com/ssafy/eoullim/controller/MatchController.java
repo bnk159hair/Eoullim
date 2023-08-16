@@ -140,12 +140,16 @@ public class MatchController {
                         .frameRate(24)
                         .name("VideoInfo")
                         .build();
-                Recording recording = openvidu.startRecording(sessionId, recordingProperties); // 녹화 시작
+                try{
+                    Thread.sleep(3000);
 
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                existingRoom.setChildTwo(matchRequest.getChildId()); // 두번째 입장자 아이디 저장
+                Recording recording = openvidu.startRecording(sessionId, recordingProperties); // 녹화 시작
                 sessionRecordings.put(sessionId, recording.getId());
                 existingRoom.setRecordingId(recording.getId());
-                existingRoom.setChildTwo(matchRequest.getChildId()); // 두번째 입장자 아이디 저장
-
                 return new ResponseEntity<>(result, HttpStatus.OK);
             }else{
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
