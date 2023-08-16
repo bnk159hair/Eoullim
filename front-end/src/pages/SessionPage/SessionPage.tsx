@@ -465,7 +465,7 @@ const SessionPage = () => {
           </NavContainer>
         </SessionPageContainer>
       ) : streamList.length !== 2 ? (
-        navigate('/')
+        leaveSession()
       ) : !isFriend ? (
         <EndModal
           onClose={leaveSession}
