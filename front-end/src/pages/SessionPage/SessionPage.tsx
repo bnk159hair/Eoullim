@@ -152,7 +152,7 @@ const SessionPage = () => {
       getAnimon();
       friends.forEach((user: any) => {
         console.log(user.id, subscriberId);
-        if (Number(user.id) === Number(subscriberId)) {
+        if (String(user.id) === String(subscriberId)) {
           console.log('친구입니다.');
           setFriend(isTrue);
         }
@@ -255,9 +255,9 @@ const SessionPage = () => {
     };
   }, []);
 
-  const getFriends = async () => {
+  const getFriends = () => {
     console.log(profileId);
-    await axios
+    axios
       .get(`${API_BASE_URL}/friendship/${profileId}`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
