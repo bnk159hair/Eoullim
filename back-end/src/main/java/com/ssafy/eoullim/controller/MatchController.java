@@ -77,55 +77,55 @@ public class MatchController {
                 .fromJson(params)
                 .build();
 
+        LocalDateTime now = LocalDateTime.now();
+        String formatNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String sessionId = matchRequest.getChildId().toString()+"_"+formatNow; // sessionId 결정
+
+        if (this.mapSessions.get(sessionId) != null) { // 만드려는 세션 Id가 이미 존재하는지
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         if(matchingQueue.isEmpty()){ // 비어있다면
-            LocalDateTime now = LocalDateTime.now();
-            String formatNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-            String sessionId = matchRequest.getChildId().toString()+"_"+formatNow; // sessionId 결정
+            Room newRoom = new Room();
+            matchingQueue.add(newRoom);
 
-            if (this.mapSessions.get(sessionId) != null) { // 만드려는 세션 Id가 이미 존재하는지
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            try{
+                System.out.println("[EMPTY] Session created: " + sessionId);
+
+                SessionProperties sessionProperties = new SessionProperties.Builder()
+                        .customSessionId(sessionId)
+                        .recordingMode(RecordingMode.MANUAL)
+                        .build();
+
+                Session session = openvidu.createSession(sessionProperties);
+
+                String token = session.createConnection(connectionProperties).getToken();
+
+                List<Integer> random = RandomGeneratorUtils.generateRandomNumbers(2, 12, 4);
+
+                newRoom.setSessionId(session.getSessionId());
+                newRoom.setRandom(random);
+
+
+                Map<String, Object> result = new HashMap<>(); // 리턴할 결과 객체
+                result.put("sessionId", session.getSessionId());
+                result.put("token", token);
+                result.put("guideSeq", newRoom.getRandom());
+
+                mapSessions.put(sessionId, session);
+
+                newRoom.setChildOne(matchRequest.getChildId()); // 첫 입장자 아이디 저장
+                mapRooms.put(sessionId, newRoom);
+
+                return new ResponseEntity<>(result, HttpStatus.OK);
+
+            }catch (Exception e){
+                return getErrorResponse(e);
             }
-            else{ // 없는거 확인했으면 세로운 세션 Id 만들기
-                try{
-                    System.out.println("[EMPTY] Session created: " + sessionId);
 
-                    SessionProperties sessionProperties = new SessionProperties.Builder()
-                            .customSessionId(sessionId)
-                            .recordingMode(RecordingMode.MANUAL)
-                            .build();
-
-                    Session session = openvidu.createSession(sessionProperties);
-
-                    String token = session.createConnection(connectionProperties).getToken();
-
-                    List<Integer> random = RandomGeneratorUtils.generateRandomNumbers(2, 12, 4);
-
-                    Room newRoom = new Room();
-                    newRoom.setSessionId(session.getSessionId());
-                    newRoom.setRandom(random);
-
-                    matchingQueue.add(newRoom);
-
-                    Map<String, Object> result = new HashMap<>(); // 리턴할 결과 객체
-                    result.put("sessionId", session.getSessionId());
-                    result.put("token", token);
-                    result.put("guideSeq", newRoom.getRandom());
-
-                    mapSessions.put(sessionId, session);
-
-                    newRoom.setChildOne(matchRequest.getChildId()); // 첫 입장자 아이디 저장
-                    mapRooms.put(sessionId, newRoom);
-
-                    return new ResponseEntity<>(result, HttpStatus.OK);
-
-                }catch (Exception e){
-                    return getErrorResponse(e);
-                }
-            }
         }else{ // 비어있지 않다면
             Room existingRoom = matchingQueue.poll();
-            String sessionId = existingRoom.getSessionId();
+            sessionId = existingRoom.getSessionId();
             if(mapSessions.get(sessionId) != null){ // 세션이 정상적으로 존재한다면
                 System.out.println("[ALREADY] Session created: " + sessionId);
                 String token = mapSessions.get(sessionId).createConnection(connectionProperties).getToken();
