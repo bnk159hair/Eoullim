@@ -108,11 +108,16 @@ const FriendSessionPage = () => {
 
   useEffect(() => {
     for (const user of streamList) {
-      if (Number(user.userId) !== Number(publisherId)) {
-        console.log(user);
-        console.log(user.userId, publisherId);
+      if (String(user.userId) !== String(publisherId)) {
         setSubscriberId(user.userId);
-        console.log(subscriberId);
+        friends.forEach((user: any) => {
+          console.log(user.id, subscriberId);
+          console.log(Number(user.id) === Number(subscriberId));
+          if (String(user.id) === String(subscriberId)) {
+            console.log('친구입니다.');
+            setFriend(isTrue);
+          }
+        });
       }
     }
     console.log(publisherId, subscriberId);
@@ -121,13 +126,6 @@ const FriendSessionPage = () => {
   useEffect(() => {
     if (subscriberId) {
       getAnimon();
-      friends.forEach((user: any) => {
-        console.log(user.id, subscriberId);
-        if (Number(user.id) === Number(subscriberId)) {
-          console.log('친구입니다.');
-          setFriend(isTrue);
-        }
-      });
     }
   }, [subscriberId]);
 
@@ -148,7 +146,7 @@ const FriendSessionPage = () => {
         client.subscribe(`/topic/${session.sessionId}/animon`, (response) => {
           console.log('메시지 수신:', response.body);
           const message = JSON.parse(response.body);
-          if (message.childId !== String(publisherId)) {
+          if (String(message.childId) !== String(publisherId)) {
             console.log(message.childId, message.isAnimonOn);
             console.log('상대방이 화면을 껐습니다.');
             setSubscriberId(message.childId);
