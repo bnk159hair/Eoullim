@@ -132,7 +132,7 @@ const VideoModal: React.FC<VideoModalProps> = ({
             />
             <VideoInfo>
               <GuideContainer>
-                {info ? (
+                {info.length ? (
                   info.map(([guide, time, second]: any[], index: number) => (
                     <div
                       className="timestamp_box"
@@ -157,7 +157,7 @@ const VideoModal: React.FC<VideoModalProps> = ({
                     </div>
                   ))
                 ) : (
-                  <span>타임라인이 없습니다</span>
+                  <GuideInfo>타임라인이 없습니다</GuideInfo>
                 )}
               </GuideContainer>
             </VideoInfo>
