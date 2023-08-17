@@ -121,6 +121,7 @@ const SessionPage = () => {
 
   useEffect(() => {
     for (const user of streamList) {
+      console.log('before', Number(user.userId), Number(publisherId));
       if (Number(user.userId) !== Number(publisherId)) {
         console.log(user);
         console.log(user.userId, publisherId);
@@ -148,15 +149,25 @@ const SessionPage = () => {
   }, [isOpen]);
 
   useEffect(() => {
+    for (const user of streamList) {
+      if (Number(user.userId) !== Number(publisherId)) {
+        setSubscriberId(Number(user.userId));
+        friends.forEach((user: any) => {
+          console.log(user.id, subscriberId);
+          console.log(Number(user.id) === Number(subscriberId));
+          if (String(user.id) === String(subscriberId)) {
+            console.log('친구입니다.');
+            setFriend(isTrue);
+          }
+        });
+      }
+    }
+    console.log(publisherId, subscriberId);
+  }, [streamList]);
+
+  useEffect(() => {
     if (subscriberId) {
       getAnimon();
-      friends.forEach((user: any) => {
-        console.log(user.id, subscriberId);
-        if (String(user.id) === String(subscriberId)) {
-          console.log('친구입니다.');
-          setFriend(isTrue);
-        }
-      });
     }
   }, [subscriberId]);
 
