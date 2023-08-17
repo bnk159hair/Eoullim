@@ -77,8 +77,6 @@ const FriendSessionPage = () => {
 
   console.log('오픈비두 시작');
 
-  setPublisherId(profileId);
-  setPublisherAnimonURL(profile.animon.name + 'mask.png');
   console.log(profileId, sessionId, sessionToken);
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
     useOpenVidu(profileId, sessionId, sessionToken);
@@ -98,9 +96,24 @@ const FriendSessionPage = () => {
   useEffect(() => {
     setPublisherVideoStatus(isFalse);
     setSubscriberVideoStatus(isFalse);
+    setPublisherId(profileId);
+    setPublisherAnimonURL(profile.animon.name + 'mask.png');
     console.log('친구불러오기 시작');
     getFriends();
   }, []);
+
+  useEffect(() => {
+    for (const user of streamList) {
+      console.log('before', Number(user.userId), Number(publisherId));
+      if (Number(user.userId) !== profileId) {
+        console.log(user);
+        console.log(user.userId, publisherId);
+        setSubscriberId(user.userId);
+        console.log(subscriberId);
+      }
+    }
+    console.log(publisherId, subscriberId);
+  }, [streamList]);
 
   useEffect(() => {
     setOpen(isOpen);
@@ -108,7 +121,7 @@ const FriendSessionPage = () => {
 
   useEffect(() => {
     for (const user of streamList) {
-      if (Number(user.userId) !== profileId) {
+      if (Number(user.userId) !== Number(publisherId)) {
         setSubscriberId(Number(user.userId));
         friends.forEach((user: any) => {
           console.log(user.id, subscriberId);
@@ -121,7 +134,7 @@ const FriendSessionPage = () => {
       }
     }
     console.log(publisherId, subscriberId);
-  }, [streamList]);
+  }, [subscriberId]);
 
   useEffect(() => {
     if (subscriberId) {

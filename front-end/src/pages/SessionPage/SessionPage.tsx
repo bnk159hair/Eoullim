@@ -149,7 +149,7 @@ const SessionPage = () => {
 
   useEffect(() => {
     for (const user of streamList) {
-      if (Number(user.userId) !== profileId) {
+      if (Number(user.userId) !== Number(publisherId)) {
         setSubscriberId(Number(user.userId));
         friends.forEach((user: any) => {
           console.log(user.id, subscriberId);
@@ -162,7 +162,7 @@ const SessionPage = () => {
       }
     }
     console.log(publisherId, subscriberId);
-  }, [streamList]);
+  }, [subscriberId]);
 
   useEffect(() => {
     if (subscriberId) {
