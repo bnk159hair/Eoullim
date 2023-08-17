@@ -108,7 +108,7 @@ const FriendSessionPage = () => {
 
   useEffect(() => {
     for (const user of streamList) {
-      if (Number(user.userId) !== Number(publisherId)) {
+      if (Number(user.userId) !== profileId) {
         setSubscriberId(Number(user.userId));
         friends.forEach((user: any) => {
           console.log(user.id, subscriberId);
