@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,useRef, useState } from 'react';
 import {
   MainPageContainer,
   ProfileImg,
@@ -166,12 +166,21 @@ const MainPage: React.FC = () => {
   const [isAlarmOpen, setAlarmOpen] = useState(false);
   const IMGURL = `/${profile.animon.name}.png`;
 
-  const [audioObj, setAudioObj] = useState(new Audio('/mainguide.mp3'));
+  const audioObjRef = useRef(new Audio('/mainguide.mp3'));
+  
 
   const playAudio = () => {
+    const audioObj = audioObjRef.current;
     audioObj.currentTime = 0;
     audioObj.play();
   };
+
+  useEffect(() => {
+    return () => {
+      audioObjRef.current.pause();
+      audioObjRef.current.currentTime = 0;
+    };
+  }, []);
 
   return (
     <MainPageContainer>
