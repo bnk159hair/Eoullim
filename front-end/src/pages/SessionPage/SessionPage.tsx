@@ -315,6 +315,7 @@ const SessionPage = () => {
       console.log('메시지 전송:', message);
     }
     destroySession(session, guideScript, timeStamp, userToken);
+    session.disconnect();
     navigate('/');
   };
 
