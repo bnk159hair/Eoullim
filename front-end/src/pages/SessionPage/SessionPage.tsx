@@ -91,9 +91,6 @@ const SessionPage = () => {
   const [startTime, setStartTime] = useState(0);
   const [timeStamp, setTimeStamp] = useRecoilState(TimeStamp);
 
-  setPublisherId(profileId);
-  setPublisherAnimonURL(profile.animon.name + 'mask.png');
-
   const { publisher, streamList, session, isOpen, onChangeMicStatus } =
     useOpenVidu(profileId);
   console.log(session);
@@ -116,13 +113,15 @@ const SessionPage = () => {
     setSubscriberGuideStatus(isFalse);
     setGuideScript('');
     setTimeStamp('');
+    setPublisherId(profileId);
+    setPublisherAnimonURL(profile.animon.name + 'mask.png');
     getFriends();
   }, []);
 
   useEffect(() => {
     for (const user of streamList) {
       console.log('before', Number(user.userId), Number(publisherId));
-      if (Number(user.userId) !== Number(publisherId)) {
+      if (Number(user.userId) !== profileId) {
         console.log(user);
         console.log(user.userId, publisherId);
         setSubscriberId(user.userId);
@@ -150,7 +149,7 @@ const SessionPage = () => {
 
   useEffect(() => {
     for (const user of streamList) {
-      if (Number(user.userId) !== Number(publisherId)) {
+      if (Number(user.userId) !== profileId) {
         setSubscriberId(Number(user.userId));
         friends.forEach((user: any) => {
           console.log(user.id, subscriberId);
