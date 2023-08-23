@@ -67,7 +67,7 @@ public class MatchController {
 
     @PostMapping("/random/start")
     @Transactional
-    public ResponseEntity<?> startRandom(
+    public synchronized ResponseEntity<?> startRandom(
             @RequestBody MatchRequest matchRequest
     ) throws OpenViduJavaClientException, OpenViduHttpException {
 
