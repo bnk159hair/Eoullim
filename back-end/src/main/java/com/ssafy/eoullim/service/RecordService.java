@@ -6,6 +6,7 @@ import com.ssafy.eoullim.model.entity.RecordEntity;
 import com.ssafy.eoullim.repository.ChildRepository;
 import com.ssafy.eoullim.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecordService {
@@ -88,6 +90,7 @@ public class RecordService {
     }
 
     public List<Map<String, String>> getRecordList(Integer myId){
+        log.info("길이: "+roomRepository.getRecordList(myId).size());
         return roomRepository.getRecordList(myId);
     }
 }
