@@ -16,5 +16,5 @@ public interface RecordRepository extends JpaRepository<RecordEntity, Integer> {
     @Query(value = "select r.recordId, r.createTime, r.videoPath, r.participant.name as name, " +
             "r.participant.school as school, r.participant.animon.name as animonName from RecordEntity as r " +
             "where r.master.id = :myId")
-    List<Map<String, Object>> getRecordList(@Param("myId") Integer myId);
+    List<HashMap<String, Object>> getRecordList(@Param("myId") Integer myId);
 }
