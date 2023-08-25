@@ -11,8 +11,7 @@ import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -89,7 +88,7 @@ public class RecordService {
         /* JSON Parse 종료 */
     }
 
-    public List<Map<String, String>> getRecordList(Integer myId){
+    public List<HashMap<String, String>> getRecordList(Integer myId){
         log.info("길이: "+roomRepository.getRecordList(myId).size());
         log.info(roomRepository.getRecordList(myId).get(0).values().toString());
         return roomRepository.getRecordList(myId);

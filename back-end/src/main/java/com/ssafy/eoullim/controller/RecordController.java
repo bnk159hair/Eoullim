@@ -8,8 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -22,7 +21,7 @@ public class RecordController {
     @GetMapping("/{childId}")
     public ResponseEntity<?> getRecording(@PathVariable Integer childId
     ) throws OpenViduJavaClientException, OpenViduHttpException {
-        List<Map<String, String>> list = recordService.getRecordList(childId);
+        List<HashMap<String, String>> list = recordService.getRecordList(childId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
