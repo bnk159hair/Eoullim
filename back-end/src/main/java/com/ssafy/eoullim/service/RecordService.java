@@ -1,7 +1,9 @@
 package com.ssafy.eoullim.service;
 
 import com.ssafy.eoullim.model.Room;
+import com.ssafy.eoullim.model.entity.ChildEntity;
 import com.ssafy.eoullim.model.entity.RecordEntity;
+import com.ssafy.eoullim.repository.ChildRepository;
 import com.ssafy.eoullim.repository.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -22,6 +24,7 @@ import org.json.simple.parser.ParseException;
 public class RecordService {
 
     private final RecordRepository roomRepository;
+    private final ChildRepository childRepository;
 
     public void writeVideoToDB(String recordingId, Room room) throws IOException, ParseException {
 
@@ -69,11 +72,15 @@ public class RecordService {
             String name = String.valueOf(element.get("name"));
             JSONObject clientData = (JSONObject) parser.parse((String)element.get("clientData"));
             int userId = Integer.parseInt((String)clientData.get("childId"));
+            ChildEntity user = childRepository.findById(userId).orElseThrow();
+
             if(room.getChildOne().intValue() == userId){ // 영상의 주인이 첫번째 사람
-                roomRepository.save(RecordEntity.of(downFolder+name, userId, room.getChildTwo(), room.getGuideSeq(), room.getTimeline()));
+                ChildEntity participant = childRepository.findById(room.getChildTwo()).orElseThrow();
+                roomRepository.save(RecordEntity.of(downFolder+name, user, participant, room.getGuideSeq(), room.getTimeline()));
             }
             if(room.getChildTwo().intValue() == userId){ // 영상의 주인이 두번째 사람
-                roomRepository.save(RecordEntity.of(downFolder+name, userId, room.getChildOne(), room.getGuideSeq(), room.getTimeline()));
+                ChildEntity participant = childRepository.findById(room.getChildOne()).orElseThrow();
+                roomRepository.save(RecordEntity.of(downFolder+name, user, participant, room.getGuideSeq(), room.getTimeline()));
             }
 
         }
