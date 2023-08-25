@@ -89,8 +89,9 @@ public class RecordService {
     }
 
     public List<HashMap<String, Object>> getRecordList(Integer myId){
-        log.info("길이: "+roomRepository.getRecordList(myId).size());
-        log.info(roomRepository.getRecordList(myId).get(0).values().toString());
+        for(HashMap<String, Object> i : roomRepository.getRecordList(myId)){
+            log.info(i.keySet().toString());
+        }
         return roomRepository.getRecordList(myId);
     }
 }
