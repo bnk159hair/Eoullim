@@ -26,11 +26,13 @@ public class RecordEntity {
     @Column(name="video_path")
     private String videoPath;
 
-    @Column(name="master_id")
-    private Integer masterId;
+    @ManyToOne
+    @JoinColumn(name="master_id", nullable = false, referencedColumnName = "child_id")
+    private ChildEntity master;
 
-    @Column(name="participant_id")
-    private Integer participantId;
+    @ManyToOne
+    @JoinColumn(name="participant_id", nullable = false, referencedColumnName = "child_id")
+    private ChildEntity participant;
 
     @Column(name="guide_seq")
     private String guideSeq;
@@ -38,21 +40,21 @@ public class RecordEntity {
     @Column(name="timeline")
     private String timeline;
 
-    public RecordEntity(Integer recordId, String videoPath, Integer masterId, Integer participantId, String guideSeq, String timeline) {
+    public RecordEntity(Integer recordId, String videoPath, ChildEntity master, ChildEntity participant, String guideSeq, String timeline) {
         this.recordId = recordId;
         this.videoPath = videoPath;
-        this.masterId = masterId;
-        this.participantId = participantId;
+        this.master = master;
+        this.participant = participant;
         this.guideSeq = guideSeq;
         this.timeline = timeline;
     }
 
-    public static RecordEntity of(String videoPath, Integer masterId, Integer participantId, String guideSeq, String timeline){
+    public static RecordEntity of(String videoPath, ChildEntity master, ChildEntity participant, String guideSeq, String timeline){
         return new RecordEntity(
                 null,
                 videoPath,
-                masterId,
-                participantId,
+                master,
+                participant,
                 guideSeq,
                 timeline
         );
