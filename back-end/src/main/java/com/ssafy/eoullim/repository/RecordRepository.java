@@ -13,8 +13,10 @@ public interface RecordRepository extends JpaRepository<RecordEntity, Integer> {
 //            "from record_info as r join child as c on r.participant_id=c.child_id " +
 //            "join animon as a on c.animon_id=a.animon_id " +
 //            "where r.master_id = :myId", nativeQuery = true)
-    @Query(value = "select r.recordId as record_id, r.createTime as create_time, r.videoPath as video_path, r.participant.name as name, " +
-            "r.participant.school as school, r.participant.animon.name as animonName from RecordEntity as r " +
+//    @Query(value = "select r.recordId as record_id, r.createTime as create_time, r.videoPath as video_path, r.participant.name as name, " +
+//            "r.participant.school as school, r.participant.animon.name as animonName from RecordEntity as r " +
+//            "where r.master.id = :myId")
+    @Query(value = "select r from RecordEntity as r " +
             "where r.master.id = :myId")
-    List<Record> getRecordList(@Param("myId") Integer myId);
+    List<RecordEntity> getRecordList(@Param("myId") Integer myId);
 }
