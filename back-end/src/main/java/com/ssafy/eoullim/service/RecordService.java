@@ -94,7 +94,7 @@ public class RecordService {
         List<Map<String, Object>> recordList = roomRepository.getRecordList(myId);
         for(Map<String, Object> i : recordList){
 
-            log.info(i.keySet().toString(););
+            log.info(i.keySet().toString());
             //            list.add(new Record(i));
         }
         return list;
