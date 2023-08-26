@@ -1,7 +1,7 @@
 package com.ssafy.eoullim.model;
 
 import java.time.LocalDateTime;
-
+import java.util.*;
 public class Record {
     private String record_id;
     private String create_time;
@@ -10,13 +10,13 @@ public class Record {
     private String school;
     private String animonName;
 
-    public Record(Integer record_id, LocalDateTime create_time, String video_path, String name, String school, String animonName) {
-        this.record_id = record_id.toString();
-        this.create_time = create_time.toString();
-        this.video_path = video_path;
-        this.name = name;
-        this.school = school;
-        this.animonName = animonName;
+    public Record(Map<String, Object> record) {
+        this.record_id = record.get(record_id).toString();
+        this.create_time = record.get(create_time).toString();
+        this.video_path = record.get(video_path).toString();
+        this.name = record.get(name).toString();
+        this.school = record.get(school).toString();;
+        this.animonName = record.get(animonName).toString();;
     }
 
     @Override
