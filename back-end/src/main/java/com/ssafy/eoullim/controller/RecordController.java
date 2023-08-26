@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.ssafy.eoullim.model.Record;
 
 import java.util.*;
 
@@ -23,11 +24,10 @@ public class RecordController {
     @GetMapping("/{childId}")
     public ResponseEntity<?> getRecording(@PathVariable Integer childId
     ) throws OpenViduJavaClientException, OpenViduHttpException {
-        List<HashMap<String, String>> list = recordService.getRecordList(childId);
+        List<Record> list = recordService.getRecordList(childId);
 
-        for(Map<String, String> i : list){
-            log.info(i.keySet().toString());
-            log.info(i.values().toString());
+        for(Record i : list){
+            log.info(i.toString());
 
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
