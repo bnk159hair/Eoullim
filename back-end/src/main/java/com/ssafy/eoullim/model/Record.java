@@ -1,7 +1,10 @@
 package com.ssafy.eoullim.model;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
 public class Record {
     private String record_id;
     private String create_time;
