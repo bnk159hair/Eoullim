@@ -91,11 +91,11 @@ public class RecordService {
 
     public List<Record> getRecordList(Integer myId){
         List<Record> list = new ArrayList<>();
-        List<Map<String, Object>> recordList = roomRepository.getRecordList(myId);
-        for(Map<String, Object> i : recordList){
+        List<Map<String, String>> recordList = roomRepository.getRecordList(myId);
+        for(Map<String, String> i : recordList){
 
-            log.info(i.keySet().toString());
-            //            list.add(new Record(i));
+            log.info(i.get("create_time"));
+//            list.add(new Record());
         }
         return list;
     }
