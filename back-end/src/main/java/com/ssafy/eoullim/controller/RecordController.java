@@ -23,7 +23,7 @@ public class RecordController {
     @GetMapping("/{childId}")
     public ResponseEntity<?> getRecording(@PathVariable Integer childId
     ) throws OpenViduJavaClientException, OpenViduHttpException {
-        List<Map<String, String>> list = recordService.getRecordList(childId);
+        List<HashMap<String, String>> list = recordService.getRecordList(childId);
 
         for(Map<String, String> i : list){
             log.info(i.keySet().toString());
