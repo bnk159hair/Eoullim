@@ -94,11 +94,11 @@ public class RecordService {
         List<Map<String, String>> recordList = roomRepository.getRecordList(myId);
         for(Map<String, String> i : recordList){
 
-            log.info(i.get("record_id").toString());
-            
+            log.info(String.valueOf(i.get("record_id")));
+
             log.info(i.get("create_time").toString());
 
-            String record_id = i.get("record_id").toString();
+            String record_id = String.valueOf(i.get("record_id"));
             String create_time = i.get("create_time").toString();
             String video_path = i.get("video_path");
             String name = i.get("name");
