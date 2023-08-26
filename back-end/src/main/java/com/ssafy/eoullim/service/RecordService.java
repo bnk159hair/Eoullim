@@ -89,11 +89,7 @@ public class RecordService {
     }
 
     public List<Map<String, String>> getRecordList(Integer myId){
-        for(Map<String, String> i : roomRepository.getRecordList(myId)){
-            log.info(i.keySet().toString());
-            log.info(i.values().toString());
 
-        }
         return roomRepository.getRecordList(myId);
     }
 }

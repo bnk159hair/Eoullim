@@ -4,12 +4,14 @@ import com.ssafy.eoullim.service.RecordService;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Slf4j
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/recordings")
@@ -22,6 +24,12 @@ public class RecordController {
     public ResponseEntity<?> getRecording(@PathVariable Integer childId
     ) throws OpenViduJavaClientException, OpenViduHttpException {
         List<Map<String, String>> list = recordService.getRecordList(childId);
+
+        for(Map<String, String> i : list){
+            log.info(i.keySet().toString());
+            log.info(i.values().toString());
+
+        }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
