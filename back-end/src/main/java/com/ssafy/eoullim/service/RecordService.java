@@ -100,8 +100,10 @@ public class RecordService {
             String name = i.getParticipant().getName();
             String school = i.getParticipant().getSchool();
             String animonName = i.getParticipant().getAnimon().getName();
+            String guide_seq = i.getGuideSeq();
+            String timeline = i.getTimeline();
             log.info(create_time);
-            list.add(new Record(record_id, create_time, video_path, name, school, animonName));
+            list.add(new Record(record_id, create_time, video_path, name, school, animonName, guide_seq, timeline));
         }
         return list;
     }
