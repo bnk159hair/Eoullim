@@ -90,7 +90,11 @@ public class RecordService {
     }
 
     public List<Record> getRecordList(Integer myId){
-
-        return roomRepository.getRecordList(myId);
+        List<Record> list = new ArrayList<>();
+        List<Map<String, Object>> recordList = roomRepository.getRecordList(myId);
+        for(Map<String, Object> i : recordList){
+            list.add(new Record(i));
+        }
+        return list;
     }
 }
