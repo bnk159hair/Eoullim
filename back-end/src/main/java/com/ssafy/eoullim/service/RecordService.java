@@ -93,7 +93,9 @@ public class RecordService {
         List<Record> list = new ArrayList<>();
         List<Map<String, Object>> recordList = roomRepository.getRecordList(myId);
         for(Map<String, Object> i : recordList){
-            list.add(new Record(i));
+
+            log.info(i.keySet().toString(););
+            //            list.add(new Record(i));
         }
         return list;
     }
