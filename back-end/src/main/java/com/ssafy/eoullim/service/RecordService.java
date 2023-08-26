@@ -18,6 +18,7 @@ import java.util.zip.ZipInputStream;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import com.ssafy.eoullim.model.Record;
 
 @Slf4j
 @Service
@@ -88,7 +89,7 @@ public class RecordService {
         /* JSON Parse 종료 */
     }
 
-    public List<HashMap<String, String>> getRecordList(Integer myId){
+    public List<Record> getRecordList(Integer myId){
 
         return roomRepository.getRecordList(myId);
     }
