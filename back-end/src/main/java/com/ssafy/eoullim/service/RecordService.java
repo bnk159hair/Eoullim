@@ -88,7 +88,7 @@ public class RecordService {
         /* JSON Parse 종료 */
     }
 
-    public List<Map<String, String>> getRecordList(Integer myId){
+    public List<HashMap<String, String>> getRecordList(Integer myId){
 
         return roomRepository.getRecordList(myId);
     }
