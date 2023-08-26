@@ -92,9 +92,10 @@ public class RecordService {
 
     public List<Record> getRecordList(Integer myId){
         List<Record> list = new ArrayList<>();
-        List<Record> recordList = roomRepository.getRecordList(myId);
-        for(Record i : recordList){
-            log.info(i.getCreate_time().toString());
+        List<RecordEntity> recordList = roomRepository.getRecordList(myId);
+        for(RecordEntity i : recordList){
+            log.info(i.getCreateTime().toString());
+            log.info(i.getParticipant().getName());
 //            log.info(String.valueOf(i.get("record_id")));
 //            String record_id = String.valueOf(i.get("record_id"));
 //            String create_time = i.get("create_time").toString();
