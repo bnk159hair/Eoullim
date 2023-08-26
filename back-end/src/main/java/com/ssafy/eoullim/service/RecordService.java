@@ -92,18 +92,18 @@ public class RecordService {
 
     public List<Record> getRecordList(Integer myId){
         List<Record> list = new ArrayList<>();
-        List<Map<String, String>> recordList = roomRepository.getRecordList(myId);
-        for(Map<String, String> i : recordList){
-
-            log.info(String.valueOf(i.get("record_id")));
-            String record_id = String.valueOf(i.get("record_id"));
-            String create_time = i.get("create_time").toString();
-            String video_path = i.get("video_path");
-            String name = i.get("name");
-            String school = i.get("school");
-            String animonName = i.get("animonName");
-            log.info(create_time);
-            list.add(new Record(record_id, create_time, video_path, name, school, animonName));
+        List<Record> recordList = roomRepository.getRecordList(myId);
+        for(Record i : recordList){
+            log.info(i.getCreate_time().toString());
+//            log.info(String.valueOf(i.get("record_id")));
+//            String record_id = String.valueOf(i.get("record_id"));
+//            String create_time = i.get("create_time").toString();
+//            String video_path = i.get("video_path");
+//            String name = i.get("name");
+//            String school = i.get("school");
+//            String animonName = i.get("animonName");
+//            log.info(create_time);
+//            list.add(new Record(record_id, create_time, video_path, name, school, animonName));
         }
         return list;
     }
