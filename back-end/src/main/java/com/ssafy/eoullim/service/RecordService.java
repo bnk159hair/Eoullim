@@ -94,17 +94,14 @@ public class RecordService {
         List<Record> list = new ArrayList<>();
         List<RecordEntity> recordList = roomRepository.getRecordList(myId);
         for(RecordEntity i : recordList){
-            log.info(i.getCreateTime().toString());
-            log.info(i.getParticipant().getName());
-//            log.info(String.valueOf(i.get("record_id")));
-//            String record_id = String.valueOf(i.get("record_id"));
-//            String create_time = i.get("create_time").toString();
-//            String video_path = i.get("video_path");
-//            String name = i.get("name");
-//            String school = i.get("school");
-//            String animonName = i.get("animonName");
-//            log.info(create_time);
-//            list.add(new Record(record_id, create_time, video_path, name, school, animonName));
+            String record_id = String.valueOf(i.getRecordId());
+            String create_time = i.getCreateTime().toString();
+            String video_path = i.getVideoPath();
+            String name = i.getParticipant().getName();
+            String school = i.getParticipant().getSchool();
+            String animonName = i.getParticipant().getAnimon().getName();
+            log.info(create_time);
+            list.add(new Record(record_id, create_time, video_path, name, school, animonName));
         }
         return list;
     }
