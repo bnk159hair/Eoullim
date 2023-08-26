@@ -88,10 +88,10 @@ public class RecordService {
         /* JSON Parse 종료 */
     }
 
-    public List<Map<String, Object>> getRecordList(Integer myId){
-        for(Map<String, Object> i : roomRepository.getRecordList(myId)){
-            log.info(i.values().toString());
-        }
+    public List<Map<String, String>> getRecordList(Integer myId){
+//        for(Map<String, String> i : roomRepository.getRecordList(myId)){
+//            log.info(i.values().toString());
+//        }
         return roomRepository.getRecordList(myId);
     }
 }
