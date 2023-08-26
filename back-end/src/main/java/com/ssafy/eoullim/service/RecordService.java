@@ -97,7 +97,7 @@ public class RecordService {
 
             log.info(String.valueOf(i.get("record_id")));
             String record_id = String.valueOf(i.get("record_id"));
-            String create_time = i.get("create_time");
+            String create_time = i.get("create_time").toString();
             String video_path = i.get("video_path");
             String name = i.get("name");
             String school = i.get("school");
