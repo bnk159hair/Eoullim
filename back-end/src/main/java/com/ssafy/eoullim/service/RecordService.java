@@ -11,6 +11,7 @@ import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -95,15 +96,13 @@ public class RecordService {
         for(Map<String, String> i : recordList){
 
             log.info(String.valueOf(i.get("record_id")));
-
-            log.info(i.get("create_time").toString());
-
             String record_id = String.valueOf(i.get("record_id"));
-            String create_time = i.get("create_time").toString();
+            String create_time = i.get("create_time");
             String video_path = i.get("video_path");
             String name = i.get("name");
             String school = i.get("school");
             String animonName = i.get("animonName");
+            log.info(create_time);
             list.add(new Record(record_id, create_time, video_path, name, school, animonName));
         }
         return list;
