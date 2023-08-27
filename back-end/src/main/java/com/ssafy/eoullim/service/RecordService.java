@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -26,7 +27,7 @@ import com.ssafy.eoullim.model.Record;
 @RequiredArgsConstructor
 public class RecordService {
 
-    private final RecordRepository roomRepository;
+    private final RecordRepository recordRepository;
     private final ChildRepository childRepository;
 
     public void writeVideoToDB(String recordingId, Room room) throws IOException, ParseException {
@@ -79,32 +80,20 @@ public class RecordService {
 
             if(room.getChildOne().intValue() == userId){ // 영상의 주인이 첫번째 사람
                 ChildEntity participant = childRepository.findById(room.getChildTwo()).orElseThrow();
-                roomRepository.save(RecordEntity.of(downFolder+name, user, participant, room.getGuideSeq(), room.getTimeline()));
+                recordRepository.save(RecordEntity.of(downFolder+name, user, participant, room.getGuideSeq(), room.getTimeline()));
             }
             if(room.getChildTwo().intValue() == userId){ // 영상의 주인이 두번째 사람
                 ChildEntity participant = childRepository.findById(room.getChildOne()).orElseThrow();
-                roomRepository.save(RecordEntity.of(downFolder+name, user, participant, room.getGuideSeq(), room.getTimeline()));
+                recordRepository.save(RecordEntity.of(downFolder+name, user, participant, room.getGuideSeq(), room.getTimeline()));
             }
 
         }
         /* JSON Parse 종료 */
     }
 
-    public List<Record> getRecordList(Integer myId){
-        List<Record> list = new ArrayList<>();
-        List<RecordEntity> recordList = roomRepository.getRecordList(myId);
-        for(RecordEntity i : recordList){
-            String record_id = String.valueOf(i.getRecordId());
-            String create_time = i.getCreateTime().toString();
-            String video_path = i.getVideoPath();
-            String name = i.getParticipant().getName();
-            String school = i.getParticipant().getSchool();
-            String animonName = i.getParticipant().getAnimon().getName();
-            String guide_seq = i.getGuideSeq();
-            String timeline = i.getTimeline();
-            log.info(create_time);
-            list.add(new Record(record_id, create_time, video_path, name, school, animonName, guide_seq, timeline));
-        }
-        return list;
+    public List<Record> getRecordList(Integer masterId){
+        List<Record> recordList = recordRepository.findRecordEntitiesByMasterId(masterId)
+                .stream().map(Record::fromEntity).collect(Collectors.toList());
+        return recordList;
     }
 }

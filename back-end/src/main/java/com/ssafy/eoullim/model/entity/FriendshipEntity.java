@@ -19,17 +19,17 @@ public class FriendshipEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "my_id", nullable = false, referencedColumnName = "child_id")
-    private ChildEntity my;
+    private ChildEntity child;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "friend_id", nullable = false, referencedColumnName = "child_id")
     private ChildEntity friend;
 
-    public static FriendshipEntity of(ChildEntity my, ChildEntity friend) {
+    public static FriendshipEntity of(ChildEntity child, ChildEntity friend) {
         FriendshipEntity friendship = new FriendshipEntity();
-        friendship.setMy(my);
+        friendship.setChild(child);
         friendship.setFriend(friend);
         return friendship;
     }
