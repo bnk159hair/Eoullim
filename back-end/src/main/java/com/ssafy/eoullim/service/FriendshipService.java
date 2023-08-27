@@ -33,7 +33,7 @@ public class FriendshipService {
         ChildEntity friendEntity = childRepository.findById(friendId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
         // ERROR : 이미 좋아요 누른 친구인 경우
-        friendshipRepository.findByMyIdAndFriendId(myId, friendId)
+        friendshipRepository.findFriendshipEntityByChildIdAndFriendId(myId, friendId)
             .ifPresent(it -> { throw new EoullimApplicationException(ErrorCode.INVALID_DATA); });
         friendshipRepository.save(FriendshipEntity.of(childEntity, friendEntity));
     }
@@ -48,7 +48,7 @@ public class FriendshipService {
             throw new EoullimApplicationException(ErrorCode.FORBIDDEN_NO_PERMISSION,
                     String.format("you have no permission with child %d", childId));
         // 친구들의 접속 상태 확인 후 반환
-        List<Child> friends = friendshipRepository.findFriendsByMyId(childId)
+        List<Child> friends = friendshipRepository.findFriendsByChildId(childId)
                                 .stream()
                                 .map(Child::fromEntity)
                                 .collect(Collectors.toList());

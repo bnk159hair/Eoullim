@@ -17,7 +17,7 @@ public class RecordEntity {
     @Id
     @Column(name="record_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer recordId;
+    private Integer id;
 
     @Column(name="create_time")
     @CreationTimestamp
@@ -26,11 +26,11 @@ public class RecordEntity {
     @Column(name="video_path")
     private String videoPath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="master_id", nullable = false, referencedColumnName = "child_id")
     private ChildEntity master;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="participant_id", nullable = false, referencedColumnName = "child_id")
     private ChildEntity participant;
 
@@ -40,8 +40,8 @@ public class RecordEntity {
     @Column(name="timeline")
     private String timeline;
 
-    public RecordEntity(Integer recordId, String videoPath, ChildEntity master, ChildEntity participant, String guideSeq, String timeline) {
-        this.recordId = recordId;
+    public RecordEntity(Integer id, String videoPath, ChildEntity master, ChildEntity participant, String guideSeq, String timeline) {
+        this.id = id;
         this.videoPath = videoPath;
         this.master = master;
         this.participant = participant;
