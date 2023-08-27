@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.model;
 
+import com.ssafy.eoullim.dto.request.ChildRequest;
 import com.ssafy.eoullim.model.entity.ChildEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,19 @@ public class Child {
                 entity.getGrade(),
                 entity.getStatus(),
                 Animon.fromEntity(entity.getAnimon())
+        );
+    }
+
+    public static Child of(ChildRequest request) {
+        return new Child(
+                null,
+                request.getName(),
+                request.getBirth(),
+                request.getGender(),
+                request.getSchool(),
+                request.getGrade(),
+                null,
+                null
         );
     }
 }

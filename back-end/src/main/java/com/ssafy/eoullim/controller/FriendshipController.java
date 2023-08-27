@@ -27,9 +27,9 @@ public class FriendshipController {
     }
 
     @GetMapping("/{childId}")
-    public Response<List<Child>> friendList(@PathVariable Integer childId, Authentication authentication) {
+    public Response<List<Child>> getFriendsList(@PathVariable Integer childId, Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
-        List<Child> friendList = friendshipService.friendList(childId, user.getId());
+        List<Child> friendList = friendshipService.getFriends(childId, user.getId());
         return Response.success(friendList);
     }
 
