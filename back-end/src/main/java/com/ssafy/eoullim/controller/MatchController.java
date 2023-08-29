@@ -45,36 +45,36 @@ import static com.ssafy.eoullim.exception.ErrorCode.OPENVIDU_SERVER_ERROR;
 @RequestMapping("/api/v1/meetings")
 @RequiredArgsConstructor
 public class MatchController {
-    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL;
-
-    @Value("${OPENVIDU_SECRET}")
-    private String OPENVIDU_SECRET;
-
-    private OpenVidu openvidu;
-
-    private Queue<Room> matchingQueue = new LinkedList<Room>();
-    // Collection to pair session names and OpenVidu Session objects
-    private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
-    // Collection to pair session names and tokens (the inner Map pairs tokens and
-    // role associated)
-
-    private Map<String, String> sessionRecordings = new ConcurrentHashMap<>();
-    private Map<String, Room> mapRooms = new ConcurrentHashMap<>();
+//    @Value("${OPENVIDU_URL}")
+//    private String OPENVIDU_URL;
+//
+//    @Value("${OPENVIDU_SECRET}")
+//    private String OPENVIDU_SECRET;
+//
+//    private OpenVidu openvidu;
+//
+//    private Queue<Room> matchingQueue = new LinkedList<Room>();
+//    // Collection to pair session names and OpenVidu Session objects
+//    private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
+//    // Collection to pair session names and tokens (the inner Map pairs tokens and
+//    // role associated)
+//
+//    private Map<String, String> sessionRecordings = new ConcurrentHashMap<>();
+//    private Map<String, Room> mapRooms = new ConcurrentHashMap<>();
 
     private final RecordService recordService;
 
     private final AlarmService alarmService;
     private final MatchService matchService;
-
-    @PostConstruct
-    public void init() {
-        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }
+//
+//    @PostConstruct
+//    public void init() {
+//        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+//    }
 
     @PostMapping("/random/start")
     @Transactional
-    public synchronized Response<Match> startRandom(
+    public synchronized ResponseEntity<?> startRandom(
             @RequestBody MatchRequest matchRequest
     ) {
         Match result = null;
@@ -83,15 +83,15 @@ public class MatchController {
 
         } catch (OpenViduJavaClientException e) {
             log.info(e.getMessage());
-
+            throw new RuntimeException(e);
         } catch (OpenViduHttpException e) {
             log.info(e.getMessage());
-
+            throw new RuntimeException(e);
         } catch (InterruptedException e) {
             log.info(e.getMessage());
-
+            throw new RuntimeException(e);
         }
-        return Response.success(result);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PostMapping("/random/stop")
     public ResponseEntity<?> stopRandom(
@@ -187,7 +187,7 @@ public class MatchController {
                      */
                     Alarm alarm = new Alarm(sessionId, matchFriendRequest.getName());
                     alarmService.send(matchFriendRequest.getFriendId(), alarm);
-                    
+
                     return new ResponseEntity<>(result, HttpStatus.OK);
 
                 }catch (Exception e){
