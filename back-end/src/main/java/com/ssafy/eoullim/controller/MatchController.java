@@ -62,9 +62,9 @@ public class MatchController {
 //    private Map<String, String> sessionRecordings = new ConcurrentHashMap<>();
 //    private Map<String, Room> mapRooms = new ConcurrentHashMap<>();
 //
-//    private final RecordService recordService;
-//
-//    private final AlarmService alarmService;
+    private final RecordService recordService;
+
+    private final AlarmService alarmService;
     private final MatchService matchService;
 
 //    @PostConstruct
@@ -93,48 +93,35 @@ public class MatchController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-//    @PostMapping("/random/stop")
-//    public ResponseEntity<?> stopRandom(
-//            @RequestBody Map<String, Object> params
-//    ) throws OpenViduJavaClientException, OpenViduHttpException, IOException, ParseException, org.json.simple.parser.ParseException {
-//
-//        String sessionId = (String) params.get("sessionId");
-//        System.out.println("[STOP] Session created: " + sessionId);
-//
-//        if(mapSessions.get(sessionId) != null && mapRooms.get(sessionId)!= null){
-//
-//            Session session = mapSessions.get(sessionId);
-//            if(matchingQueue.contains(mapRooms.get(sessionId))){ // 매치가 안되었는데 나갔을 경우
-//
-//                matchingQueue.remove(mapRooms.get(sessionId));
-//                mapSessions.remove(sessionId);
-//                mapRooms.remove(sessionId);
-//
-//                return new ResponseEntity<>(HttpStatus.OK);
-//
-//            }else{ // 매치가 된 후 나갔을 경우
-//                String recordId = sessionRecordings.get(sessionId);
-//                Recording recording = openvidu.stopRecording(recordId);
-//
-//                sessionRecordings.remove(sessionId);
-//                mapSessions.remove(sessionId);
-//
-//                String guideSeq = (String) params.get("guideSeq");
-//                mapRooms.get(sessionId).setGuideSeq(guideSeq);
-//
-//                String timeline = (String) params.get("timeline");
-//                mapRooms.get(sessionId).setTimeline(timeline);
-//
-//                recordService.writeVideoToDB(recordId, mapRooms.get(sessionId));
-//
-//                mapRooms.remove(sessionId);
-//                session.close();
-//                return new ResponseEntity<>(recording, HttpStatus.OK);
-//            }
-//        }else{
-//            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @PostMapping("/random/stop")
+    public ResponseEntity<?> stopRandom(
+            @RequestBody Map<String, Object> params
+    ) throws OpenViduJavaClientException, OpenViduHttpException, IOException, ParseException, org.json.simple.parser.ParseException {
+
+        String sessionId = (String) params.get("sessionId");
+        String guideSeq = (String) params.get("guideSeq");
+        String timeline = (String) params.get("timeline");
+        log.info("Random Stop Called " + sessionId);
+
+        Recording recording = null;
+
+        try{
+            recording = matchService.stopRandom(sessionId, guideSeq, timeline, recordService);
+        } catch (OpenViduJavaClientException e) {
+            log.info(e.getMessage());
+            throw new RuntimeException(e);
+        } catch (OpenViduHttpException e) {
+            log.info(e.getMessage());
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            log.info(e.getMessage());
+            throw new RuntimeException(e);
+        } catch (org.json.simple.parser.ParseException e) {
+            log.info(e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return new ResponseEntity<>(recording, HttpStatus.OK);
+    }
 //
 //    /* 친구 만나기 */
 //    @PostMapping("/friend/start")
