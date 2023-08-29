@@ -10,12 +10,14 @@ import com.ssafy.eoullim.utils.RandomGeneratorUtils;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -113,6 +115,42 @@ public class MatchService {
             }else{
                 throw new EoullimApplicationException(ErrorCode.MATCH_NOT_FOUND);
             }
+        }
+    }
+
+    public Recording stopRandom(String sessionId, String guideSeq, String timeline, RecordService recordService) throws OpenViduJavaClientException, OpenViduHttpException, IOException, ParseException {
+        if(mapSessions.get(sessionId) != null && mapRooms.get(sessionId)!= null){
+
+            Session session = mapSessions.get(sessionId);
+            if(matchingQueue.contains(mapRooms.get(sessionId))){ // 매치가 안되었는데 나갔을 경우
+
+                matchingQueue.remove(mapRooms.get(sessionId));
+                mapSessions.remove(sessionId);
+                mapRooms.remove(sessionId);
+
+                throw new EoullimApplicationException(ErrorCode.MATCH_NOT_FOUND);
+
+
+            }else{ // 매치가 된 후 나갔을 경우
+                String recordId = sessionRecordings.get(sessionId);
+                Recording recording = openvidu.stopRecording(recordId);
+
+                sessionRecordings.remove(sessionId);
+                mapSessions.remove(sessionId);
+
+                mapRooms.get(sessionId).setGuideSeq(guideSeq);
+
+                mapRooms.get(sessionId).setTimeline(timeline);
+
+                recordService.writeVideoToDB(recordId, mapRooms.get(sessionId));
+
+                mapRooms.remove(sessionId);
+                session.close();
+                return recording;
+            }
+        }else{
+            throw new EoullimApplicationException(ErrorCode.MATCH_NOT_FOUND);
+
         }
     }
 }
