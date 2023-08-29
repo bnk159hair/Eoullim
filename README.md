@@ -1,22 +1,24 @@
-# 😺 **어울림**
+# <img width="20%" src="./exec/assets/logo.png"/>
 
-아이들의 또래 친구를 만들어주는 서비스, 어울림
+교외 지역 아이들이 또래 친구를 사귈 수 있는 1:1 랜덤 화상 미팅 서비스
 
 <div align=center>
 <img width="60%" src="./exec/assets/loginPage.png"/>
-<br><br>
-<img width="40%" src="./exec/assets/logo.png"/>
 </div>
 
 <br>
 
-## 💡 **어울림 소개**
+## 💡 **서비스 소개**
 
--   또래 친구를 만나기 힘든 교외 지역 아이들을 위한 1:1 화상 미팅 기능을 제공하는 웹 서비스
--   신입생이 1명인 곳이 125개교, 0명인 곳이 131개교이며 교육통계에 따르면 3명 이하인 학교가 500여개교에 달합니다. 이처럼 학생이 감소하는 속도는 더욱 빨라지고 있습니다.
--   저희는 비슷한 상황에 있는 전국의 500여개의 학교 학생들을 위해서, 아이들이 또래 친구를 사귈 수 있는 화상미팅 서비스를 개발했습니다.
--   실제 초등학교 선생님과 학생들에게 설문조사를 통해 관심사를 파악하고 피드백을 통해 서비스의 기능을 구체화할 수 있었습니다.
--   저희 서비스가 제공하는 대표 기능은 '아이들의 자연스러운 대화를 위한 가이드 기능', '아이들의 흥미를 끄는 동물 가면 기능' 그리고 '부모님의 걱정을 덜어줄 녹화 기능'입니다.
+-   교육통계에 따르면 2023년 신입생이 1명인 곳이 125개교, 3명 이하인 학교가 500여개교 입니다.
+-   동네에 또래 친구가 적은 교외 지역 초등학교 1~3학년 아이들을 위한 1:1 랜덤 화상 미팅 기능을 제공합니다.
+-   초등학교 선생님들과 학생들을 대상으로 두 번의 설문조사를 진행하여 서비스의 기능을 구체화 했습니다.
+-   핵심 기능
+    - 1:1 랜덤 화상 미팅 기능
+    - 아이들의 대화를 유도하는 가이드 기능
+    - 아이들의 흥미를 끄는 동물 가면 기능
+    - 만났던 친구를 다시 만날 수 있는 초대 기능
+    - 부모님의 걱정을 덜어주는 녹화 기능
 
 <br>
 
@@ -29,13 +31,11 @@
 ## 📅 **프로젝트 진행 기간**
 
 **2023/07/10(월) ~ 2023/08/18(금) <br>**
-SSAFY 9기 1학기 공통프로젝트
-<br>
-최우수 프로젝트 수상 🏆
+SSAFY 9기 2학기 공통프로젝트 최우수상 🏆
 
 <br>
 
-## 💻 **어울림 서비스 화면**
+## 💻 **서비스 화면**
 
 ### **프로필 기능**
 
@@ -134,17 +134,20 @@ SSAFY 9기 1학기 공통프로젝트
 
 <br>
 
+
 ## 🏗️ **아키텍처**
 
 <img width="100%" src="./exec/assets/SW아키텍처.png"/>
 
 <br>
 
+
 ## 🗃️ **ERD**
 
 <img width="80%" src="./exec/assets/erd.png"/>
 
 <br>
+
 
 ## 🛠️ **기술 스택**
 
@@ -163,20 +166,16 @@ SSAFY 9기 1학기 공통프로젝트
 <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
 <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=Redux&logoColor=white">
 <img src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white">
-<br>
 
 <br>
 
 ### **Back**
-
-#
 
 <img src="https://img.shields.io/badge/java 11-FF0000?style=for-the-badge&logo=OpenJDK&logoColor=white">
 <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">
 <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">
 <br>
 <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white">
-<img src="https://img.shields.io/badge/queryDSL-4479A1?style=for-the-badge&logoColor=white"> 
 <br>
 <img src="https://img.shields.io/badge/JWT-E61587?style=for-the-badge&logoColor=white">
 <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
@@ -187,18 +186,18 @@ SSAFY 9기 1학기 공통프로젝트
 
 ### **CICD**
 
-<img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">
 <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
 <img src="https://img.shields.io/badge/gitlab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white">
 <br>
 <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white">
-<img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=NGINX&logoColor=white">
 
 <br>
 
 ### **기타**
 
+<img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">
+<img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=NGINX&logoColor=white">
 <img src="https://img.shields.io/badge/Tensorflow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white">
 
 ### **협업 툴**
@@ -238,21 +237,14 @@ ex) **BE-FEAT : {간단한 설명}(#{issue number or jira issue})**
     -   배포 가능한 상태의 결과물 올리는 브랜치
 -   `develop`
     -   구현 완료된 기능을 병합하기 위한 브랜치
-    -   통합 폴더의 기능
 -   `dev-back`
-    -   백엔드의 구현 완료된 기능을 병합하기 위한 브랜치
-    -   backend의 메인 개발 브랜치이며 frontend 코드는 Main의 코드와 같아야함
+    -   backend의 메인 개발 브랜치
 -   `dev-front`
-    -   프론트엔드의 구현 완료된 기능을 병합하기 위한 브랜치
-    -   frontend의 메인 개발 브랜치, backend코드는 Main의 코드와 같아야함
+    -   frontend의 메인 개발 브랜치
 -   `feature`
     -   개별 기능 구현 브랜치
-    -   네이밍 규칙
-        -   FE or BE-feat or fix or refactor/기능이름
-        -   예) FE-feat/로그인페이지
-            <br><br>
 -   **feature 브랜치가 완성되면 dev-back, dev-front 브랜치로 merge request를 통해 merge한다.**<br>
-    ⇒ merge request가 요청되면, 모든 팀원들이 코드 리뷰를 하여 안전하게 merge한다.
+    ⇒ merge request가 요청되면 leader가 코드 리뷰 이후에 merge한다.
 
 <br>
 
@@ -278,14 +270,15 @@ ex) **BE-FEAT : {간단한 설명}(#{issue number or jira issue})**
     -   WebRTC, useOpenVidu, useStream Custom Hooks
     -   Frontend 코드 리뷰
 
+<br>
+
 ### **Backend**
 
 -   고우민 - Backend Leader
-    -   Spring Boot Backend API, Spring Data JPA, Redis, SSE, JWT
-    -   유저 캐시 개발
-    -   유저, 회원 인증, 알림 API 개발
-    -   데이터베이스 ERD 설계
-    -   Backend 코드 리뷰
+    -   Spring Security를 이용한 JWT 인증/인가 구현
+    -   Redis를 이용한 실시간 접속 상태 확인 기능 구현
+    -   SSE를 이용한 실시간 초대 알림 기능 구현
+    -   데이터베이스 ERD 설계, JPA Entity 매핑
 -   김하영 - Infra Manager
     -   DB 서버, 백엔드 개발 서버, 배포 서버 구축
     -   Docker 컨테이너 관리
@@ -296,3 +289,5 @@ ex) **BE-FEAT : {간단한 설명}(#{issue number or jira issue})**
     -   Spring Boot Backend API, Spring Data JPA, WebSocket
     -   DB 스키마 설계, MySQL RDBMS 관리
     -   유저, 프로필, 친구 API 개발
+
+<br>
