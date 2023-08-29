@@ -25,23 +25,16 @@ public class ChildController {
     private final ChildService childService;
 
     @GetMapping
-    public Response<List<Child>> list(Authentication authentication) {
+    public Response<List<Child>> getChildrenList(Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
-        List<Child> childList = childService.getChildList(user.getId());
-        return Response.success(childList);
+        List<Child> childrenList = childService.getChildrenList(user.getId());
+        return Response.success(childrenList);
     }
 
     @PostMapping
     public Response<Void> create(@RequestBody ChildRequest request, Authentication authentication) {
         User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class);
-        childService.create(
-                user,
-                request.getName(),
-                request.getBirth(),
-                request.getGender(),
-                request.getSchool(),
-                request.getGrade()
-        );
+        childService.create(user, request);
         return Response.success();
     }
 
@@ -64,9 +57,9 @@ public class ChildController {
         return Response.success(child);
     }
 
-    @GetMapping("/participant/{participantId}")     // 화상 회의 중 상대방의 애니몬을 가져오기 위한 api
-    public Response<Friend> getParticipantAnimon(@PathVariable Integer participantId) {
-        Friend friend = childService.getProfileAnimonByChild(participantId);
+    @GetMapping("/participant/{participantId}")
+    public Response<Friend> getParticipantInfo(@PathVariable Integer participantId) {
+        Friend friend = childService.getParticipantInfo(participantId);
         return Response.success(friend);
     }
 
@@ -96,7 +89,6 @@ public class ChildController {
         return Response.success(animon);
     }
 
-    // 학교 API
     @PostMapping("/school")
     public Response<Void> checkSchool(@RequestBody ChildSchoolRequest request) {
         childService.checkSchool(request.getKeyword());

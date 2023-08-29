@@ -12,8 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface FriendshipRepository extends JpaRepository<FriendshipEntity, Integer> {
-    Optional<FriendshipEntity> findFriendshipEntityByChildIdAndFriendId(Integer childId, Integer friendId);
 
-    @Query(value = "select l.friend from FriendshipEntity l where l.child.id = :childId")
-    List<ChildEntity> findFriendsByChildId(@Param("childId") Integer childId);
+    Optional<FriendshipEntity> findByChildAndFriend(ChildEntity child, ChildEntity friend);
+
+    @Query(value = "select l.friend from FriendshipEntity l where l.child = :child")
+    List<ChildEntity> findFriendsByChild(@Param("child") ChildEntity child);
+
 }
