@@ -14,5 +14,5 @@ public class Match {
 
     private String sessionId;
     private String token;
-    private List<Integer> quideSeq;
+    private List<Integer> guideSeq;
 }
