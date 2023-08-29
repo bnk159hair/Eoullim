@@ -94,7 +94,7 @@ public class MatchController {
 
         Match result = null;
         try{
-            matchService.startFriend(childId, childName, friendId, existSessionId, alarmService);
+            result = matchService.startFriend(childId, childName, friendId, existSessionId, alarmService);
         } catch (OpenViduJavaClientException e) {
             log.info(e.getMessage());
             throw new RuntimeException(e);
