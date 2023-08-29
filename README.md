@@ -22,12 +22,6 @@
 
 <br>
 
-## 🎬 **어울림 시연 영상**
-
-[<img src="https://img.shields.io/badge/Link-0085DE?style=for-the-badge&logo=YouTube&logoColor=white">](https://drive.google.com/file/d/16C9Lg_xMNVv9vWsGIXMjhe2ciYe5wq5c/view?usp=sharing)
-
-<br>
-
 ## 📅 **프로젝트 진행 기간**
 
 **2023/07/10(월) ~ 2023/08/18(금) <br>**
@@ -35,27 +29,33 @@ SSAFY 9기 2학기 공통프로젝트 최우수상 🏆
 
 <br>
 
+## 🎬 **어울림 시연 영상**
+
+[<img src="https://img.shields.io/badge/Link-0085DE?style=for-the-badge&logo=YouTube&logoColor=white">](https://drive.google.com/file/d/16C9Lg_xMNVv9vWsGIXMjhe2ciYe5wq5c/view?usp=sharing)
+
+<br>
+
 ## 💻 **서비스 화면**
 
-### **프로필 기능**
+### **회원가입, 로그인, 프로필**
 
 <div align=center>
 
-<img width="80%" src="./exec/assets/회원가입기능.gif"/>
+<img width="60%" src="./exec/assets/회원가입기능.gif"/>
 
 **회원가입**
 
 <br>
 
-<img width="80%" src="./exec/assets/비밀번호 변경및 프로필 생성.gif"/>
+<img width="60%" src="./exec/assets/비밀번호 변경및 프로필 생성.gif"/>
 
 **로그인 및 프로필 생성**
 
 <br>
 
-<img width="80%" src="exec/assets/프로필 수정기능.gif"/>
+<!-- <img width="80%" src="exec/assets/프로필 수정기능.gif"/>
 
-**프로필 수정**
+**프로필 수정** -->
 
 </div>
 
@@ -65,35 +65,35 @@ SSAFY 9기 2학기 공통프로젝트 최우수상 🏆
 
 <div align=center>
 
-<img width="80%" src="./exec/assets/메인 튜토리얼.gif"/>
+<!-- <img width="80%" src="./exec/assets/메인 튜토리얼.gif"/>
 
-**메인 튜토리얼**
+**메인 튜토리얼** -->
 
-<br>
+<!-- <br> -->
 
-<img width="80%" src="./exec/assets/프로필 애니몬 선택 기능.gif"/>
+<img width="60%" src="./exec/assets/프로필 애니몬 선택 기능.gif"/>
 
 **프로필 애니몬 변경**
 
 <br>
 
-<img width="80%" src="./exec/assets/새친구 첫 시작.gif"/>
+<img width="60%" src="./exec/assets/새친구 첫 시작.gif"/>
 
-**새 친구 만나기**
+**랜덤 화상 미팅 시작**
 
 <br>
 
-<img width="80%" src="./exec/assets/가면벗기와 가이드 재생 기능.gif"/>
+<img width="60%" src="./exec/assets/가면벗기와 가이드 재생 기능.gif"/>
 
 **가면 및 가이드 기능**
 
 <br>
 
-<img width="80%" src="./exec/assets/세션 종료 모달 기능.gif"/>
+<!-- <img width="60%" src="./exec/assets/세션 종료 모달 기능.gif"/>
 
-**종료 기능**
+**종료 기능** -->
 
-<br>
+<!-- <br> -->
 
 </div>
 
@@ -101,21 +101,21 @@ SSAFY 9기 2학기 공통프로젝트 최우수상 🏆
 
 <div align=center>
 
-<img width="80%" src="./exec/assets/친구 리스트 확인 없을때.gif"/>
+<img width="60%" src="./exec/assets/친구 리스트 확인 없을때.gif"/>
 
-**내 친구 확인 기능**
-
-<br>
-
-<img width="80%" src="./exec/assets/세션 초대 받기 기능.gif"/>
-
-**친구 초대 받기 기능**
+**내 친구 리스트**
 
 <br>
 
-<img width="80%" src="./exec/assets/친구 초대 보내기 알림 기능.gif"/>
+<!-- <img width="80%" src="./exec/assets/세션 초대 받기 기능.gif"/>
 
-**친구 초대 보내기 기능**
+**친구 초대 받기 기능** -->
+
+<br>
+
+<img width="60%" src="./exec/assets/친구 초대 보내기 알림 기능.gif"/>
+
+**친구에게 초대 보내기**
 
 <br>
 </div>
@@ -124,7 +124,7 @@ SSAFY 9기 2학기 공통프로젝트 최우수상 🏆
 
 <div align=center>
 
-<img width="80%" src="./exec/assets/녹화 기능.gif"/>
+<img width="60%" src="./exec/assets/녹화 기능.gif"/>
 
 **녹화 기능**
 
@@ -132,21 +132,66 @@ SSAFY 9기 2학기 공통프로젝트 최우수상 🏆
 
 </div>
 
-<br>
-
 
 ## 🏗️ **아키텍처**
 
-<img width="100%" src="./exec/assets/SW아키텍처.png"/>
+<img width="80%" src="./exec/assets/SW아키텍처.png"/>
 
 <br>
-
 
 ## 🗃️ **ERD**
 
 <img width="80%" src="./exec/assets/erd.png"/>
 
 <br>
+
+
+
+## 👥 **팀원 역할**
+
+### **Frontend**
+
+-   김성준 - Web Design Manager
+    -   웹 디자인 총괄-styled-components, MUI
+    -   웹 프레임 설계-TypeScript, React, Recoil
+        -   회원가입, 로그인, 프로필, 메인, 녹화, 내 친구, 웹페이지 기능 및 배경음악 기능
+    -   기획 및 최종발표 자료 제작-PPT
+    -   프로토타입 설계
+
+-   안경준 - Project Leader
+    -   AR 마스크 기능 구현-Three.js, tf.js
+    -   영상 타임라인 기능 구현-react-player
+    -   초대 기능 구현-SSE
+    -   웹소켓 연결-Stomp.js
+    -   문서화
+
+-   오영재 - Front Leader
+    -   웹 컴포넌트 관리-styled-components, MUI, React, TypeScript, React-Router, Recoil
+    -   새 친구, 내 친구 페이지-openvidu-browser
+    -   WebRTC, useOpenVidu, useStream Custom Hooks
+    -   Frontend 코드 리뷰
+
+### **Backend**
+
+-   고우민 - Backend Leader
+    -   Spring Security를 이용한 JWT 인증/인가 구현
+    -   Redis를 이용한 실시간 접속 상태 확인 기능 구현
+    -   SSE를 이용한 실시간 초대 알림 기능 구현
+    -   데이터베이스 ERD 설계, JPA Entity 매핑
+
+-   김하영 - Infra Manager
+    -   DB 서버, 백엔드 개발 서버, 배포 서버 구축
+    -   Docker 컨테이너 관리
+    -   CI/CD 자동 배포 구축-Jenkins
+    -   새 친구 만나기, 내 친구 만나기, 녹화 영상 API 개발
+
+-   유연석 - Project Manager
+    -   Jira, Git, 버전 관리
+    -   Spring Boot Backend API, Spring Data JPA, WebSocket
+    -   DB 스키마 설계, MySQL RDBMS 관리
+    -   유저, 프로필, 친구 API 개발
+<br>
+
 
 
 ## 🛠️ **기술 스택**
@@ -208,16 +253,17 @@ SSAFY 9기 2학기 공통프로젝트 최우수상 🏆
 
 <br>
 
-## 📚 **프로젝트 산출물**
+<!-- ## 📚 **프로젝트 산출물** -->
 
 <!-- -   [기능 명세서](https://docs.google.com/spreadsheets/d/1LJWp10l55WSav7c_ZgmGGtJ5U0w4zq0SYePQb5vVUXo/edit?usp=sharing) -->
 
--   [와이어프레임](https://www.figma.com/file/kg0ofaik0sI6lImrCvkDXe/PJT?type=design&node-id=0-1&mode=design&t=1uZ910Wow6FieKb0-0)
+<!-- -   [와이어프레임](https://www.figma.com/file/kg0ofaik0sI6lImrCvkDXe/PJT?type=design&node-id=0-1&mode=design&t=1uZ910Wow6FieKb0-0)
 -   [덤프데이터](./exec/Dump20230817.sql)
--   [포팅 메뉴얼](./exec/포팅메뉴얼.md)
+-   [포팅 메뉴얼](./exec/포팅메뉴얼.md) -->
 <!-- -   [발표자료](./exec/최종 발표/최종 발표 제출용.pdf) -->
 
-<br>
+<!-- <br> -->
+
 
 ## ✔ **Git 커밋 메시지 컨벤션**
 
@@ -245,49 +291,5 @@ ex) **BE-FEAT : {간단한 설명}(#{issue number or jira issue})**
     -   개별 기능 구현 브랜치
 -   **feature 브랜치가 완성되면 dev-back, dev-front 브랜치로 merge request를 통해 merge한다.**<br>
     ⇒ merge request가 요청되면 leader가 코드 리뷰 이후에 merge한다.
-
-<br>
-
-## 👥 **팀원 역할 분배**
-
-### **Frontend**
-
--   김성준 - Web Design Manager
-    -   웹 디자인 총괄-styled-components, MUI
-    -   웹 프레임 설계-TypeScript, React, Recoil
-        -   회원가입, 로그인, 프로필, 메인, 녹화, 내 친구, 웹페이지 기능 및 배경음악 기능
-    -   기획 및 최종발표 자료 제작-PPT
-    -   프로토타입 설계
--   안경준 - Project Leader
-    -   AR 마스크 기능 구현-Three.js, tf.js
-    -   영상 타임라인 기능 구현-react-player
-    -   초대 기능 구현-SSE
-    -   웹소켓 연결-Stomp.js
-    -   문서화
--   오영재 - Front Leader
-    -   웹 컴포넌트 관리-styled-components, MUI, React, TypeScript, React-Router, Recoil
-    -   새 친구, 내 친구 페이지-openvidu-browser
-    -   WebRTC, useOpenVidu, useStream Custom Hooks
-    -   Frontend 코드 리뷰
-
-<br>
-
-### **Backend**
-
--   고우민 - Backend Leader
-    -   Spring Security를 이용한 JWT 인증/인가 구현
-    -   Redis를 이용한 실시간 접속 상태 확인 기능 구현
-    -   SSE를 이용한 실시간 초대 알림 기능 구현
-    -   데이터베이스 ERD 설계, JPA Entity 매핑
--   김하영 - Infra Manager
-    -   DB 서버, 백엔드 개발 서버, 배포 서버 구축
-    -   Docker 컨테이너 관리
-    -   CI/CD 자동 배포 구축-Jenkins
-    -   새 친구 만나기, 내 친구 만나기, 녹화 영상 API 개발
--   유연석 - Project Manager
-    -   Jira, Git, 버전 관리
-    -   Spring Boot Backend API, Spring Data JPA, WebSocket
-    -   DB 스키마 설계, MySQL RDBMS 관리
-    -   유저, 프로필, 친구 API 개발
 
 <br>
