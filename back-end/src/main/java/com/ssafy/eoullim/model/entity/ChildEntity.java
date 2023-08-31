@@ -1,5 +1,6 @@
 package com.ssafy.eoullim.model.entity;
 
+import com.ssafy.eoullim.model.Child;
 import com.ssafy.eoullim.model.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,13 +48,13 @@ public class ChildEntity {
     @JoinColumn(name = "animon_id")
     private AnimonEntity animon;
 
-    public static ChildEntity of(UserEntity user, String name, Date birth, char gender, String school, int grade) {
+    public static ChildEntity of(UserEntity user, Child child) {
         ChildEntity entity = new ChildEntity();
-        entity.setName(name);
-        entity.setBirth(birth);
-        entity.setGender(gender);
-        entity.setSchool(school);
-        entity.setGrade(grade);
+        entity.setName(child.getName());
+        entity.setBirth(child.getBirth());
+        entity.setGender(child.getGender());
+        entity.setSchool(child.getSchool());
+        entity.setGrade(child.getGrade());
         entity.setUser(user);
         return entity;
     }
