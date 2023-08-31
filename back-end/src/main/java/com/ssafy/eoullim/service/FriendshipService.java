@@ -12,43 +12,44 @@ import com.ssafy.eoullim.repository.FriendshipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FriendshipService {
+
     private final FriendshipRepository friendshipRepository;
     private final ChildRepository childRepository;
     private final ChildCacheRepository childCacheRepository;
 
-    public void regist(Integer myId, Integer friendId) {
-        // ERROR : 두 childId가 같은 경우
-        if (myId.equals(friendId))
+    public void regist(Integer childId, Integer friendId) {
+
+        if (childId.equals(friendId)) // childId와 friendId가 같은 경우
             throw new EoullimApplicationException(ErrorCode.INVALID_DATA, String.format("childIds are same"));
-        // ERROR : childId가 없는 경우
-        ChildEntity childEntity = childRepository.findById(myId).orElseThrow(
+
+        ChildEntity child = childRepository.findById(childId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
-        ChildEntity friendEntity = childRepository.findById(friendId).orElseThrow(
+        ChildEntity friend = childRepository.findById(friendId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND));
-        // ERROR : 이미 좋아요 누른 친구인 경우
-        friendshipRepository.findByMyIdAndFriendId(myId, friendId)
+
+        friendshipRepository.findByChildAndFriend(child, friend) // 이미 좋아요 누른 친구인 경우
             .ifPresent(it -> { throw new EoullimApplicationException(ErrorCode.INVALID_DATA); });
-        friendshipRepository.save(FriendshipEntity.of(childEntity, friendEntity));
+
+        friendshipRepository.save(FriendshipEntity.of(child, friend));
     }
 
-    public List<Child> friendList(Integer childId, Integer userId) {
-        // ERROR: 찾으려는 아이가 없음
+    public List<Child> getFriends(Integer childId, Integer userId) {
+
         ChildEntity childEntity = childRepository.findById(childId).orElseThrow(
                 () -> new EoullimApplicationException(ErrorCode.CHILD_NOT_FOUND,
                         String.format("child %d is not found", childId)));
-        // ERROR: 사용자가 해당 child에 접근 권한 없음
-        if(!childEntity.getUser().getId().equals(userId))
+
+        if(!childEntity.getUser().getId().equals(userId)) // user가 해당 child에 권한이 없는 경우
             throw new EoullimApplicationException(ErrorCode.FORBIDDEN_NO_PERMISSION,
                     String.format("you have no permission with child %d", childId));
-        // 친구들의 접속 상태 확인 후 반환
-        List<Child> friends = friendshipRepository.findFriendsByMyId(childId)
+
+        List<Child> friends = friendshipRepository.findFriendsByChild(childEntity)
                                 .stream()
                                 .map(Child::fromEntity)
                                 .collect(Collectors.toList());

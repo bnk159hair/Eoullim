@@ -20,12 +20,16 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     CHILD_NOT_FOUND(HttpStatus.NOT_FOUND, "Child not found"),
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "Data not found"),
+    MATCH_NOT_FOUND(HttpStatus.NOT_FOUND, "Match not found"),
     // 409 Conflict
+    MATCH_CONFLICT(HttpStatus.CONFLICT, "Match Conflict"),
 
     // 500 Internal Server Error
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "API Connection error occurs"),
     NOTIFICATION_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Connect to notification occurs error"),
+    OPENVIDU_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Openvidu server error occurs"),
+    OPENVIDU_HTTP_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Openvidu http error occurs")
     ;
 
     private final HttpStatus status;
