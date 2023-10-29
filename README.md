@@ -31,7 +31,7 @@ SSAFY 9기 2학기 공통프로젝트 최우수상 🏆
 
 ## 🎬 **어울림 시연 영상**
 
-[<img src="https://img.shields.io/badge/Link-0085DE?style=for-the-badge&logo=YouTube&logoColor=white">](https://drive.google.com/file/d/1WslZg69gb1SLhKtSn4ULfPDBd9H6jFJf/view?usp=drive_link)
+[<img src="https://img.shields.io/badge/Link-0085DE?style=for-the-badge&logo=YouTube&logoColor=white">](https://drive.google.com/file/d/1j1oZ528A9tH38KA0cNtWzjVZkpJ4MORD/view)
 
 <br>
 
